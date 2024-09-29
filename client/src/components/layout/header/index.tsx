@@ -4,10 +4,12 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import logo from "../../../assets/images/logo.png";
-import SearchIcon from "@mui/icons-material/Search";
-import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import {
+  SearchOutlined,
+  UserOutlined,
+  HeartOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 import useDropdown from "../../../hooks/openMenuDropdown";
 import { Link, useNavigate } from "react-router-dom";
 import { Dropdown, Menu } from "antd";
@@ -37,14 +39,14 @@ export default function PrimarySearchAppBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ backgroundColor: "white !important" }}>
-        <Toolbar>
+        <Toolbar className="py-4"> {/* Padding artırıldı */}
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ display: { xs: "none", sm: "block" } }}
           >
-            <img src={logo} style={{ width: "100px" }} alt="logo" />
+            <img src={logo} className="w-24" alt="logo" /> {/* Genişlik ayarlandı */}
           </Typography>
 
           <Box sx={{ flexGrow: 1 }} />
@@ -60,7 +62,7 @@ export default function PrimarySearchAppBar() {
               <Link
                 key={link.path}
                 to={link.path}
-                style={{ textDecoration: "none", color: "#000" }}
+                className="text-black text-lg" // Yazı rengi ve boyutu ayarlandı
               >
                 {link.label}
               </Link>
@@ -71,7 +73,7 @@ export default function PrimarySearchAppBar() {
 
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton size="large" aria-label="search">
-              <SearchIcon />
+              <SearchOutlined className="text-xl" /> {/* Simge boyutu ayarlandı */}
             </IconButton>
             <Dropdown
               overlay={menu}
@@ -84,7 +86,7 @@ export default function PrimarySearchAppBar() {
                 aria-label="user menu"
                 onClick={toggleDropdown}
               >
-                <PersonOutlineIcon />
+                <UserOutlined className="text-xl" />
               </IconButton>
             </Dropdown>
             <IconButton
@@ -92,14 +94,14 @@ export default function PrimarySearchAppBar() {
               aria-label="favorite items"
               onClick={handleMenuClick}
             >
-              <FavoriteBorderIcon />
+              <HeartOutlined className="text-xl" />
             </IconButton>
             <IconButton
               size="large"
               aria-label="shopping cart"
               onClick={handleMenuClick}
             >
-              <ShoppingCartIcon />
+              <ShoppingCartOutlined className="text-xl" />
             </IconButton>
           </Box>
         </Toolbar>

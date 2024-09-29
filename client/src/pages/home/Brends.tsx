@@ -11,7 +11,6 @@ const Brends = () => {
       style={{
         padding: "20px",
         display: "flex",
-        // alignItems: "center",
         justifyContent: "center",
         height: "600px",
         gap: "30px",
