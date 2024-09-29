@@ -1,124 +1,173 @@
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  Container,
-  Paper,
-} from "@mui/material";
-import { useState } from "react";
+import React from "react";
+import { Form, Input, Button, Typography } from "antd";
+import { Formik } from "formik";
+import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import { registerValidationSchema } from "../../../validation/registerValidation";
+import { Content } from "antd/es/layout/layout";
 
-const Register = () => {
-  const [user, setUser] = useState({
-    firstName: "",
-    lastName: "",
-    username: "",
-    email: "",
-    phoneNumber: "",
-    password: "",
-    confirmPassword: "",
-  });
+const { Title } = Typography;
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setUser({ ...user, [name]: value });
+const Register: React.FC = () => {
+  const onFinish = (values: any, { resetForm }: any) => {
+    console.log("Received values from form: ", values);
+    resetForm();
   };
 
   return (
-    <Container component="main" maxWidth="xs">
-      <Paper elevation={3} sx={{ padding: 4 }}>
-        <Typography variant="h5" align="center">
+    <Content
+      style={{
+        background: `url("/assets/images/bg.jpg") no-repeat center center/cover`,
+        height: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Content
+        style={{
+          maxWidth: "400px",
+          padding: "50px",
+          background: "#84787840",
+          borderRadius: "10px",
+          boxShadow: "rgba(0, 0, 0, 0.36) 0px 4px 8px",
+        }}
+      >
+        <Title
+          level={2}
+          style={{ textAlign: "center", marginBottom: "40px", color: "#fff" }}
+        >
           Register
-        </Typography>
-        <Box component="form" noValidate sx={{ mt: 3 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="First Name"
-            name="firstName"
-            value={user.firstName}
-            onChange={handleChange}
-            autoFocus
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Last Name"
-            name="lastName"
-            value={user.lastName}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Username"
-            name="username"
-            value={user.username}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Email Address"
-            name="email"
-            type="email"
-            value={user.email}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Phone Number"
-            name="phoneNumber"
-            type="tel"
-            value={user.phoneNumber}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Password"
-            name="password"
-            type="password"
-            value={user.password}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Confirm Password"
-            name="confirmPassword"
-            type="password"
-            value={user.confirmPassword}
-            onChange={handleChange}
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-          >
-            Register
-          </Button>
-          <Typography variant="body2" align="center">
-            Already have an account?{" "}
-            <a
-              href="/login"
-              style={{ textDecoration: "none", color: "#1976d2" }}
-            >
-              Sign In
-            </a>
-          </Typography>
-        </Box>
-      </Paper>
-    </Container>
+        </Title>
+
+        <Formik
+          initialValues={{
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
+          validationSchema={registerValidationSchema}
+          onSubmit={onFinish}
+        >
+          {({
+            values,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+          }) => (
+            <Form layout="vertical" onFinish={handleSubmit}>
+              <Form.Item
+                label="First Name"
+                validateStatus={
+                  touched.firstName && errors.firstName ? "error" : ""
+                }
+                help={touched.firstName && errors.firstName}
+                style={{ color: "#fff" }}
+              >
+                <Input
+                  name="firstName"
+                  prefix={<UserOutlined />}
+                  placeholder="First Name"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.firstName}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Last Name"
+                validateStatus={
+                  touched.lastName && errors.lastName ? "error" : ""
+                }
+                help={touched.lastName && errors.lastName}
+                style={{ color: "#fff" }}
+              >
+                <Input
+                  name="lastName"
+                  prefix={<UserOutlined />}
+                  placeholder="Last Name"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.lastName}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Email"
+                validateStatus={touched.email && errors.email ? "error" : ""}
+                help={touched.email && errors.email}
+                style={{ color: "#fff" }}
+              >
+                <Input
+                  name="email"
+                  prefix={<MailOutlined />}
+                  placeholder="Email"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.email}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Password"
+                validateStatus={
+                  touched.password && errors.password ? "error" : ""
+                }
+                help={touched.password && errors.password}
+                style={{ color: "#fff" }}
+              >
+                <Input.Password
+                  name="password"
+                  prefix={<LockOutlined />}
+                  placeholder="Password"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.password}
+                />
+              </Form.Item>
+
+              <Form.Item
+                label="Confirm Password"
+                validateStatus={
+                  touched.confirmPassword && errors.confirmPassword
+                    ? "error"
+                    : ""
+                }
+                help={touched.confirmPassword && errors.confirmPassword}
+                style={{ color: "#fff" }}
+              >
+                <Input.Password
+                  name="confirmPassword"
+                  prefix={<LockOutlined />}
+                  placeholder="Confirm Password"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.confirmPassword}
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  style={{
+                    width: "100%",
+                    backgroundColor: "#3e160e",
+                    borderColor: "#3e160e",
+                    borderRadius: "5px",
+                  }}
+                >
+                  Register
+                </Button>
+              </Form.Item>
+            </Form>
+          )}
+        </Formik>
+      </Content>
+    </Content>
   );
 };
 

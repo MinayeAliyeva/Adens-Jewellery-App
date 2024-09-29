@@ -1,14 +1,23 @@
 import React from "react";
+import { Layout, Menu } from 'antd';
 import Header from "./header";
 import { Outlet } from "react-router-dom";
 import Footer from "./footer";
-
+import Container from "../Container";
 const MainLayout = () => {
   return (
     <>
+    <Container height="5vh" backgroundColor="#fff">
       <Header />
-      <Outlet />
-      <Footer />
+    </Container>
+
+      <Container height= "80vh"  backgroundColor="#fff">
+        <Outlet />
+      </Container>
+
+      <Container height="15vh">
+        <Footer />
+      </Container>
     </>
   );
 };
