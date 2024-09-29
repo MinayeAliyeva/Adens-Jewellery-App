@@ -1,23 +1,50 @@
 import React, { useState } from "react";
-import { Card, Rate, Input, Button, List, Typography, Row, Col } from "antd";
-import productImg1 from "../../assets/images/pro-10.jpg"; 
+import {
+  Card,
+  Rate,
+  Input,
+  Button,
+  List,
+  Typography,
+  Row,
+  Col,
+  Modal,
+} from "antd";
+import productImg1 from "../../assets/images/carusel3.jpg";
+import productImg2 from "../../assets/images/carusel2.jpg";
+import productImg3 from "../../assets/images/carusel1.jpg";
 
 const { Title, Paragraph } = Typography;
 
 const Detail = () => {
   const product = {
-    productImg: productImg1,
-    productName: "Product 1",
-    productPrice: "$20",
-    productDetails: "Material: Cotton",
-    productId: 1,
+    productImgGallery: [productImg1, productImg2, productImg3],
+    productName: "Gold Diamond Ring",
+    productPrice: "$1350",
+    productDetails:
+      "A stunning 18K gold ring featuring a brilliant cut diamond.",
+    productId: 12345,
+    comments: [
+      {
+        body: "Very beautiful and well-crafted ring!",
+        rating: 5,
+        username: "jane_doe",
+      },
+    ],
   };
 
   const [reviews, setReviews] = useState<{ content: string; rating: number }[]>(
-    []
+    product.comments.map((comment) => ({
+      content: comment.body,
+      rating: comment.rating,
+    }))
   );
   const [content, setContent] = useState("");
   const [rating, setRating] = useState(0);
+  const [previewImage, setPreviewImage] = useState(
+    product.productImgGallery[0]
+  );
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleReviewSubmit = () => {
     if (content && rating) {
@@ -25,6 +52,15 @@ const Detail = () => {
       setContent("");
       setRating(0);
     }
+  };
+
+  const handleImageClick = (img: string) => {
+    setPreviewImage(img);
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -37,30 +73,79 @@ const Detail = () => {
         }}
       >
         <Row gutter={16}>
-          <Col xs={24} sm={12}>
-            <img
-              src={product?.productImg}
-              alt={product?.productName}
-              style={{
-                width: "100%",
-                borderRadius: "10px",
-                height: "400px",
-                objectFit: "cover",
-              }}
-            />
+          <Col xs={24} sm={16}>
+            <div style={{ position: "relative" }}>
+              <img
+                src={previewImage}
+                alt={product.productName}
+                style={{
+                  width: "100%",
+                  height: "400px",
+                  borderRadius: "10px",
+                  objectFit: "cover",
+                  transition: "transform 0.5s ease-in-out",
+                }}
+                onClick={() => handleImageClick(previewImage)}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "10px",
+                  left: "10px",
+                  display: "flex",
+                  gap: "10px",
+                }}
+              >
+                {product.productImgGallery.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={product.productName}
+                    onClick={() => handleImageClick(img)}
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      borderRadius: "5px",
+                      objectFit: "cover",
+                      cursor: "pointer",
+                      border:
+                        previewImage === img ? "2px solid #1890ff" : "none",
+                      transition: "border 0.3s ease",
+                    }}
+                  />
+                ))}
+              </div>
+            </div>
           </Col>
-          <Col xs={24} sm={12}>
-            <Title level={2}>{product?.productName}</Title>
-            <Paragraph>{product?.productDetails}</Paragraph>
-            <Paragraph
-              style={{ fontWeight: "bold", fontSize: "18px", color: "#1890ff" }}
-            >
-              {product?.productPrice}
-            </Paragraph>
-            <Rate disabled defaultValue={3} />
+          <Col xs={24} sm={8}>
+            <div style={{ padding: "20px" }}>
+              <Title level={4}>{product.productName}</Title>
+              <Paragraph style={{ fontWeight: "bold", fontSize: "18px" }}>
+                {product.productPrice}
+              </Paragraph>
+              <Paragraph>{product.productDetails}</Paragraph>
+            </div>
           </Col>
         </Row>
       </Card>
+
+      {/* <Modal
+        visible={isModalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+        width={800}
+        style={{ textAlign: "center" }}
+      >
+        <img
+          src={previewImage}
+          alt={product.productName}
+          style={{
+            width: "100%",
+            height: "auto",
+            borderRadius: "10px",
+          }}
+        />
+      </Modal> */}
 
       <Card
         title="Comments"
@@ -108,9 +193,14 @@ const Detail = () => {
           <Button
             type="primary"
             onClick={handleReviewSubmit}
-            style={{ marginTop: "10px", width: "200px", borderRadius: "5px",    backgroundColor: "#40331D", }}
+            style={{
+              marginTop: "10px",
+              width: "200px",
+              borderRadius: "5px",
+              backgroundColor: "#40331D",
+            }}
           >
-            Send Comment 
+            Send Comment
           </Button>
         </div>
       </Card>

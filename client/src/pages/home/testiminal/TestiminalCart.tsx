@@ -1,40 +1,30 @@
 import { FC } from "react";
 import { FaRegStar } from "react-icons/fa";
 import img from "../../../assets/images/newsletter-image.jpg";
-interface ITestiminalCartProps {
+
+interface ITestimonialCartProps {
   testimonial: { id: number; quote: string; author: string };
 }
-const TestiminalCart: FC<ITestiminalCartProps> = ({ testimonial }) => {
+
+const TestimonialCart: FC<ITestimonialCartProps> = ({ testimonial }) => {
   return (
-    <div
-      key={testimonial.id}
-      style={{
-        padding: "20px",
-        textAlign: "center",
-        display: "flex",
-        alignItems: "center",
-        marginBottom: "70px",
-      }}
-    >
+    <div className="flex items-center p-5 mb-14 text-center" key={testimonial.id}>
       <img
-        style={{ borderRadius: "50%", width: "100px", height: "100px" }}
+        className="rounded-full w-24 h-24"
         src={img}
-        alt=""
+        alt={testimonial.author} 
       />
 
-      <div>
-        {" "}
-        <div>
-          <FaRegStar />
-          <FaRegStar />
-          <FaRegStar />
+      <div className="ml-4">
+        <div className="flex">
+          <FaRegStar className="text-yellow-500" />
+          <FaRegStar className="text-yellow-500" />
+          <FaRegStar className="text-yellow-500" />
         </div>
-        <blockquote style={{ fontStyle: "italic", fontSize: "1.2rem" }}>
+        <blockquote className="italic text-lg">
           "{testimonial.quote}"
         </blockquote>
-        <cite
-          style={{ display: "block", marginTop: "10px", fontWeight: "bold" }}
-        >
+        <cite className="block mt-2 font-bold">
           - {testimonial.author}
         </cite>
       </div>
@@ -42,4 +32,4 @@ const TestiminalCart: FC<ITestiminalCartProps> = ({ testimonial }) => {
   );
 };
 
-export default TestiminalCart;
+export default TestimonialCart;

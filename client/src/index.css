@@ -1,5 +1,12 @@
 body {
   margin: 0;
   font-optical-sizing: auto;
-  font-family: 'Dancing Script', cursive !;
+  font-family: "Dancing Script", cursive;
 }
+.font-dancing-script {
+  font-family: "Dancing Script", cursive !important; /* !important ile çakışmaları önleyebilirsiniz */
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
