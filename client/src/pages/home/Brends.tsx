@@ -1,9 +1,9 @@
 import { Col, Layout, Row, Typography } from "antd";
-import brand1 from "../../assets/images/brand-2.png";
-import brand2 from "../../assets/images/brand-3.png";
-import brand3 from "../../assets/images/brand-4.png";
-import brand4 from "../../assets/images/brand-5.png";
-import brand5 from "../../assets/images/band.png";
+const brand1 = "/assets/images/brand-2.png";
+const brand2 = "/assets/images/brand-3.png";
+const brand3 = "/assets/images/brand-4.png";
+const brand4 = "/assets/images/brand-5.png";
+const brand5 = "/assets/images/band.png";
 
 const Brends = () => {
   return (

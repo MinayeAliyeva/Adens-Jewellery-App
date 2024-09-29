@@ -1,5 +1,5 @@
 import { Button, Col, Layout, Row, Typography } from "antd";
-import infoImg from "../../assets/images/info.jpg";
+const infoImg = "./assets/images/info.jpg";
 
 const Info = () => {
   return (

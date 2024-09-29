@@ -1,8 +1,10 @@
 import { FC } from "react";
 import { Carousel } from "antd";
-import caruselImg1 from "../../assets/images/carusel1.jpg";
-import caruselImg2 from "../../assets/images/carusel2.jpg";
-import caruselImg3 from "../../assets/images/carusel3.jpg";
+import Container from "../../components/Container";
+import Typography from "antd/es/typography/Typography";
+const caruselImg1 = "/assets/images/carusel1.jpg";
+const caruselImg2 = "/assets/images/carusel2.jpg";
+const caruselImg3 = "/assets/images/carusel3.jpg";
 
 const slides = [
   {
@@ -40,14 +42,19 @@ const XCarusel: FC = () => (
           alt={slide.alt}
           className="w-full h-full object-cover transition-transform duration-1000 ease-in-out"
         />
-        <div
+        <Container
+         width="50%"
+         backgroundColor="red"
+        >
+          <Typography  
           className="font-dancing-script absolute bottom-24 right-6 transform translate-y-0 text-white text-2xl md:text-4xl p-4 rounded-lg z-10  "
           style={{
             animationDelay: `${index * 0.5}s`,
-          }}
-        >
-          {slide.text}
-        </div>
+          }}>
+             {slide.text}
+          </Typography>
+         
+        </Container>
       </div>
     ))}
   </Carousel>

@@ -1,6 +1,8 @@
 import { FC } from "react";
 import { FaRegStar } from "react-icons/fa";
-import img from "../../../assets/images/newsletter-image.jpg";
+
+const img =  "./assets/images/newsletter-image.jpg";
+//const imgSrc = img;
 
 interface ITestimonialCartProps {
   testimonial: { id: number; quote: string; author: string };

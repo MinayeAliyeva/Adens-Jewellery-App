@@ -1,11 +1,13 @@
 import { Navigate, RouteObject, useRoutes } from "react-router-dom";
 import MainLayout from "../components/layout/MainLayout";
 import Home from "../pages/home";
-import Login from "../pages/auth/login";
-import Register from "../pages/auth/register";
-import Detail from "../pages/detail";
+
+import Detail from "../pages/home/detail";
 import Contact from "../pages/contact";
 import Shop from "../pages/shop";
+import Register from "../pages/auth/register";
+import Login from "../pages/auth/login";
+import About from "../pages/about";
 export type MyRouterObject = RouteObject;
 export enum RoutePaths {
   MAIN = "/",
@@ -15,6 +17,7 @@ export enum RoutePaths {
   DETAIL = "/detail/:id",
   CONTACT = "/contact",
   SHOP = "/shop",
+  ABOUT='/about'
 }
 export const routes: MyRouterObject[] = [
   {
@@ -48,6 +51,10 @@ export const routes: MyRouterObject[] = [
       {
         path: RoutePaths.SHOP,
         element: <Shop />,
+      },
+      {
+        path: RoutePaths.ABOUT,
+        element: <About />,
       },
     ],
   },
