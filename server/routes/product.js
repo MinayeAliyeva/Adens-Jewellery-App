@@ -1,26 +1,58 @@
 const express = require("express");
 const router = express.Router();
 
-const { Product, validateProduct } = require("../models/product");
+const { Product } = require("../models/product");
 
 // router.get("/", (req, res) => {
 //   res.status(200).send(products);
 // });
 
 router.post("/", async (req, res) => {
+  console.log({ req });
+
+  // const product = new Product({
+  //   name: req?.body?.name,
+  //   price: req?.body?.price
+  // });
+
   const product = new Product({
-    name: req.body.name,
-    price: req.body.price,
-    description: req.body.description,
-    imageUrl: req.body.imageUrl,
-    date: Date.now(),
-    isActive: req.body.isActive,
-    comments: [{ body: "MUkemmel!!!", date: new Date() }],
-    star: 5,
-    stock: 2,
+    id: req?.body?.id,
+    productName: req?.body?.productName,
+    size: req?.body?.size,
+    price: req?.body?.price,
+    measure: req?.body?.measure,
+    categoryName: req?.body?.categoryName,
+    color: req?.body?.color,
+    comments: req?.body?.comments,
+    imagesUrl: req?.body?.imagesUrl,
+    favorite: req?.body?.favorite,
+    brand: req?.body?.brand,
+    viewing: req?.body?.viewing,
+    material: req?.body?.material,
+    popularity: req?.body?.popularity,
+    description: req?.body?.description,
+    discount: req?.body?.discount,
+    stock: req?.body?.stock,
+    weight: req?.body?.weight,
+    dimensions: req?.body?.dimensions,
+    warranty: req?.body?.warranty,
+    certification: req?.body?.certification,
+    returnPolicy: req?.body?.returnPolicy,
+    relatedProducts: req?.body?.relatedProducts,
+    totalSales: req?.body?.totalSales,
+    creationDate: req?.body?.creationDate,
+    lastUpdated: req?.body?.lastUpdated,
+    reviewsCount: req?.body?.reviewsCount,
+    averageRating: req?.body?.averageRating,
+    productAvailability: req?.body?.productAvailability,
+    repairService: req?.body?.repairService,
+    priceHistory: req?.body?.priceHistory,
   });
+
   try {
     const result = await product.save();
+    console.log({ product });
+
     res.status(201).send(product);
   } catch (error) {
     console.log("product error", error);
