@@ -8,6 +8,7 @@ import Shop from "../pages/shop";
 import Register from "../pages/auth/register";
 import Login from "../pages/auth/login";
 import About from "../pages/about";
+import Favorite from "../pages/favorites";
 export type MyRouterObject = RouteObject;
 export enum RoutePaths {
   MAIN = "/",
@@ -17,7 +18,8 @@ export enum RoutePaths {
   DETAIL = "/detail/:id",
   CONTACT = "/contact",
   SHOP = "/shop",
-  ABOUT='/about'
+  ABOUT = "/about",
+  FAVORITE = "/favorite",
 }
 export const routes: MyRouterObject[] = [
   {
@@ -55,6 +57,10 @@ export const routes: MyRouterObject[] = [
       {
         path: RoutePaths.ABOUT,
         element: <About />,
+      },
+      {
+        path: RoutePaths.FAVORITE,
+        element: <Favorite />,
       },
     ],
   },

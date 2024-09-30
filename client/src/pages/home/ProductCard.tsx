@@ -16,8 +16,8 @@ interface IProps {
     productDetails: string;
     productId: number;
     availableColors: string[];
-    stock: number; // Stok durumu
-    discount: number; // İndirim yüzdesi
+    stock: number; 
+    discount: number; 
   };
 }
 

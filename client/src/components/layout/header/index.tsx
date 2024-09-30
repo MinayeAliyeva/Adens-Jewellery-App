@@ -24,7 +24,6 @@ export default function Header() {
       }}
     >
       <Link to="/home">
-     
         <img src={logo} className="w-24" alt="logo" />
       </Link>
 
@@ -42,8 +41,13 @@ export default function Header() {
       >
         <SearchOutlined style={{ color: "#707070" }} className="text-xl" />
         <ProfileMenuComponent items={menuItems} />
-        <HeartOutlined style={{ color: "#707070" }} className="text-xl" />
-        <ShoppingCartOutlined style={{ color: "#707070" }} className="text-xl" />
+        <Link to="/favorite">
+          <HeartOutlined style={{ color: "#707070" }} className="text-xl" />
+        </Link>
+        <ShoppingCartOutlined
+          style={{ color: "#707070" }}
+          className="text-xl"
+        />
       </Menu>
     </AntdHeader>
   );
