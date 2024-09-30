@@ -1,5 +1,3 @@
-import React from "react";
-import { Layout, Menu } from 'antd';
 import Header from "./header";
 import { Outlet } from "react-router-dom";
 import Footer from "./footer";

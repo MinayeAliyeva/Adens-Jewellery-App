@@ -9,19 +9,21 @@ app.get("/", (req, res) => {
   res.send("Merhaba Dünya!");
 });
 app.use("/api/products", productsRouter);
-const connectInfoEnum = {
+const connectInfo = {
   USER_NAME: "eliyevaminayee",
   PASSWORD: "mongodb12345",
   DATABASE_NAME: "adensdb",
 };
 (async () => {
+  console.log("daxil");
   try {
     await mongoose.connect(
-      `mongodb+srv://${connectInfoEnum.USER_NAME}:${connectInfoEnum.PASSWORD}@cluster0.pp6ku.mongodb.net/${connectInfoEnum.DATABASE_NAME}?retryWrites=true&w=majority`
+      `mongodb+srv://${connectInfo?.USER_NAME}:${connectInfo?.PASSWORD}@cluster0.pp6ku.mongodb.net/${connectInfo?.DATABASE_NAME}?retryWrites=true&w=majority`
     );
+
     console.log(" mongodb baglantisi kuruldu");
   } catch (error) {
-    console.log(err);
+    console.log(error);
   }
 })();
 
