@@ -7,12 +7,17 @@ import {
 import { Link } from "react-router-dom";
 import { menuItems, navLinks } from "../../../constants";
 import { ProfileMenuComponent } from "./components/DropdownComponent";
+import { useTranslation } from "react-i18next";
+import SelecBox from "./components/SelecBox";
+import React from "react";
+import NavLink from "./components/NavLink";
 
 const logo = "/assets/images/logo.png";
-
 const { Header: AntdHeader } = Layout;
 
-export default function Header() {
+const Header = React.memo(() => {
+
+
   return (
     <AntdHeader
       style={{
@@ -29,15 +34,18 @@ export default function Header() {
 
       <div style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
         {navLinks.map((link) => (
-          <Link key={link.path} to={link.path} className="text-black text-lg">
-            {link.label}
-          </Link>
+          <NavLink link={link} />
         ))}
       </div>
 
       <Menu
         mode="horizontal"
-        style={{ display: "flex", gap: "20px", border: "none" }}
+        style={{
+          display: "flex",
+          gap: "20px",
+          border: "none",
+          alignItems: "center",
+        }}
       >
         <SearchOutlined style={{ color: "#707070" }} className="text-xl" />
         <ProfileMenuComponent items={menuItems} />
@@ -48,7 +56,10 @@ export default function Header() {
           style={{ color: "#707070" }}
           className="text-xl"
         />
+        <SelecBox />
       </Menu>
     </AntdHeader>
   );
-}
+});
+
+export default Header;
