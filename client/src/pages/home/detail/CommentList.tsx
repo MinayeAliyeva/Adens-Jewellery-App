@@ -1,5 +1,5 @@
-import { FC, memo } from "react";
-import { Avatar, Card, Divider, Layout, List, Rate, Typography } from "antd";
+import {  memo } from "react";
+import { Avatar, Card, List, Rate, Typography } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 

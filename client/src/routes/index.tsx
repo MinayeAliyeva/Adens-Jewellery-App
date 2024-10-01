@@ -1,5 +1,5 @@
 import { Navigate, RouteObject, useRoutes } from "react-router-dom";
-import MainLayout from "../components/layout/MainLayout";
+import MainLayout from "../layouts/MainLayout";
 import Home from "../pages/home";
 
 import Detail from "../pages/home/detail";
@@ -21,10 +21,12 @@ export enum RoutePaths {
   ABOUT = "/about",
   FAVORITE = "/favorite",
 }
+
+
 export const routes: MyRouterObject[] = [
   {
     path: RoutePaths.MAIN,
-    element: <MainLayout />,
+    element:  <MainLayout />,
     children: [
       {
         index: true,
