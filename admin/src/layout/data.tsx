@@ -1,13 +1,14 @@
-
+import { FaUsers } from "react-icons/fa";
+import { CgProductHunt } from "react-icons/cg";
 export const menu = [
-    {
-        title: 'Products',
-        icon: 'ic',
-        path: 'products'
-    },
-    {
-        title: 'Users',
-        icon: 'icu',
-        path: 'users'
-    },
-]
+  {
+    title: "Products",
+    icon: <CgProductHunt />,
+    path: "products",
+  },
+  {
+    title: "Users",
+    icon: <FaUsers />,
+    path: "users",
+  },
+];

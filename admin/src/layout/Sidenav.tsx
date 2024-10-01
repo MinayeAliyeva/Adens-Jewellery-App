@@ -1,15 +1,9 @@
-import React, { useState } from 'react';
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from '@ant-design/icons';
-import { Button, Divider, Layout, Menu, theme } from 'antd';
-import { Link, Outlet } from 'react-router-dom';
-import { menu } from './data';
-
+import React, { useState } from "react";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { Button, Divider, Layout, Menu, theme } from "antd";
+import { Link, Outlet } from "react-router-dom";
+import { menu } from "./data";
+const logo = "/assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
 
 const Sidenav: React.FC = () => {
@@ -20,23 +14,39 @@ const Sidenav: React.FC = () => {
 
   return (
     <Layout>
-      <Sider  style={{minHeight: '100vh'}} trigger={null} collapsible collapsed={collapsed}>
-        <Content style={{height: '64px', backgroundColor: 'blue'}}>
-            LOGO
-        
+      <Sider
+        style={{
+          minHeight: "100vh",
+          background: "#91caff14",
+          width: "300px",
+          boxShadow: "1px 3px 5px rgb(0 0 0 / 38%)",
+        }}
+        trigger={null}
+        collapsible
+        collapsed={collapsed}
+      >
+        <Content style={{ height: "64px" }}>
+          <img src={logo} alt="logo" style={{ width: "150px" }} />
+        </Content>
+        <Divider style={{ backgroundColor: "#292c3261" }} />
+        {menu.map((item) => (
+          <Content>
+            {" "}
+            <Content
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {item.icon}
+              <Link style={{ color: "#000" }} to={item.path}>
+                {item.title}
+              </Link>
             </Content>
-        {/* <div className="demo-logo-vertical" /> */}
-        <Divider style={{backgroundColor:'red'}}/>
-        {
-           
-            menu.map(item=>(<Content>
-                {
-                    item.icon
-                }
-                <Link to={item.path}>{item.title}</Link>
-                <Divider style={{backgroundColor:'red'}}/>
-            </Content>))
-        }
+            <Divider style={{ backgroundColor: "#292c3261" }} />
+          </Content>
+        ))}
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
@@ -45,7 +55,7 @@ const Sidenav: React.FC = () => {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
             style={{
-              fontSize: '16px',
+              fontSize: "16px",
               width: 64,
               height: 64,
             }}
@@ -53,14 +63,14 @@ const Sidenav: React.FC = () => {
         </Header>
         <Content
           style={{
-            margin: '24px 16px',
+            margin: "24px 16px",
             padding: 24,
             minHeight: 280,
             background: colorBgContainer,
             borderRadius: borderRadiusLG,
           }}
         >
-          <Outlet/>
+          <Outlet />
         </Content>
       </Layout>
     </Layout>
