@@ -1,26 +1,6 @@
-import TableComponent from "./TableComponent";
 import XTable from "../../components/TestTable";
-import EditButton from "../../components/EditButton";
-import { Button } from "antd";
 import { useGetProductsQuery } from "../../store/api/product/product-api";
-import { useState } from "react";
-import ProductDialog from "./ProductDialog";
 import XButton from "./OpenDialog";
-
-const tableData = [
-  {
-    image: "TTTT",
-    productName: "TTTT",
-    description: "TTTT",
-    price: 78,
-    category: "TTTT",
-    test: {
-      age: 20,
-    },
-    id: "67",
-    action: <EditButton />,
-  },
-];
 
 const columns = [
   {
@@ -64,12 +44,6 @@ const columns = [
     dataIndex: "material",
     key: "material",
   },
-  // {
-  //   title: "",
-  //   dataIndex: "",
-  //   key: "",
-  // },
-
   {
     title: "",
     key: "actions",

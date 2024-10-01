@@ -29,15 +29,19 @@ router.get("/", async (req, res) => {
 });
 
 // Ürün oluşturma ve resim yükleme
-router.post("/", upload.single("mainImageUrl"), async (req, res) => {
-  const file = req.file;
-  console.log({file});
+router.post("/", upload.array("images"), async (req, res) => {
+  console.log({file: req.file});
   
-  if (!file) return res.status(400).send("No image in the request");
+  const files = req.files;
+  
+  if (!files || files.length === 0) {
+    return res.status(400).send("No images in the request");
+  }
 
-  // Resmin URL'si
+  // Resmin URL'sini oluşturma
   const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
-  const imageUrl = `${basePath}${file.filename}`;
+  const imageUrls = files.map(file => `${basePath}${file.filename}`); // Tüm dosya isimlerini al
+
 
   const product = new Product({
     id: req.body.id,
@@ -48,8 +52,8 @@ router.post("/", upload.single("mainImageUrl"), async (req, res) => {
     categoryName: req.body.categoryName,
     color: req.body.color,
     comments: req.body.comments,
-    mainImageUrl: imageUrl, // Resim URL'si
-    additionalImages: req.body.additionalImages,
+    mainImageUrl: imageUrls[0], // Resim URL'si
+    additionalImages: imageUrls.slice(1),
     brand: req.body.brand,
     material: req.body.material,
     popularity: req.body.popularity,

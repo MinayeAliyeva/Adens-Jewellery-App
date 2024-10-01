@@ -7,9 +7,10 @@ import {
   Input,
   InputNumber,
   Modal,
+  Upload,
 } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
-import { UploadFile } from "antd/es/upload/interface";
 import { useAddProductMutation } from "../../store/api/product/product-api";
 
 interface IProductDialog {
@@ -18,22 +19,30 @@ interface IProductDialog {
 }
 
 const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
-  const [addProduct, { data, isLoading, isError }] = useAddProductMutation();
+  const [addProduct] = useAddProductMutation();
   const [form] = Form.useForm();
-  const [mainImage, setMainImage] = useState<File | null>(null);
   const [additionalImages, setAdditionalImages] = useState<File[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files) {
-      setSelectedFile(event.target.files[0]); // Seçilen dosyayı alıyoruz
+  
+
+  const [fileList, setFileList] = useState<any>([]);
+  const handleChange = (info: any) => {
+    if (info?.file) {
+      setFileList([info?.file, ...fileList]);
+    }
+  };
+  const handleChangeAdditions = (info: any) => {
+    let updatedFileList = [...info.fileList];
+    if (updatedFileList?.length) {
+      setFileList([...fileList, ...updatedFileList]);
+      
+     // setSelectedFile(info?.file);
     }
   };
 
-  // Form gönderme işlemi
   const onFinish = async (values: any) => {
     const formData = new FormData();
-    // Form verilerini ekleme
     formData.append("productName", values.productName);
     formData.append("size", values.size || "");
     formData.append("price", values.price);
@@ -52,13 +61,18 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
     formData.append("creationDate", values.creationDate || "");
     formData.append("popularity", values.popularity || 0);
     formData.append("viewing", values.viewing || 0);
-    
-    // Ana görsel ekleme
-    if (selectedFile) {
-      formData.append("mainImageUrl", selectedFile); // Ana görseli ekliyoruz
-    }
 
-    // Ürünü backend'e gönderme
+    // Ana görsel ekleme
+    // if (selectedFile) {
+    //   formData.append("mainImageUrl", selectedFile); // Ana görseli ekliyoruz
+    // }
+
+    fileList.forEach((file:any) => {
+      console.log({file});
+      
+      formData.append('images', file.originFileObj ?? file); // 'files' keyi ile dosyayı ekliyoruz
+    });
+  
     try {
       await addProduct(formData);
       setOpen?.(false);
@@ -189,7 +203,33 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
             name="mainImageUrl"
             rules={[{ required: true, message: "Ana görsel gerekli!" }]}
           >
-            <input type="file" onChange={handleFileChange} />
+            <Upload
+              accept="image/*" // Sadece resim dosyalarına izin ver
+              showUploadList={true} // Yüklenen dosyaların listesini göster
+              onChange={handleChange} // Dosya durumu değiştiğinde çağrılır
+              beforeUpload={() => false} // Sunucuya otomatik yüklemeyi devre dışı bırakır
+              maxCount={1}
+              listType="picture"
+            >
+              <Button icon={<UploadOutlined />}>Dosya Yükle</Button>
+            </Upload>
+          </Form.Item>
+
+          <Form.Item
+            label="Additional Görsel"
+            name="additionalImages"
+            // rules={[{ required: true, message: "Ana görsel gerekli!" }]}
+          >
+            <Upload
+              accept="image/*" // Sadece resim dosyalarına izin ver
+              multiple
+              showUploadList={true} // Yüklenen dosyaların listesini göster
+              onChange={handleChangeAdditions} // Dosya durumu değiştiğinde çağrılır
+              beforeUpload={() => false} // Sunucuya otomatik yüklemeyi devre dışı bırakır
+              listType="picture"
+            >
+              <Button icon={<UploadOutlined />}>Dosya Yükle 2</Button>
+            </Upload>
           </Form.Item>
 
           <Form.Item>
