@@ -1,14 +1,18 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const productsRouter = require("../server/routes/product");
-
+const productsRouter = require("../server/routes/productRoute");
+const usersRouter = require("../server/routes/usersRoute");
 app.use(express.json());
 //test
 app.get("/", (req, res) => {
   res.send("Merhaba Dünya!");
 });
 app.use("/api/products", productsRouter);
+app.use("/api/users", usersRouter);
+
+
+
 const connectInfo = {
   USER_NAME: "eliyevaminayee",
   PASSWORD: "mongodb12345",
