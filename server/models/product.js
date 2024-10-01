@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 // Yorumların alt şeması
 const commentSchema = new mongoose.Schema({
   body: [
@@ -39,56 +38,32 @@ const productSchema = new mongoose.Schema({
   categoryName: String,
   color: String,
   comments: [commentSchema], // Yorumlar şema olarak referans edilir
-  imagesUrl: {
-    mainImageUrl: {
-      type: String,
-      required: true,
-    },
-    additionalImages: [String],
-  },
-  favorite: {
-    userId: String,
-    isFavorite: Boolean,
-    favoriteId: String,
-  },
+  mainImageUrl:mongoose.Schema.Types.Mixed,
+  additionalImages:mongoose.Schema.Types.Mixed,
+  // favorite: {
+  //   userId: String,
+  //   isFavorite: Boolean,
+  //   favoriteId: String,
+  // },
   brand: String,
-  viewing: Number,
+  // viewing: Number,
   material: String,
   popularity: Number,
   description: String,
-  discount: {
-    percentage: Number,
-    newPrice: Number,
-    oldPrice: Number,
-  },
+  discount: String,
   stock: Number,
   weight: Number,
-  dimensions: {
-    ringDiameter: Number,
-  },
-  warranty: {
-    duration: String,
-    coverage: String,
-  },
+  dimensions: Number,
+  warranty: String,
   certification: String,
-  returnPolicy: {
-    days: Number,
-    condition: String,
-  },
-  relatedProducts: [
-    {
-      productId: String,
-      productName: String,
-    },
-  ],
+  returnPolicy: String,
   totalSales: Number,
-  creationDate: {
-    type: Date,
-    default: Date.now,
-  },
+  creationDate: String,
   lastUpdated: Date,
   reviewsCount: Number,
   averageRating: Number,
+  color: String,
+  brand: String,
   productAvailability: {
     online: Boolean,
     stores: [String],

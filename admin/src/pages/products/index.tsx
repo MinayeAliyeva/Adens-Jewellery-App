@@ -1,44 +1,53 @@
-import TableComponent from "./TableComponent"
-import XTable from "./TestTable"
+import TableComponent from "./TableComponent";
+import XTable from "../../components/TestTable";
+import EditButton from "../../components/EditButton";
+import { Button } from "antd";
+import { useGetProductsQuery } from "../../store/api/product/product-api";
+import { useState } from "react";
+import ProductDialog from "./ProductDialog";
+import XButton from "./OpenDialog";
 
-const tableData =[{
-  image: 'TTTT',
-  productName: 'TTTT',
-  description: 'TTTT',
-  price: 78,
-  category: 'TTTT',
-  test: {
-    age: 20,
+const tableData = [
+  {
+    image: "TTTT",
+    productName: "TTTT",
+    description: "TTTT",
+    price: 78,
+    category: "TTTT",
+    test: {
+      age: 20,
+    },
+    id: "67",
+    action: <EditButton />,
   },
-  id: '67',
-
-}];
+];
 
 const columns = [
   {
-    title: "Product",
-    key: "product",
+    title: "Image",
+    dataIndex: "mainImageUrl",
+    key: "mainImageUrl",
     render: (text: any, record: any) => {
-      console.log("record", record);
+      console.log("record", record?.mainImageUrl);
+      
       return (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <img
-            src={record?.image}
-            alt={record?.productName}
-            style={{ width: 50, height: 50, marginRight: 10 }}
-          />
-          <span>{record?.productName}</span>
-          <div>
-           x
-          </div>
-        </div>
-      );
+        <img
+          src={record?.mainImageUrl} 
+          alt={record.productName} 
+          style={{ width: 50, height: 50 }} 
+        />
+      )
     },
   },
   {
-    title: "Description",
-    dataIndex: "description",
-    key: "description",
+    title: "Name",
+    dataIndex: "productName",
+    key: "productName",
+  },
+  {
+    title: "Size",
+    dataIndex: "size",
+    key: "size",
   },
   {
     title: "Price",
@@ -46,39 +55,45 @@ const columns = [
     key: "price",
   },
   {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
+    title: "Catagory",
+    dataIndex: "categoryName",
+    key: "categoryName",
   },
   {
-    title: "action",
-    key: "action",
+    title: "Material",
+    dataIndex: "material",
+    key: "material",
+  },
+  // {
+  //   title: "",
+  //   dataIndex: "",
+  //   key: "",
+  // },
+
+  {
+    title: "",
+    key: "actions",
     render: (text: any, record: any) => {
-      console.log("record", record);
       return (
-        // <div style={{ display: "flex", alignItems: "center" }}>
-        //   <img
-        //     src={record?.image}
-        //     alt={record?.productName}
-        //     style={{ width: 50, height: 50, marginRight: 10 }}
-        //   />
-        //   <span>{record?.productName}</span>
-          <div>
-           x
-          </div>
-        // </div>
+        <>
+          <button>Edit</button>
+          <button>Delete</button>
+        </>
       );
     },
   },
 ];
 
 const Products = () => {
-  return (
-   <>
-  <TableComponent/>
-  <XTable data={tableData} columns={columns} actions='x'/>
-   </>
-  )
-}
+  const { data } = useGetProductsQuery();
+  
 
-export default Products
+  return (
+    <>
+      <XButton />
+      <XTable data={data} columns={columns} />
+    </>
+  );
+};
+
+export default Products;

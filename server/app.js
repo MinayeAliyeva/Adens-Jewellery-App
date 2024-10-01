@@ -3,14 +3,18 @@ const app = express();
 const mongoose = require("mongoose");
 const productsRouter = require("../server/routes/productRoute");
 const usersRouter = require("../server/routes/usersRoute");
+const path = require('path');
+const cors = require("cors");
 app.use(express.json());
+app.use(cors());
+app.options("*", cors());
 //test
 app.get("/", (req, res) => {
   res.send("Merhaba Dünya!");
 });
 app.use("/api/products", productsRouter);
 app.use("/api/users", usersRouter);
-
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
 
 const connectInfo = {
@@ -31,7 +35,7 @@ const connectInfo = {
   }
 })();
 
-const PORT = 8080;
+const PORT = 8000;
 app.listen(PORT, () => {
   console.log(`Sunucu ${PORT} portunda çalışıyor.`);
 });
