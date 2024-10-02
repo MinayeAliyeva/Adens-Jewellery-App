@@ -1,17 +1,20 @@
 import { FC } from "react";
 import {
   Button,
-  Checkbox,
-  DatePicker,
   Form,
   Input,
-  InputNumber,
   Modal,
+  Row,
+  Col,
   Upload,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { useAddProductMutation } from "../../store/api/product/product-api";
+import SelectBox from "../../components/SelectBox";
+import { sizeOptions } from "./data";
+import DatePickerComponent from "../../components/DatePickerComponent";
+import dayjs from "dayjs";
 
 interface IProductDialog {
   open: boolean;
@@ -21,32 +24,27 @@ interface IProductDialog {
 const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
   const [addProduct] = useAddProductMutation();
   const [form] = Form.useForm();
-  const [additionalImages, setAdditionalImages] = useState<File[]>([]);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  
-
   const [fileList, setFileList] = useState<any>([]);
+  const [creationDate, setCreationDate] = useState<dayjs.Dayjs | null>(null);
   const handleChange = (info: any) => {
     if (info?.file) {
       setFileList([info?.file, ...fileList]);
     }
   };
+
   const handleChangeAdditions = (info: any) => {
     let updatedFileList = [...info.fileList];
     if (updatedFileList?.length) {
       setFileList([...fileList, ...updatedFileList]);
-      
-     // setSelectedFile(info?.file);
     }
   };
 
   const onFinish = async (values: any) => {
     const formData = new FormData();
+    const formattedDate = creationDate ? creationDate.format("YYYY-MM-DD") : new Date().toISOString(); 
     formData.append("productName", values.productName);
-    formData.append("size", values.size || "");
+    formData.append("size", values.size ?? "S");
     formData.append("price", values.price);
-    formData.append("measure", values.measure || "");
     formData.append("categoryName", values.categoryName || "");
     formData.append("color", values.color || "");
     formData.append("brand", values.brand || "");
@@ -54,192 +52,190 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
     formData.append("stock", values.stock || 0);
     formData.append("weight", values.weight || 0);
     formData.append("dimensions", values.dimensions || 0);
-    formData.append("favorite", values.favorite);
     formData.append("warrantyDuration", values.warrantyDuration || "");
-    formData.append("returnPolicy", values.returnPolicy || "");
-    formData.append("relatedProducts", values.relatedProducts || "");
-    formData.append("creationDate", values.creationDate || "");
-    formData.append("popularity", values.popularity || 0);
-    formData.append("viewing", values.viewing || 0);
-
-    // Ana görsel ekleme
-    // if (selectedFile) {
-    //   formData.append("mainImageUrl", selectedFile); // Ana görseli ekliyoruz
-    // }
-
-    fileList.forEach((file:any) => {
-      console.log({file});
-      
-      formData.append('images', file.originFileObj ?? file); // 'files' keyi ile dosyayı ekliyoruz
+    formData.append("creationDate", formattedDate);
+    fileList.forEach((file: any) => {
+      formData.append("images", file.originFileObj ?? file);
     });
-  
+
+    console.log({ formData });
+    console.log({ values });
+
     try {
       await addProduct(formData);
-      setOpen?.(false);
-      console.log("Ürün başarıyla eklendi!");
-    } catch (error) {
-      console.error("Ürün eklenirken hata oluştu:", error);
-    }
+      // setOpen?.(false);
+    } catch (error) {}
   };
 
   return (
-    <>
-      <Modal
-        title="Modal 1000px width"
-        centered
-        open={open}
-        onOk={() => setOpen?.(false)}
-        onCancel={() => setOpen?.(false)}
-        width={1000}
+    <Modal
+      title="Add Product"
+      centered
+      open={true}
+      onOk={() => setOpen?.(false)}
+      onCancel={() => setOpen?.(false)}
+      width={1000}
+    >
+      <Form
+        form={form}
+        name="create-product"
+        onFinish={onFinish}
+        layout="vertical"
+        initialValues={{ favorite: false }}
       >
-        <Form
-          form={form}
-          name="create-product"
-          onFinish={onFinish}
-          layout="vertical"
-          initialValues={{ favorite: false }}
-        >
-          <Form.Item
-            label="Ürün İsmi"
-            name="productName"
-            rules={[{ required: true, message: "Ürün ismi gerekli!" }]}
-          >
-            <Input placeholder="Ürün İsmini Giriniz" />
-          </Form.Item>
-
-          <Form.Item label="Beden" name="size">
-            <Input placeholder="Ürün Bedeni (isteğe bağlı)" />
-          </Form.Item>
-
-          <Form.Item
-            label="Fiyat"
-            name="price"
-            rules={[{ required: true, message: "Fiyat gerekli!" }]}
-          >
-            <InputNumber
-              placeholder="Fiyatı Giriniz"
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-
-          <Form.Item label="Ölçü" name="measure">
-            <InputNumber
-              placeholder="Ölçüyü Giriniz"
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-
-          <Form.Item label="Kategori İsmi" name="categoryName">
-            <Input placeholder="Kategori İsmini Giriniz" />
-          </Form.Item>
-
-          <Form.Item label="Renk" name="color">
-            <Input placeholder="Renk Giriniz" />
-          </Form.Item>
-
-          <Form.Item label="Marka" name="brand">
-            <Input placeholder="Markayı Giriniz" />
-          </Form.Item>
-
-          <Form.Item label="Açıklama" name="description">
-            <Input.TextArea placeholder="Ürün Açıklamasını Giriniz" rows={4} />
-          </Form.Item>
-
-          <Form.Item label="Stok Durumu" name="stock">
-            <InputNumber
-              placeholder="Stok Miktarını Giriniz"
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-
-          <Form.Item label="Ağırlık (kg)" name="weight">
-            <InputNumber
-              placeholder="Ürün Ağırlığını Giriniz"
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-
-          <Form.Item label="Boyutlar (Çap mm)" name="dimensions">
-            <InputNumber placeholder="Çapı Giriniz" style={{ width: "100%" }} />
-          </Form.Item>
-
-          <Form.Item label="Favori" name="favorite" valuePropName="checked">
-            <Checkbox>Bu ürünü favori yap</Checkbox>
-          </Form.Item>
-
-          <Form.Item label="Garanti Süresi" name="warrantyDuration">
-            <Input placeholder="Garanti Süresini Giriniz" />
-          </Form.Item>
-
-          <Form.Item label="İade Şartları" name="returnPolicy">
-            <Input placeholder="İade Şartlarını Giriniz" />
-          </Form.Item>
-
-          <Form.Item label="İlgili Ürünler" name="relatedProducts">
-            <Input placeholder="İlgili Ürünleri Giriniz (ID ya da İsim)" />
-          </Form.Item>
-
-          <Form.Item label="Satış Tarihi" name="creationDate">
-            <DatePicker showTime />
-          </Form.Item>
-
-          <Form.Item label="Ürün Popülerliği" name="popularity">
-            <InputNumber
-              placeholder="Popülerlik Skoru"
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-
-          <Form.Item label="İzlenme Sayısı" name="viewing">
-            <InputNumber
-              placeholder="İzlenme Sayısı"
-              style={{ width: "100%" }}
-            />
-          </Form.Item>
-
-          {/* Ana Görsel Yükleme */}
-          <Form.Item
-            label="Ana Görsel"
-            name="mainImageUrl"
-            rules={[{ required: true, message: "Ana görsel gerekli!" }]}
-          >
-            <Upload
-              accept="image/*" // Sadece resim dosyalarına izin ver
-              showUploadList={true} // Yüklenen dosyaların listesini göster
-              onChange={handleChange} // Dosya durumu değiştiğinde çağrılır
-              beforeUpload={() => false} // Sunucuya otomatik yüklemeyi devre dışı bırakır
-              maxCount={1}
-              listType="picture"
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item
+              label="Product Name"
+              name="productName"
+              rules={[{ required: true, message: "Product name is required!" }]}
             >
-              <Button icon={<UploadOutlined />}>Dosya Yükle</Button>
-            </Upload>
-          </Form.Item>
-
-          <Form.Item
-            label="Additional Görsel"
-            name="additionalImages"
-            // rules={[{ required: true, message: "Ana görsel gerekli!" }]}
-          >
-            <Upload
-              accept="image/*" // Sadece resim dosyalarına izin ver
-              multiple
-              showUploadList={true} // Yüklenen dosyaların listesini göster
-              onChange={handleChangeAdditions} // Dosya durumu değiştiğinde çağrılır
-              beforeUpload={() => false} // Sunucuya otomatik yüklemeyi devre dışı bırakır
-              listType="picture"
+              <Input placeholder="Enter product name" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="SizeOptions "
+              name="size"
+              rules={[{ required: true, message: "Size is required!" }]}
             >
-              <Button icon={<UploadOutlined />}>Dosya Yükle 2</Button>
-            </Upload>
-          </Form.Item>
+              <SelectBox
+                name="size"
+                sizeOptions={sizeOptions}
+                style={{ width: "100%" }}
+                placeholder={"Enter size..."}
+                mode="multiple"
+                allowClear={true}
+                handleChange={(value) => form.setFieldsValue({ size: value })}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit">
-              Ürünü Kaydet
-            </Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-    </>
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item
+              label="Price"
+              name="price"
+              rules={[{ required: true, message: "Price is required!" }]}
+            >
+              <Input type="number" placeholder="Fiyatı Giriniz"/>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Dimensions " name="dimensions">
+             <Input type="number" placeholder="Enter dimension... "/>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item
+              label="Catagory Name"
+              name="categoryName"
+              rules={[{ required: true, message: "Price is required!" }]}
+            >
+              <Input placeholder="Enter Catagory..." />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Color" name="color">
+              <Input placeholder="Enter Color..." />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item label="Brand" name="brand">
+              <Input placeholder="Enter brand..." />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Description" name="description">
+              <Input.TextArea
+                placeholder="Enter product description..."
+                // rows={4}
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item label="Stok" name="stock">
+              <Input type="number" placeholder="Enter stock number..."/>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Weight(mm)" name="weight">
+            <Input type="number" placeholder="Enter weight..."/>
+
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item label="Warranty Duration " name="warrantyDuration">
+              <Input placeholder="Enter Warranty Duration" />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="CreationDate" name="creationDate">
+            <DatePickerComponent 
+                style={{ width: "100%" }} 
+                onChange={(date) => setCreationDate(date)} // tarih güncelleniyor
+              />
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={24}>
+          <Col span={12}>
+            <Form.Item
+              label="Main Image"
+              name="mainImageUrl"
+              rules={[{ required: true, message: "Main image required!" }]}
+            >
+              <Upload
+                accept="image/*"
+                showUploadList={true}
+                onChange={handleChange}
+                beforeUpload={() => false}
+                maxCount={1}
+                listType="picture"
+              >
+                <Button icon={<UploadOutlined />}>Upload Main Image</Button>
+              </Upload>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label="Additional Images" name="additionalImages">
+              <Upload
+                accept="image/*"
+                multiple
+                showUploadList={true}
+                onChange={handleChangeAdditions}
+                beforeUpload={() => false}
+                listType="picture"
+              >
+                <Button icon={<UploadOutlined />}>
+                  Upload Additional Images
+                </Button>
+              </Upload>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Save Product
+          </Button>
+        </Form.Item>
+      </Form>
+    </Modal>
   );
 };
 
