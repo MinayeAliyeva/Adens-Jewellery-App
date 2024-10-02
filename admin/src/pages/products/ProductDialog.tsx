@@ -1,13 +1,5 @@
 import { FC } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Col,
-  Upload,
-} from "antd";
+import { Button, Form, Input, Modal, Row, Col, Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import { useAddProductMutation } from "../../store/api/product/product-api";
@@ -15,6 +7,8 @@ import SelectBox from "../../components/SelectBox";
 import { sizeOptions } from "./data";
 import DatePickerComponent from "../../components/DatePickerComponent";
 import dayjs from "dayjs";
+import { DatePickerControlled } from "../../components/DatePickerControlled";
+import { useForm } from "react-hook-form";
 
 interface IProductDialog {
   open: boolean;
@@ -23,6 +17,11 @@ interface IProductDialog {
 
 const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
   const [addProduct] = useAddProductMutation();
+  const {
+    handleSubmit,
+    formState: { errors },
+    control,
+  } = useForm();
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<any>([]);
   const [creationDate, setCreationDate] = useState<dayjs.Dayjs | null>(null);
@@ -41,7 +40,9 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
 
   const onFinish = async (values: any) => {
     const formData = new FormData();
-    const formattedDate = creationDate ? creationDate.format("YYYY-MM-DD") : new Date().toISOString(); 
+    const formattedDate = creationDate
+      ? creationDate.format("YYYY-MM-DD")
+      : new Date().toISOString();
     formData.append("productName", values.productName);
     formData.append("size", values.size ?? "S");
     formData.append("price", values.price);
@@ -119,12 +120,12 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
               name="price"
               rules={[{ required: true, message: "Price is required!" }]}
             >
-              <Input type="number" placeholder="Fiyatı Giriniz"/>
+              <Input type="number" placeholder="Fiyatı Giriniz" />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label="Dimensions " name="dimensions">
-             <Input type="number" placeholder="Enter dimension... "/>
+              <Input type="number" placeholder="Enter dimension... " />
             </Form.Item>
           </Col>
         </Row>
@@ -165,13 +166,12 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item label="Stok" name="stock">
-              <Input type="number" placeholder="Enter stock number..."/>
+              <Input type="number" placeholder="Enter stock number..." />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label="Weight(mm)" name="weight">
-            <Input type="number" placeholder="Enter weight..."/>
-
+              <Input type="number" placeholder="Enter weight..." />
             </Form.Item>
           </Col>
         </Row>
@@ -184,10 +184,14 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
           </Col>
           <Col span={12}>
             <Form.Item label="CreationDate" name="creationDate">
-            <DatePickerComponent 
+              <DatePickerControlled
+                style={{ width: "100%" }}
+                control={control}
+              />
+              {/* <DatePickerComponent 
                 style={{ width: "100%" }} 
                 onChange={(date) => setCreationDate(date)} // tarih güncelleniyor
-              />
+              /> */}
             </Form.Item>
           </Col>
         </Row>
