@@ -5,6 +5,8 @@ import { BrowserRouter } from "react-router-dom";
 
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import { Provider } from "react-redux";
+import { store } from "./store";
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -23,7 +25,7 @@ i18n.use(initReactI18next).init({
         Shop: "Mağaza",
         Products: "Ürünler",
         "About Us": "Hakkımızda",
-        "Contact Us":"Bize Ulaşın"
+        "Contact Us": "Bize Ulaşın",
       },
     },
   },
@@ -41,6 +43,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <BrowserRouter>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </BrowserRouter>
 );

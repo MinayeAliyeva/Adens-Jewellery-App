@@ -1,7 +1,9 @@
 import { Button, Col, Layout, Row, Typography } from "antd";
+import { useTranslation } from "react-i18next";
 const infoImg = "./assets/images/info.jpg";
 
 const Info = () => {
+  const { t } = useTranslation();
   return (
     <Layout style={{ padding: "20px" }}>
       <Row justify="space-between" align="middle">
@@ -18,7 +20,7 @@ const Info = () => {
           }}
         >
           <Typography style={{ fontSize: "55px", fontWeight: "200" }}>
-            Chic Petal Perfection
+            {t("Chic Petal Perfection")}
           </Typography>
           <Typography
             style={{
@@ -31,8 +33,7 @@ const Info = () => {
               width: "80%",
             }}
           >
-            Jewelry is favored by both men and women because it shows luxury &
-            class; own aesthetic taste, affirming position…
+            {t("Jewelry is favored by both men and women because it shows luxury & class own aesthetic taste, affirming position…")}
           </Typography>
           <Button
             style={{
@@ -43,7 +44,7 @@ const Info = () => {
               padding: "30px",
             }}
           >
-            Shop Now
+            {t("Shop Now")}
           </Button>
         </Col>
         <Col span={12}>

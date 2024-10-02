@@ -1,5 +1,5 @@
 import { Controller } from "react-hook-form";
-import { Input, Typography } from "antd";
+import { Input } from "antd";
 
 export interface CustomInputProps {
   label?: string;

@@ -2,6 +2,8 @@ import { FC } from "react";
 import { Carousel } from "antd";
 import Container from "../../components/Container";
 import Typography from "antd/es/typography/Typography";
+import { useTranslation } from "react-i18next";
+
 const caruselImg1 = "/assets/images/carusel1.jpg";
 const caruselImg2 = "/assets/images/carusel2.jpg";
 const caruselImg3 = "/assets/images/carusel3.jpg";
@@ -24,40 +26,41 @@ const slides = [
   },
 ];
 
-const XCarusel: FC = () => (
-  <Carousel
-    autoplay 
-    autoplaySpeed={3000} 
-    infinite 
-    className="w-screen h-screen"
-    dots={true} 
-    pauseOnHover={false} 
-    effect="fade" 
-    dotPosition="right"
-  >
-    {slides.map((slide, index) => (
-      <div key={index} className="relative w-screen h-screen overflow-hidden">
-        <img
-          src={slide.img}
-          alt={slide.alt}
-          className="w-full h-full object-cover transition-transform duration-1000 ease-in-out"
-        />
-        <Container
-         width="50%"
-         backgroundColor="red"
-        >
-          <Typography  
-          className="font-dancing-script absolute bottom-24 right-6 transform translate-y-0 text-white text-2xl md:text-4xl p-4 rounded-lg z-10  "
-          style={{
-            animationDelay: `${index * 0.5}s`,
-          }}>
-             {slide.text}
-          </Typography>
-         
-        </Container>
-      </div>
-    ))}
-  </Carousel>
-);
+const XCarusel: FC = () => {
+  const { t } = useTranslation(); // `useTranslation` hook burada kullanılmalı
+
+  return (
+    <Carousel
+      autoplay
+      autoplaySpeed={3000}
+      infinite
+      className="w-screen h-screen"
+      dots={true}
+      pauseOnHover={false}
+      effect="fade"
+      dotPosition="right"
+    >
+      {slides.map((slide, index) => (
+        <div key={index} className="relative w-screen h-screen overflow-hidden">
+          <img
+            src={slide.img}
+            alt={slide.alt}
+            className="w-full h-full object-cover transition-transform duration-1000 ease-in-out"
+          />
+          <Container width="50%" backgroundColor="red">
+            <Typography
+              className="font-dancing-script absolute bottom-24 right-6 transform translate-y-0 text-white text-2xl md:text-4xl p-4 rounded-lg z-10"
+              style={{
+                animationDelay: `${index * 0.5}s`,
+              }}
+            >
+              {t(slide.text)} {/* `t` fonksiyonu kullanılacak */}
+            </Typography>
+          </Container>
+        </div>
+      ))}
+    </Carousel>
+  );
+};
 
 export default XCarusel;
