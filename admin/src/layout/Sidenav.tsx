@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Divider, Layout, Menu, theme } from "antd";
+import { Button, Divider, Layout, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 import { menu } from "./data";
 const logo = "/assets/images/logo.png";
@@ -31,7 +31,6 @@ const Sidenav: React.FC = () => {
         <Divider style={{ backgroundColor: "#292c3261" }} />
         {menu.map((item) => (
           <Content>
-            {" "}
             <Content
               style={{
                 display: "flex",

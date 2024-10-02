@@ -1,21 +1,21 @@
-import { Button } from "antd";
 import { useState } from "react";
 import ProductDialog from "./ProductDialog";
 import { MdAddCircleOutline } from "react-icons/md";
-const XButton = () => {
+import { ButtonComponent } from "../../components/ButtonComponent";
+const OpenDialogButton = () => {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button
+      <ButtonComponent
         style={{ marginBottom: "10px" }}
         type="primary"
+        buttonText="Create Product"
+        icon={<MdAddCircleOutline />}
         onClick={() => setOpen(true)}
-      >
-        <MdAddCircleOutline /> Create Product
-      </Button>
+      />
       {open && <ProductDialog open setOpen={setOpen} />}
     </>
   );
 };
 
-export default XButton;
+export default OpenDialogButton;

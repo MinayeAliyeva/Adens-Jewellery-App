@@ -3,7 +3,7 @@ import { DatePicker } from "antd";
 import { CSSProperties } from "react";
 import dayjs from "dayjs";
 import { RangePickerProps } from "antd/es/date-picker";
-
+//!extends ile yaz
 export interface IDatePickerControlled {
   style?: CSSProperties;
   onChange?: (date: dayjs.Dayjs | null, dateString: string | string[]) => void;

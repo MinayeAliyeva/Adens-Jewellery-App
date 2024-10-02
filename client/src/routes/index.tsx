@@ -15,7 +15,7 @@ export enum RoutePaths {
   HOME = "/home",
   REGISTER = "/register",
   LOGIN = "/login",
-  DETAIL = "/detail/:id",
+  PRODUCT_DETAIL = "/product/detail/:id",
   CONTACT = "/contact",
   SHOP = "/shop",
   ABOUT = "/about",
@@ -45,7 +45,7 @@ export const routes: MyRouterObject[] = [
         element: <Login />,
       },
       {
-        path: RoutePaths.DETAIL,
+        path: RoutePaths.PRODUCT_DETAIL,
         element: <Detail />,
       },
       {

@@ -29,7 +29,7 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  size: String,
+  size: [String],
   price: {
     type: Number,
     required: true,
@@ -54,7 +54,7 @@ const productSchema = new mongoose.Schema({
   stock: Number,
   weight: Number,
   dimensions: Number,
-  warranty: String,
+  warrantyDuration: String,
   certification: String,
   returnPolicy: String,
   totalSales: Number,

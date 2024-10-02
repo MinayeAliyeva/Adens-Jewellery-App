@@ -20,7 +20,7 @@ interface IProductDialog {
 const creationDate: dayjs.Dayjs | null = null;
 const fileList: dayjs.Dayjs | null = null;
 
-const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
+const EditDialog: FC<IProductDialog> = ({ open, setOpen }) => {
   const [addProduct] = useAddProductMutation();
   const { getValues, control } = useForm();
   const [form] = Form.useForm();
@@ -160,7 +160,6 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
             <Form.Item label="Description" name="description">
               <Input.TextArea
                 placeholder="Enter product description..."
-                // rows={4}
               />
             </Form.Item>
           </Col>
@@ -245,4 +244,4 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen }) => {
   );
 };
 
-export default ProductDialog;
+export default EditDialog;

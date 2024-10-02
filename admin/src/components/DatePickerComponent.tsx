@@ -11,10 +11,10 @@ dayjs.extend(customParseFormat);
 const disabledDate: RangePickerProps["disabledDate"] = (current) => {
   return current && current < dayjs().startOf("day");
 };
-
+//!IDatePickerComponent extends ile yaz
 interface IDatePickerComponent {
   style?: CSSProperties;
-  onChange?: (date: dayjs.Dayjs | null, dateString: string | string[]) => void; // Tür güncellemesi
+  onChange?: (date: dayjs.Dayjs | null, dateString: string | string[]) => void;
 };
 
 const DatePickerComponent: FC<IDatePickerComponent> = ({
