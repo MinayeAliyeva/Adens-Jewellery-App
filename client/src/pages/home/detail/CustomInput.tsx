@@ -1,6 +1,5 @@
-import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { Input, Button } from 'antd';
+import { Controller } from 'react-hook-form';
+import { Input } from 'antd';
 
 export interface CustomInputProps {
   label: string;
@@ -43,3 +42,5 @@ export const CustomInput = ({  label,
 
 
 
+// react hook form => form elementlerinin currently value sini gotire bilir
+// <input {...register('userName')} /> => nihad => methodts.getValue("userName") =>  nihad

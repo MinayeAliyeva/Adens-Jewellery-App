@@ -1,11 +1,12 @@
-import { FC, useState } from "react";
 import {
-  ShoppingCartOutlined,
   HeartOutlined,
   InfoCircleOutlined,
+  ShoppingCartOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
+import { FC, useState } from "react";
 import { Link } from "react-router-dom";
+
 
 interface IProps {
   product: {
@@ -13,15 +14,21 @@ interface IProps {
     productImgHover: string;
     productName: string;
     productPrice: string;
-    productDetails: string;
-    productId: number;
+    productDetails?: string;
+    productId: string;
     availableColors: string[];
-    stock: number; 
-    discount: number; 
+    stock: number;
+    discount: number;
+    brand: string;
+    catagoryName: string;
+    additionalImages: string[];
   };
 }
 
-const ProductCard: FC<IProps> = ({ product }) => {
+const ProductCard: FC<any> = ({ product }) => {
+ console.log("product",product);
+ console.log("id",product._id);
+ 
   const [isHovered, setIsHovered] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
@@ -50,14 +57,14 @@ const ProductCard: FC<IProps> = ({ product }) => {
 
         <img
           alt="product"
-          src={product.productImg}
+          src={product.mainImageUrl}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out ${
             isHovered ? "opacity-0" : "opacity-100"
           }`}
         />
         <img
           alt="product hover"
-          src={product.productImgHover}
+          src={product.additionalImages?.[0]}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out ${
             isHovered ? "opacity-100" : "opacity-0"
           }`}

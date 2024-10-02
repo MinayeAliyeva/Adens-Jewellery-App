@@ -4,11 +4,9 @@ import CommentList from "./CommentList";
 import ImageGallery from "./ImageInfo";
 
 const Detail = () => {
-  const onSubmit = (data: any) => console.log(data);
 
   const {
     handleSubmit,
-    formState: { errors },
     control,
   } = useForm();
 
@@ -22,7 +20,7 @@ const Detail = () => {
     >
       <ImageGallery />
       <CommentList />
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit((data: any) => {})}>
         <AddComment control={control} />
       </form>
     </div>
