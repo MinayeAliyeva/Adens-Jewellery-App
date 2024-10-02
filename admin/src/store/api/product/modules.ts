@@ -15,6 +15,7 @@
     categoryName?: string;
     color?: string;
     comments?: IComment[];
+    productId:string,
     imagesUrl: {
       mainImageUrl: string;
       additionalImages?: string[];
