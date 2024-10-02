@@ -87,7 +87,7 @@ const ProductCard: FC<any> = ({ product }) => {
           </div>
 
           <div className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
-            <Link to={`/detail/${product?.productId}`}>
+            <Link to={`/product/detail/${product._id}`}>
               <InfoCircleOutlined className="text-lg cursor-pointer transition-colors duration-300" />
             </Link>
           </div>
@@ -103,7 +103,7 @@ const ProductCard: FC<any> = ({ product }) => {
           <div className="absolute bottom-4 left-3 right-3 flex flex-col items-center bg-white bg-opacity-80 p-4 z-10">
             <span className="text-md font-semibold mb-7">Select Options:</span>
             <div className="flex space-x-6">
-              {["S", "M", "L"].map((size) => (
+              {product?.size?.map((size: string) => (
                 <button
                   key={size}
                   className={`border px-4 py-1 transition duration-300 ${

@@ -1,6 +1,6 @@
 import { CSSProperties, FC } from "react";
 import { Select, Space } from "antd";
-
+//!extends
 interface ISelectBox {
   sizeOptions: { label: string; value: string }[];
   handleChange?: (value: string[]) => void;

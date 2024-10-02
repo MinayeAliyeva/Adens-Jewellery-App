@@ -1,22 +1,19 @@
-import { FC, useRef, useState } from "react";
+import { FC, useRef } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import type { InputRef, TableColumnsType, TableColumnType } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import { map } from "lodash";
-export interface DataType {
-  [key: string]: string | number;
-}
+import { IProduct } from "../../store/api/product/modules";
 
-type DataIndex = keyof DataType;
+type DataIndex = keyof IProduct;
 
-const XTable: FC<{
-  data: any;
-  columns: TableColumnsType<DataType>;
+const ProductsTable: FC<{
+  data: IProduct[];
+  columns: TableColumnsType<IProduct>;
 }> = ({ data, columns }) => {
-  const [searchText, setSearchText] = useState("");
-  const [searchedColumn, setSearchedColumn] = useState("");
-  
+
+
   const searchInput = useRef<InputRef>(null);
   const handleSearch = (
     selectedKeys: string[],
@@ -24,16 +21,13 @@ const XTable: FC<{
     dataIndex: DataIndex
   ) => {
     confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex as string);
   };
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
-    setSearchText("");
   };
   const getColumnSearchProps = (
     dataIndex: DataIndex
-  ): TableColumnType<DataType> => ({
+  ): TableColumnType<IProduct> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -67,7 +61,10 @@ const XTable: FC<{
             Search
           </Button>
           <Button
-            onClick={() => clearFilters && handleReset(clearFilters)}
+            onClick={() => {
+              clearFilters && handleReset(clearFilters);
+              handleSearch(selectedKeys as string[], confirm, dataIndex);
+            }}
             size="small"
             style={{ width: 90 }}
           >
@@ -78,8 +75,6 @@ const XTable: FC<{
             size="small"
             onClick={() => {
               confirm({ closeDropdown: false });
-              setSearchText((selectedKeys as string[])[0]);
-              setSearchedColumn(dataIndex as string);
             }}
           >
             Filter
@@ -100,25 +95,22 @@ const XTable: FC<{
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) => {
-      return record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase());
+      return record?.[dataIndex!]?.toString().toLowerCase().includes((value as string).toLowerCase())!;
     },
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100);
       }
-    }
+    },
   });
   const tableColumns = map(columns, (column) => {
     return {
       ...column,
       ...getColumnSearchProps(column?.key as any),
-    };
+    } ;
   });
 
   return <Table columns={tableColumns} dataSource={data} />;
 };
 
-export default XTable;
+export default ProductsTable;

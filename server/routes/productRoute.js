@@ -46,7 +46,7 @@ router.post("/", upload.array("images"), async (req, res) => {
   const product = new Product({
     id: req.body.id,
     productName: req.body.productName,
-    size: req.body.size,
+    size: req.body.size.split(','),
     price: req.body.price,
     measure: req.body.measure,
     categoryName: req.body.categoryName,
@@ -62,7 +62,7 @@ router.post("/", upload.array("images"), async (req, res) => {
     stock: req.body.stock,
     weight: req.body.weight,
     dimensions: req.body.dimensions,
-    warranty: req.body.warranty,
+    warrantyDuration: req.body.warrantyDuration,
     certification: req.body.certification,
     returnPolicy: req.body.returnPolicy,
     relatedProducts: req.body.relatedProducts,
