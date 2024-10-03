@@ -9,9 +9,9 @@ app.use(express.json());
 app.use(cors());
 app.options("*", cors());
 //test
-app.get("/", (req, res) => {
-  res.send("Merhaba Dünya!");
-});
+// app.get("/", (req, res) => {
+//   res.send("Merhaba Dünya!");
+// });
 app.use("/api/products", productsRouter);
 app.use("/api/users", usersRouter);
 app.use('/public', express.static(path.join(__dirname, 'public')));

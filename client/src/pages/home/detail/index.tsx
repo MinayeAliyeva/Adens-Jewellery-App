@@ -1,17 +1,19 @@
 import { useForm } from "react-hook-form";
 import AddComment from "./AddComment";
 import CommentList from "./CommentList";
-import ImageGallery from "./ImageInfo";
 import { useParams } from "react-router-dom";
+import { useGetProducDetailByIdQuery } from "../../../store/api/product/product-api";
+import ProductDetail from "./ProductDetail";
+import { IProduct } from "../../../store/api/product/modules";
 
 const Detail = () => {
-   const params = useParams();
-   console.log({params});
-   
-  const {
-    handleSubmit,
-    control,
-  } = useForm();
+  const {id} = useParams();
+  console.log("DETAIL id",id);
+  
+  const { data: product } = useGetProducDetailByIdQuery<{data:IProduct}>(id!);
+
+  console.log("DETAIL", {product});
+  const { handleSubmit, control } = useForm();
 
   return (
     <div
@@ -21,7 +23,7 @@ const Detail = () => {
         minHeight: "900px",
       }}
     >
-      <ImageGallery />
+      <ProductDetail product={product}/>
       <CommentList />
       <form onSubmit={handleSubmit((data: any) => {})}>
         <AddComment control={control} />

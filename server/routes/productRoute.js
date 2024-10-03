@@ -13,14 +13,14 @@ const FILE_TYPE_MAP = {
 // Multer storage ayarları
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, '../public/images')); // Yükleme klasörü
+    cb(null, path.join(__dirname, "../public/images")); // Yükleme klasörü
   },
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}_${file.originalname}`); // Dosya adı
   },
 });
 
-const upload = multer({ storage, limits: { fileSize: 1024 * 1024 * 5 }});
+const upload = multer({ storage, limits: { fileSize: 1024 * 1024 * 5 } });
 
 // Ürün listeleme
 router.get("/", async (req, res) => {
@@ -28,25 +28,41 @@ router.get("/", async (req, res) => {
   res.status(200).send(products);
 });
 
+router.get("/:id", async (req, res) => {
+  console.log("req.params.id", req.params.id);
+
+  const product = await Product.findOne({ _id: req.params.id });
+  if (!product) {
+    return res.status(404).send("Such product is not exsits...");
+  }
+  console.log("id li product", product);
+
+  res.status(200).send(product);
+});
+
 // Ürün oluşturma ve resim yükleme
 router.post("/", upload.array("images"), async (req, res) => {
-  console.log({file: req.file});
-  
+  console.log({ file: req.file });
+
   const files = req.files;
-  
+
   if (!files || files.length === 0) {
     return res.status(400).send("No images in the request");
   }
 
   // Resmin URL'sini oluşturma
   const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
-  const imageUrls = files.map(file => `${basePath}${file.filename}`); // Tüm dosya isimlerini al
+  const imageUrls = files.map((file) => `${basePath}${file.filename}`); // Tüm dosya isimlerini al
 
+  //detail
 
+  // Product.find({catagory:'qizil',blabla:"hhh"}); filterleme bir nece parametre gore
+  //Product.find({catagory:'qizil',blabla:"hhh"}).select({name:1,price:1})==>1 olablari getirir 0 yazsan ondan basgalarini getir;
+  //.limit(2)==> sayfalama pagination
   const product = new Product({
     id: req.body.id,
     productName: req.body.productName,
-    size: req.body.size.split(','),
+    size: req.body.size.split(","),
     price: req.body.price,
     measure: req.body.measure,
     categoryName: req.body.categoryName,
@@ -84,4 +100,25 @@ router.post("/", upload.array("images"), async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  const deletedProduct = await Product.findByIdAndDelete(req.params.id);
+  // await Product.findByIdAndRemove(req.params.id)
+  if (!deletedProduct) {
+    return res
+      .status(404)
+      .send({ success: false, message: "product not found!" });
+  }
+  res.status(200).send({ success: true, message: "the product is deleted!" });
+});
+
 module.exports = router;
+
+// .then(product =>{
+//   if(product) {
+//       return res.status(200).json({success: true, message: 'the product is deleted!'})
+//   } else {
+//       return res.status(404).json({success: false , message: "product not found!"})
+//   }
+// }).catch(err=>{
+//  return res.status(500).json({success: false, error: err})
+// })

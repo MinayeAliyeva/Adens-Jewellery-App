@@ -1,10 +1,11 @@
+// import UsersTable from "./UsersTable";
 
 const Users = () => {
   return (
     <>
-    Users
+      {/* <UsersTable /> */}
     </>
-  )
-}
+  );
+};
 
-export default Users
+export default Users;

@@ -1,20 +1,22 @@
-import { Button, Upload } from "antd";
+import { Upload } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import { FC } from "react";
 import { Controller } from "react-hook-form";
-import { UploadChangeParam, UploadFile } from "antd/es/upload";
-//!extends
-interface IUploadImagesComponentProps {
+import { UploadChangeParam, UploadFile, UploadProps } from "antd/es/upload"; 
+import { ButtonComponent } from "./ButtonComponent";
+
+interface IUploadImagesComponentProps extends UploadProps {
   handleChange?: (info: UploadChangeParam<UploadFile<File>>) => void;
   control: any;
   name?: string;
   rules?: Record<string, any>;
 }
+
 const UploadImagesComponent: FC<IUploadImagesComponentProps> = ({
   handleChange,
   control,
   name = "upload",
-  ...rest
+  ...rest 
 }) => {
   return (
     <div className="input-container">
@@ -25,17 +27,21 @@ const UploadImagesComponent: FC<IUploadImagesComponentProps> = ({
         render={({ field, fieldState }) => (
           <Upload
             {...field}
+            {...rest} 
             className={
               fieldState.invalid ? "custom-input error" : "custom-input"
             }
             accept="image/*"
             showUploadList={true}
-            onChange={handleChange}
-            beforeUpload={() => false}
+            onChange={(info) => {
+              if (handleChange) handleChange(info); 
+              field.onChange(info.fileList); 
+            }}
+            beforeUpload={() => false} 
             maxCount={1}
             listType="picture"
           >
-            <Button icon={<UploadOutlined />}>Upload Main Image</Button>
+            <ButtonComponent buttonText="Upload Main Image" icon={<UploadOutlined />} />
           </Upload>
         )}
       />
