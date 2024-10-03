@@ -2,9 +2,10 @@ import { Card, Col, Modal, Row, Button, message, Statistic } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
 import { EyeOutlined, DollarCircleOutlined } from "@ant-design/icons";
-import {  memo, useState } from "react";
+import {  FC, memo, useState } from "react";
 import ProductInfo from "./ProductInfo";
 import ImageGallery from "./ImageGallery";
+import { IProduct } from '../../../../../admin/src/store/api/product/modules';
 
 
 
@@ -27,9 +28,13 @@ const product = {
     ],
   };
 
-const ImageInfo = memo(() => {
+interface IProductDetailProps {
+  product: IProduct;
+}
+const ProductDetail:FC<IProductDetailProps> = memo(({product}) => {
 
-
+  console.log("page ProductDetail",{product});
+  const {mainImageUrl="" ,additionalImages=[""], productName=""} = product ?? {};
 
   return (
     <Card
@@ -42,10 +47,10 @@ const ImageInfo = memo(() => {
     >
       <Row gutter={16}>
         <Col xs={24} sm={16}>
-       <ImageGallery product={product} />
+       <ImageGallery mainImageUrl={mainImageUrl} additionalImages={additionalImages} productName={productName}/>
         </Col>
         <Col xs={24} sm={8}>
-       <ProductInfo product={product}/>
+       {/* <ProductInfo product={product}/> */}
         </Col>
       </Row>
 
@@ -53,4 +58,4 @@ const ImageInfo = memo(() => {
   );
 });
 
-export default ImageInfo;
+export default ProductDetail;

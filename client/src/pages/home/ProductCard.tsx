@@ -37,7 +37,6 @@ const ProductCard: FC<any> = ({ product }) => {
     const discountedPrice = price - (price * product.discount) / 100;
     return `$${discountedPrice.toFixed(2)}`;
   };
-
   return (
     <div
       className="w-full max-w-md transition-transform hover:scale-105 relative"

@@ -1,5 +1,7 @@
 import { Content } from "antd/es/layout/layout";
-import { ButtonComponent } from "../../components/ButtonComponent";
+import OpenEditDialogButton from "./OpenEditDialog";
+import { IProduct } from "../../store/api/product/modules";
+import OpenDeleteDialogButton from "./OpenDeleteDialog";
 
 export const sizeOptions = [
   { label: "Small", value: "S" },
@@ -11,14 +13,12 @@ export const columns = [
     title: "Image",
     dataIndex: "mainImageUrl",
     key: "mainImageUrl",
-    render: (text: any, record: any) => {
-      console.log("record", record?.mainImageUrl);
-
+    render: (text: any, record: IProduct) => {
       return (
         <img
           src={record?.mainImageUrl}
           alt={record.productName}
-          style={{ width: 50, height: 50 }}
+          style={{ width: 50, height: 50, objectFit: "cover" }}
         />
       );
     },
@@ -32,6 +32,10 @@ export const columns = [
     title: "Size",
     dataIndex: "size",
     key: "size",
+    render: (item: string[], record: IProduct) => {
+      console.log("item", item);
+      return item?.join(", ");
+    },
   },
   {
     title: "Price",
@@ -62,8 +66,7 @@ export const columns = [
     title: "CreationDate",
     dataIndex: "creationDate",
     key: "creationDate",
-    render: (item: string, record: any) => {
-      console.log({ item, record });
+    render: (item: string, record: IProduct) => {
       return item;
     },
   },
@@ -80,11 +83,13 @@ export const columns = [
   {
     title: "",
     key: "actions",
-    render: (text: any, record: any) => {
+    render: (text: any, record: IProduct) => {
+      console.log("record", record);
+
       return (
         <Content style={{ display: "flex", gap: "20px" }}>
-          <ButtonComponent buttonText="Edit" />
-          <ButtonComponent danger buttonText="Delete" />
+          <OpenEditDialogButton product={record} />
+          <OpenDeleteDialogButton product={record} />
         </Content>
       );
     },

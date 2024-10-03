@@ -9,6 +9,9 @@ import Register from "../pages/auth/register";
 import Login from "../pages/auth/login";
 import About from "../pages/about";
 import Favorite from "../pages/favorites";
+import Products from "../pages/home/Products";
+import Fag from "../pages/fag";
+import Error from "../pages/error";
 export type MyRouterObject = RouteObject;
 export enum RoutePaths {
   MAIN = "/",
@@ -20,13 +23,15 @@ export enum RoutePaths {
   SHOP = "/shop",
   ABOUT = "/about",
   FAVORITE = "/favorite",
+  PRODUCTS = "/products",
+  FAG = "/fag",
+  ERROR = "*",
 }
-
 
 export const routes: MyRouterObject[] = [
   {
     path: RoutePaths.MAIN,
-    element:  <MainLayout />,
+    element: <MainLayout />,
     children: [
       {
         index: true,
@@ -63,6 +68,18 @@ export const routes: MyRouterObject[] = [
       {
         path: RoutePaths.FAVORITE,
         element: <Favorite />,
+      },
+      {
+        path: RoutePaths.PRODUCTS,
+        element: <Products />,
+      },
+      {
+        path: RoutePaths.FAG,
+        element: <Fag />,
+      },
+      {
+        path: RoutePaths.ERROR,
+        element: <Error />,
       },
     ],
   },

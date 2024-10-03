@@ -2,9 +2,9 @@ import { Controller } from "react-hook-form";
 import { DatePicker } from "antd";
 import { CSSProperties } from "react";
 import dayjs from "dayjs";
-import { RangePickerProps } from "antd/es/date-picker";
-//!extends ile yaz
-export interface IDatePickerControlled {
+import { DatePickerProps } from "antd/es/date-picker"; 
+
+export interface IDatePickerControlled extends DatePickerProps {
   style?: CSSProperties;
   onChange?: (date: dayjs.Dayjs | null, dateString: string | string[]) => void;
   control: any;
@@ -13,7 +13,7 @@ export interface IDatePickerControlled {
   placeholder?: string;
 }
 
-const disabledDate: RangePickerProps["disabledDate"] = (current) => {
+const disabledDate: DatePickerProps["disabledDate"] = (current) => {
   return current && current < dayjs().startOf("day");
 };
 
@@ -34,13 +34,18 @@ export const DatePickerControlled = ({
         render={({ field, fieldState }) => (
           <DatePicker
             {...field}
+            {...rest} 
             className={
               fieldState.invalid ? "custom-input error" : "custom-input"
             }
             format="YYYY-MM-DD"
             disabledDate={disabledDate}
             style={style}
-            onChange={onChange}
+            placeholder={placeholder}
+            onChange={(date, dateString) => {
+              if (onChange) onChange(date, dateString);
+              field.onChange(date);
+            }}
           />
         )}
       />

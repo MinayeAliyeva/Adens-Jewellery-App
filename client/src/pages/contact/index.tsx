@@ -17,7 +17,7 @@ const Contact = () => {
   };
 
   return (
-    <div style={{ padding: "50px", backgroundColor: "#f0f2f5" }}>
+    <div style={{ padding: "50px", backgroundColor: "#f0f2f5",height:'100vh' }}>
       <Row gutter={16}>
         <Col xs={24} sm={12}>
           <Card

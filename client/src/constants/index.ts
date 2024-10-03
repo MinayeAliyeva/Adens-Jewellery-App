@@ -11,5 +11,6 @@ export const navLinks = [
     { path: "/products", label: "Products" },
     { path: "/about", label: "About Us" },
     { path: "/contact", label: "Contact Us" },
+    { path: "/fag", label: "FAG" },
   ];
   

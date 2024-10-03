@@ -1,24 +1,17 @@
 import { Modal } from "antd";
 import React, { FC, memo, useState } from "react";
-interface IProduct {
-  productImgGallery: string[];
-  productName: string;
-  productPrice: string;
-  productDetails: string;
-  productId: number;
-  viewCount: number;
-  comments?: {
-    body: string;
-    rating: number;
-    username: string;
-  }[];
-}
+
 interface IImageGalleryProps {
-  product: IProduct;
+  productName: string;
+  mainImageUrl: string;
+  additionalImages: string[];
 }
-const ImageGallery: FC<IImageGalleryProps> = ({ product }) => {
+
+const ImageGallery: FC<IImageGalleryProps> = ({ mainImageUrl,  productName, additionalImages}) => {
+  console.log({mainImageUrl,  productName, additionalImages});
+  
   const [previewImage, setPreviewImage] = useState(
-    product.productImgGallery[0]
+    mainImageUrl
   );
   const [isModalVisible, setIsModalVisible] = useState(false);
   
@@ -35,7 +28,7 @@ const ImageGallery: FC<IImageGalleryProps> = ({ product }) => {
     <div style={{ position: "relative", height: "100%" }}>
       <img
         src={previewImage}
-        alt={product.productName}
+        alt={productName}
         style={{
           width: "100%",
           height: "100%",
@@ -54,11 +47,11 @@ const ImageGallery: FC<IImageGalleryProps> = ({ product }) => {
           gap: "10px",
         }}
       >
-        {product.productImgGallery.map((img, index) => (
+        {additionalImages?.map((img, index) => (
           <img
             key={index}
             src={img}
-            alt={product.productName}
+            alt={productName}
             onClick={() => handleImageClick(img)}
             style={{
               width: "80px",
@@ -81,7 +74,7 @@ const ImageGallery: FC<IImageGalleryProps> = ({ product }) => {
       >
         <img
           src={previewImage}
-          alt={product.productName}
+          alt={productName}
           style={{
             width: "100%",
             height: "auto",

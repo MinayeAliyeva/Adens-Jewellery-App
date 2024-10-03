@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Divider, Layout, theme } from "antd";
+import {  Divider, Layout, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 import { menu } from "./data";
+import { ButtonComponent } from "../components/ButtonComponent";
 const logo = "/assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
 
@@ -49,7 +50,7 @@ const Sidenav: React.FC = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
+          <ButtonComponent
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
