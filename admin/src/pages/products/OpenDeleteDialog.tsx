@@ -1,8 +1,8 @@
 import { useState } from "react";
-import ProductDialog from "./ProductDialog";
+import { MdDelete } from "react-icons/md";
 import { ButtonComponent } from "../../components/ButtonComponent";
 import { IProduct } from "../../store/api/product/modules";
-import { useDeleteProductMutation } from "../../store/api/product/product-api";
+import DeleteDialog from "./product-dialog/DeleteDialog";
 
 interface OpenDeleteDialogButtonProps {
   product?: IProduct;
@@ -27,9 +27,10 @@ const OpenDeleteDialogButton: React.FC<OpenDeleteDialogButtonProps> = ({
         type="primary"
         buttonText="Delete"
         onClick={handleDeleteClick}
+        icon={<MdDelete/>}
       />
       {open && (
-        <ProductDialog
+        <DeleteDialog
           open={open}
           setOpen={setOpen}
           product={product}

@@ -111,6 +111,60 @@ router.delete("/:id", async (req, res) => {
   res.status(200).send({ success: true, message: "the product is deleted!" });
 });
 
+router.put("/:id",  upload.array("images"), async (req, res) => {
+  const files = req.files;
+
+  // if (!files || files.length === 0) {
+  //   return res.status(400).send("No images in the request");
+  // }
+
+  const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
+  const imageUrls = files.map((file) => `${basePath}${file.filename}`);
+  console.log("imageUrls put", imageUrls);
+  
+
+  const findedProduct = await Product.findById(req.params.id,);
+
+  const product = await Product.findByIdAndUpdate(
+    req.params.id,
+    {
+      $set: {
+        id: req.body.id,
+        productName: req.body.productName,
+        size: req.body.size,
+        price: req.body.price,
+        measure: req.body.measure,
+        categoryName: req.body.categoryName,
+        color: req.body.color,
+        comments: req.body.comments,
+        mainImageUrl: imageUrls?.length ? imageUrls[0] : findedProduct?.mainImageUrl,
+        additionalImages: imageUrls?.length ? imageUrls.slice(1) : findedProduct?.additionalImages,
+        brand: req.body.brand,
+        material: req.body.material,
+        popularity: req.body.popularity,
+        description: req.body.description,
+        discount: req.body.discount,
+        stock: req.body.stock,
+        weight: req.body.weight,
+        dimensions: req.body.dimensions,
+        warrantyDuration: req.body.warrantyDuration,
+        certification: req.body.certification,
+        returnPolicy: req.body.returnPolicy,
+        relatedProducts: req.body.relatedProducts,
+        totalSales: req.body.totalSales,
+        creationDate: req.body.creationDate,
+        lastUpdated: req.body.lastUpdated,
+        reviewsCount: req.body.reviewsCount,
+        averageRating: req.body.averageRating,
+        productAvailability: req.body.productAvailability,
+        repairService: req.body.repairService,
+        priceHistory: req.body.priceHistory,
+      },
+    },
+    { new: true }
+  );
+  res.status(200).send(product);
+});
 module.exports = router;
 
 // .then(product =>{

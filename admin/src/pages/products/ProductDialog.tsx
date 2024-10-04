@@ -8,14 +8,12 @@ import {
   Row,
   Col,
   Upload,
-  Typography,
-  Card,
 } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import {
   useAddProductMutation,
-  useDeleteProductMutation,
+  useUpdateProductByIdMutation,
 } from "../../store/api/product/product-api";
 import SelectBox from "../../components/SelectBox";
 import { sizeOptions } from "./data";
@@ -25,32 +23,34 @@ import { useForm } from "react-hook-form";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
 import { ButtonComponent } from "../../components/ButtonComponent";
 import { IProduct } from "../../store/api/product/modules";
+import { omit } from "lodash";
 
 interface IProductDialog {
   open: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   product?: IProduct;
-  isDelete?: boolean;
 }
 
 const ProductDialog: FC<IProductDialog> = ({
   open,
   setOpen,
   product,
-  isDelete,
 }) => {
-  const [addProduct] = useAddProductMutation();
+  const [addProduct, {isLoading: isLoadingProduct}] = useAddProductMutation();
+
   const { getValues, control, reset } = useForm();
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [deleteProductById] = useDeleteProductMutation();
-  const handleDelete = (id: string = "") => {
-    deleteProductById(id).then((res) => {
-      setOpen?.(false);
-    });
-  };
+ 
+  const [
+    updateProductById,
+    { isLoading: isLoadingUpdatedProduct },
+  ] = useUpdateProductByIdMutation();
+
   const handleChange = (info: UploadChangeParam<UploadFile<File>>) => {
     if (info?.file) {
+      console.log("LOO", info?.file);
+      
       setFileList([info?.file, ...fileList]);
     }
   };
@@ -77,13 +77,21 @@ const ProductDialog: FC<IProductDialog> = ({
     formData.append("dimensions", values.dimensions || 0);
     formData.append("warrantyDuration", values.warrantyDuration || "");
     formData.append("creationDate", formattedDate);
+    console.log({values});
+    
+    // if(values.mainImageUrl && product?._id){
+    //   formData.append("images", values.mainImageUrl);
+    // }
+  console.log("fileList edit", fileList);
+  
     fileList.forEach((file: any) => {
       formData.append("images", file.originFileObj ?? file);
     });
-
+  console.log("end - ", formData);
+  
     try {
-      if (product) {
-        //!update sorgusu
+      if (product?._id) {
+        updateProductById({id: product._id, body: formData})
       } else {
         await addProduct(formData);
       }
@@ -93,15 +101,12 @@ const ProductDialog: FC<IProductDialog> = ({
     }
   };
 
+  console.log("PPPP", product);
+  
+
   return (
     <Modal
-      title={
-        isDelete
-          ? "Are you sure delete?"
-          : product
-          ? "Edit Product"
-          : "Add Product"
-      }
+      title={product ? "Edit Product": "Add Product"}
       centered
       open={open}
       onOk={() => setOpen?.(false)}
@@ -109,93 +114,6 @@ const ProductDialog: FC<IProductDialog> = ({
       width={1000}
       footer={null}
     >
-      {isDelete ? (
-        //!componente cixar
-        <Card style={{ width: "100%", padding: 20 }}>
-          <Typography.Title level={3} style={{ marginBottom: 20 }}>
-            Product Details
-          </Typography.Title>
-          <Row gutter={24}>
-            <Col span={24}>
-              <Typography.Text strong>Product Name:</Typography.Text>{" "}
-              {product?.productName}
-              <img
-                src={product?.mainImageUrl}
-                alt={product?.productName}
-                style={{
-                  width: "100%",
-                  height: "350px",
-                  borderRadius: 8,
-                  objectFit: "cover",
-                }}
-              />
-            </Col>
-          </Row>
-          <Row gutter={24} style={{ marginTop: 16 }}>
-            <Col span={12}>
-              <Typography.Text strong>Price:</Typography.Text> {product?.price}{" "}
-              TL
-            </Col>
-            <Col span={12}>
-              <Typography.Text strong>Category:</Typography.Text>{" "}
-              {product?.categoryName}
-            </Col>
-          </Row>
-          <Row gutter={24} style={{ marginTop: 16 }}>
-            <Col span={12}>
-              <Typography.Text strong>Size:</Typography.Text> {product?.size}
-            </Col>
-            <Col span={12}>
-              <Typography.Text strong>Color:</Typography.Text> {product?.color}
-            </Col>
-          </Row>
-          <Row gutter={24} style={{ marginTop: 16 }}>
-            <Col span={12}>
-              <Typography.Text strong>Brand:</Typography.Text> {product?.brand}
-            </Col>
-            <Col span={12}>
-              <Typography.Text strong>Stock:</Typography.Text> {product?.stock}
-            </Col>
-          </Row>
-          <Row gutter={24} style={{ marginTop: 16 }}>
-            <Col span={12}>
-              <Typography.Text strong>Weight:</Typography.Text>{" "}
-              {product?.weight} kg
-            </Col>
-            <Col span={12}>
-              <Typography.Text strong>Dimensions:</Typography.Text>{" "}
-              {product?.dimensions} cm
-            </Col>
-          </Row>
-          <Row gutter={24} style={{ marginTop: 16 }}>
-            <Col span={12}>
-              <Typography.Text strong>Warranty Duration:</Typography.Text>{" "}
-              {product?.warrantyDuration}
-            </Col>
-            <Col span={12}>
-              <Typography.Text strong>Creation Date:</Typography.Text>{" "}
-              {product?.creationDate
-                ? dayjs(product.creationDate).format("DD.MM.YYYY")
-                : "N/A"}
-            </Col>
-          </Row>
-          <Row justify="end" style={{ marginTop: 20 }}>
-            <Col>
-              <ButtonComponent
-                style={{ marginRight: 10 }}
-                onClick={() => setOpen?.(false)}
-                buttonText="    Cancel"
-              />
-              <ButtonComponent
-                onClick={() => handleDelete(product?._id)}
-                type="primary"
-                buttonText="Delete"
-                danger
-              />
-            </Col>
-          </Row>
-        </Card>
-      ) : (
         <Form
           form={form}
           name="create-product"
@@ -216,6 +134,7 @@ const ProductDialog: FC<IProductDialog> = ({
             creationDate: product?.creationDate
               ? dayjs(product.creationDate)
               : null,
+              mainImageUrl: product?.mainImageUrl
           }}
         >
           <Row gutter={24}>
@@ -335,12 +254,19 @@ const ProductDialog: FC<IProductDialog> = ({
                 rules={[{ required: true, message: "Main image is required!" }]}
               >
                 <Upload
+                 action={product?.mainImageUrl ?? ""}
                   accept="image/*"
                   showUploadList={true}
                   onChange={handleChange}
                   beforeUpload={() => false}
                   maxCount={1}
                   listType="picture"
+                  defaultFileList={product ? [{
+                    uid: product?._id ?? '',
+                    name: product?.productName ?? "",
+                    status: 'done',
+                    url: product?.mainImageUrl,
+                  }]: undefined}
                 >
                   <Button icon={<UploadOutlined />}>Upload Main Image</Button>
                 </Upload>
@@ -355,6 +281,18 @@ const ProductDialog: FC<IProductDialog> = ({
                   beforeUpload={() => false}
                   multiple
                   listType="picture"
+                  defaultFileList={product ? 
+                    Array.from({length: product?.additionalImages.length}).map((_,i)=>{
+                     console.log({i,addition: product?.additionalImages});
+                     
+                      return {
+                        uid: product?._id ?? '',
+                      name: product?.productName ?? "",
+                      status: 'done',
+                      url: product?.additionalImages[i],
+                      }
+                    })
+                   : undefined}
                 >
                   <Button icon={<UploadOutlined />}>
                     Upload Additional Images
@@ -367,13 +305,14 @@ const ProductDialog: FC<IProductDialog> = ({
           <Form.Item>
             <ButtonComponent
               buttonText={product ? "Update Product" : "Add Product"}
+              loading={isLoadingProduct || isLoadingUpdatedProduct}
               htmlType="submit"
               type="primary"
               icon={<FaSave />}
             />
           </Form.Item>
         </Form>
-      )}
+      
     </Modal>
   );
 };
