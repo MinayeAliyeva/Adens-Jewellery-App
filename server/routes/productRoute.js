@@ -41,35 +41,40 @@ router.get("/:id", async (req, res) => {
 });
 
 // Ürün oluşturma ve resim yükleme
-router.post("/", upload.array("images"), async (req, res) => {
-  console.log({ file: req.file });
+router.post("/", upload.fields([
+  { name: "mainImageUrl", maxCount: 1 },   // Tek ana resim
+  { name: "additionalImages", maxCount: 10 } // Çoklu ek resimler
+]), async (req, res) => {
 
+  // Dosyaların alınması
   const files = req.files;
 
-  if (!files || files.length === 0) {
+  if (!files || Object.keys(files).length === 0) {
     return res.status(400).send("No images in the request");
   }
 
-  // Resmin URL'sini oluşturma
+  // Base URL'nin oluşturulması
   const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
-  const imageUrls = files.map((file) => `${basePath}${file.filename}`); // Tüm dosya isimlerini al
 
-  //detail
-
-  // Product.find({catagory:'qizil',blabla:"hhh"}); filterleme bir nece parametre gore
-  //Product.find({catagory:'qizil',blabla:"hhh"}).select({name:1,price:1})==>1 olablari getirir 0 yazsan ondan basgalarini getir;
-  //.limit(2)==> sayfalama pagination
+  // Resim URL'lerini oluşturma
+  const mainImage = files.mainImageUrl ? `${basePath}${files.mainImageUrl[0].filename}` : null;
+  const additionalImages = files.additionalImages ? files.additionalImages.map(file => `${basePath}${file.filename}`) : [];
+  console.log({mainImage});
+  console.log({additionalImages});
+  
+  
+  // Yeni ürün nesnesinin oluşturulması
   const product = new Product({
     id: req.body.id,
     productName: req.body.productName,
-    size: req.body.size.split(","),
+    size: req.body.size ? req.body.size.split(",") : [],  // Boyutlar virgülle ayrılmışsa diziye çevir
     price: req.body.price,
     measure: req.body.measure,
     categoryName: req.body.categoryName,
     color: req.body.color,
     comments: req.body.comments,
-    mainImageUrl: imageUrls[0], // Resim URL'si
-    additionalImages: imageUrls.slice(1),
+    mainImageUrl: mainImage,  // Ana resim URL'si
+    additionalImages: additionalImages,  // Ek resim URL'leri
     brand: req.body.brand,
     material: req.body.material,
     popularity: req.body.popularity,
@@ -93,12 +98,15 @@ router.post("/", upload.array("images"), async (req, res) => {
   });
 
   try {
+    // Ürün kaydedildiğinde yanıt döndürme
     const result = await product.save();
-    res.status(201).send(product);
+    res.status(201).send(result);
   } catch (error) {
-    res.status(400).send(error);
+    // Hata durumunda yanıt döndürme
+    res.status(400).send({ message: "Error creating product", error });
   }
 });
+
 
 router.delete("/:id", async (req, res) => {
   const deletedProduct = await Product.findByIdAndDelete(req.params.id);
@@ -111,60 +119,71 @@ router.delete("/:id", async (req, res) => {
   res.status(200).send({ success: true, message: "the product is deleted!" });
 });
 
-router.put("/:id",  upload.array("images"), async (req, res) => {
-  const files = req.files;
+router.put("/:id", upload.fields([
+  { name: "mainImageUrl", maxCount: 1 },   // Tek dosya
+  { name: "additionalImages", maxCount: 10 } // Çoklu dosya
+]), async (req, res) => {
+  try {
+      const { id } = req.params;
+      const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
 
-  // if (!files || files.length === 0) {
-  //   return res.status(400).send("No images in the request");
-  // }
+      // Dosyaları ayrıştırıyoruz
+      const mainImageUrl = req.files["mainImageUrl"] ? `${basePath}${req.files["mainImageUrl"][0].filename}` : null;
+      const additionalImages = req.files["additionalImages"] ? req.files["additionalImages"].map(file => `${basePath}${file.filename}`) : [];
 
-  const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
-  const imageUrls = files.map((file) => `${basePath}${file.filename}`);
-  console.log("imageUrls put", imageUrls);
-  
+      // Ürünü buluyoruz
+      const findedProduct = await Product.findById(id);
+      if (!findedProduct) {
+          return res.status(404).send("Product not found");
+      }
 
-  const findedProduct = await Product.findById(req.params.id,);
+      // Güncelleme işlemi
+      const updatedProduct = await Product.findByIdAndUpdate(
+          id,
+          {
+              $set: {
+                  productName: req.body.productName,
+                  size: req.body.size,
+                  price: req.body.price,
+                  measure: req.body.measure,
+                  categoryName: req.body.categoryName,
+                  color: req.body.color,
+                  comments: req.body.comments,
+                  mainImageUrl: mainImageUrl || findedProduct.mainImageUrl,  // Eğer yeni dosya yoksa eski dosyayı kullan
+                  additionalImages: additionalImages.length > 0 ? additionalImages : findedProduct.additionalImages,
+                  brand: req.body.brand,
+                  material: req.body.material,
+                  popularity: req.body.popularity,
+                  description: req.body.description,
+                  discount: req.body.discount,
+                  stock: req.body.stock,
+                  weight: req.body.weight,
+                  dimensions: req.body.dimensions,
+                  warrantyDuration: req.body.warrantyDuration,
+                  certification: req.body.certification,
+                  returnPolicy: req.body.returnPolicy,
+                  relatedProducts: req.body.relatedProducts,
+                  totalSales: req.body.totalSales,
+                  creationDate: req.body.creationDate,
+                  lastUpdated: new Date(),  // Son güncellenme tarihi
+                  reviewsCount: req.body.reviewsCount,
+                  averageRating: req.body.averageRating,
+                  productAvailability: req.body.productAvailability,
+                  repairService: req.body.repairService,
+                  priceHistory: req.body.priceHistory,
+              },
+          },
+          { new: true }
+      );
 
-  const product = await Product.findByIdAndUpdate(
-    req.params.id,
-    {
-      $set: {
-        id: req.body.id,
-        productName: req.body.productName,
-        size: req.body.size,
-        price: req.body.price,
-        measure: req.body.measure,
-        categoryName: req.body.categoryName,
-        color: req.body.color,
-        comments: req.body.comments,
-        mainImageUrl: imageUrls?.length ? imageUrls[0] : findedProduct?.mainImageUrl,
-        additionalImages: imageUrls?.length ? imageUrls.slice(1) : findedProduct?.additionalImages,
-        brand: req.body.brand,
-        material: req.body.material,
-        popularity: req.body.popularity,
-        description: req.body.description,
-        discount: req.body.discount,
-        stock: req.body.stock,
-        weight: req.body.weight,
-        dimensions: req.body.dimensions,
-        warrantyDuration: req.body.warrantyDuration,
-        certification: req.body.certification,
-        returnPolicy: req.body.returnPolicy,
-        relatedProducts: req.body.relatedProducts,
-        totalSales: req.body.totalSales,
-        creationDate: req.body.creationDate,
-        lastUpdated: req.body.lastUpdated,
-        reviewsCount: req.body.reviewsCount,
-        averageRating: req.body.averageRating,
-        productAvailability: req.body.productAvailability,
-        repairService: req.body.repairService,
-        priceHistory: req.body.priceHistory,
-      },
-    },
-    { new: true }
-  );
-  res.status(200).send(product);
+      res.status(200).send(updatedProduct);
+
+  } catch (error) {
+      console.error("Error updating product:", error);
+      res.status(500).send("Server error");
+  }
 });
+
 module.exports = router;
 
 // .then(product =>{
