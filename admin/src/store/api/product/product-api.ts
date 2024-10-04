@@ -18,10 +18,20 @@ export const productApi = createApi({
       }),
     }),
 
-    deleteProduct: builder.mutation<string, string>({
+    deleteProductById: builder.mutation<string, string>({
       query: (id) => ({
         url: `/api/products/${id}`,
         method: "DELETE",
+      }),
+    }),
+    updateProductById: builder.mutation<
+      IProduct,
+      { id: string; body: any }
+    >({
+      query: ({ id, body }) => ({
+        url: `/api/products/${id}`,
+        method: "PUT",
+        body,
       }),
     }),
   }),
@@ -31,5 +41,6 @@ export const {
   useLazyGetProductsQuery,
   useGetProductsQuery,
   useAddProductMutation,
-  useDeleteProductMutation,
+  useDeleteProductByIdMutation,
+  useUpdateProductByIdMutation,
 } = productApi;
