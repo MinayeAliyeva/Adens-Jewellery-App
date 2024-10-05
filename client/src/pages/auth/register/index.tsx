@@ -1,10 +1,31 @@
-import  { FC } from "react";
-import { Form, Input, Button, Typography } from "antd";
+import { FC } from "react";
+import { Form, Button, Typography } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import InputComponent from "../../../components/InputComponent";
+import { useRegisterUserMutation } from "../../../store/api/user/user-api"; 
 
 const { Title } = Typography;
+
+const schema = yup.object().shape({
+  firstName: yup.string().required("First Name is required"),
+  lastName: yup.string().required("Last Name is required"),
+  email: yup
+    .string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+  confirmPassword: yup
+    .string()
+    .oneOf([yup.ref("password")], "Passwords must match")
+    .required("Confirm Password is required"),
+});
 
 interface IRegisterFormValues {
   firstName: string;
@@ -15,18 +36,26 @@ interface IRegisterFormValues {
 }
 
 const Register: FC = () => {
+  const [registerUser] = useRegisterUserMutation(); 
   const {
-    control,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
-  } = useForm<IRegisterFormValues>();
+  } = useForm<IRegisterFormValues>({
+    resolver: yupResolver(schema),
+  });
 
-  const onSubmit = (data: IRegisterFormValues) => {
-    console.log(data);
-    reset();
+  const onSubmit = async (data: IRegisterFormValues) => {
+    console.log("data",data);
+    
+    try {
+      await registerUser(data); 
+      reset(); 
+    } catch (error) {
+      console.error("Registration failed:", error);
+    }
   };
-  console.log("render");
 
   return (
     <Content
@@ -63,83 +92,65 @@ const Register: FC = () => {
           <Form.Item
             label="First Name"
             validateStatus={errors.firstName ? "error" : ""}
+            help={errors.firstName?.message}
           >
-            <Controller
+            <InputComponent
               name="firstName"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  prefix={<UserOutlined />}
-                  placeholder="First Name"
-                  
-                />
-              )}
+              placeholder="First Name"
+              prefix={<UserOutlined />}
             />
           </Form.Item>
 
           <Form.Item
             label="Last Name"
             validateStatus={errors.lastName ? "error" : ""}
+            help={errors.lastName?.message}
           >
-            <Controller
+            <InputComponent
               name="lastName"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  prefix={<UserOutlined />}
-                  placeholder="Last Name"
-                />
-              )}
+              placeholder="Last Name"
+              prefix={<UserOutlined />}
             />
           </Form.Item>
 
-          <Form.Item label="Email" validateStatus={errors.email ? "error" : ""}>
-            <Controller
+          <Form.Item
+            label="Email"
+            validateStatus={errors.email ? "error" : ""}
+            help={errors.email?.message}
+          >
+            <InputComponent
               name="email"
               control={control}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  prefix={<MailOutlined />}
-                  placeholder="Email"
-                />
-              )}
+              placeholder="Email"
+              prefix={<MailOutlined />}
             />
           </Form.Item>
 
           <Form.Item
             label="Password"
             validateStatus={errors.password ? "error" : ""}
+            help={errors.password?.message}
           >
-            <Controller
+            <InputComponent
               name="password"
               control={control}
-              render={({ field }) => (
-                <Input.Password
-                  {...field}
-                  prefix={<LockOutlined />}
-                  placeholder="Password"
-                />
-              )}
+              placeholder="Password"
+              prefix={<LockOutlined />}
             />
           </Form.Item>
 
           <Form.Item
             label="Confirm Password"
             validateStatus={errors.confirmPassword ? "error" : ""}
+            help={errors.confirmPassword?.message}
           >
-            <Controller
+            <InputComponent
               name="confirmPassword"
               control={control}
-              render={({ field }) => (
-                <Input.Password
-                  {...field}
-                  prefix={<LockOutlined />}
-                  placeholder="Confirm Password"
-                />
-              )}
+              placeholder="Confirm Password"
+              prefix={<LockOutlined />}
             />
           </Form.Item>
 
