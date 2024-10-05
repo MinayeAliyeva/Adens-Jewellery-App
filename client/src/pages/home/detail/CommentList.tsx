@@ -5,14 +5,9 @@ import { Content } from "antd/es/layout/layout";
 
 const { Paragraph } = Typography;
 
-interface IReview {
-  content: string;
-  rating: number;
-}
 
-interface IProps {
-  reviews: IReview[];
-}
+
+
 const reviews = [
   {
     userName: "JohnDue",

@@ -1,40 +1,20 @@
-import { Card, Col, Modal, Row, Button, message, Statistic } from "antd";
-import Paragraph from "antd/es/typography/Paragraph";
-import Title from "antd/es/typography/Title";
-import { EyeOutlined, DollarCircleOutlined } from "@ant-design/icons";
-import {  FC, memo, useState } from "react";
-import ProductInfo from "./ProductInfo";
+import { FC, memo } from "react";
+import { Card, Col, Row } from "antd";
 import ImageGallery from "./ImageGallery";
-import { IProduct } from '../../../../../admin/src/store/api/product/modules';
-
-
-
-const productImg1 = "/assets/images/carusel3.jpg";
-const productImg2 = "/assets/images/carusel2.jpg";
-const productImg3 = "/assets/images/carusel1.jpg";
-const product = {
-    productImgGallery: [productImg1, productImg2, productImg3],
-    productName: "Gold Diamond Ring",
-    productPrice: "$1350",
-    productDetails: "A stunning 18K gold ring featuring a brilliant cut diamond.",
-    productId: 12345,
-    viewCount: 150, 
-    comments: [
-      {
-        body: "Very beautiful and well-crafted ring!",
-        rating: 5,
-        username: "jane_doe",
-      },
-    ],
-  };
+import ProductInfo from "./ProductInfo";
+import { IProduct } from "../../../../../admin/src/store/api/product/modules";
 
 interface IProductDetailProps {
   product: IProduct;
 }
-const ProductDetail:FC<IProductDetailProps> = memo(({product}) => {
+const ProductDetail: FC<IProductDetailProps> = memo(({ product }) => {
+  const initialProductValue = {
+    mainImageUrl: "",
+    additionalImages: [""],
+    productName: "",
+  };
 
-  console.log("page ProductDetail",{product});
-  const {mainImageUrl="" ,additionalImages=[""], productName=""} = product ?? {};
+  const { mainImageUrl, additionalImages, productName } = initialProductValue;
 
   return (
     <Card
@@ -47,13 +27,16 @@ const ProductDetail:FC<IProductDetailProps> = memo(({product}) => {
     >
       <Row gutter={16}>
         <Col xs={24} sm={16}>
-       <ImageGallery mainImageUrl={mainImageUrl} additionalImages={additionalImages} productName={productName}/>
+          <ImageGallery
+            mainImageUrl={mainImageUrl}
+            additionalImages={additionalImages}
+            productName={productName}
+          />
         </Col>
         <Col xs={24} sm={8}>
-       {/* <ProductInfo product={product}/> */}
+          <ProductInfo product={product} />
         </Col>
       </Row>
-
     </Card>
   );
 });

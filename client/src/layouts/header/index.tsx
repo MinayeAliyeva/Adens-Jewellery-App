@@ -1,30 +1,22 @@
+import { useState, useEffect, memo } from "react";
+import { Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
 import {
   SearchOutlined,
   HeartOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import { Link } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { menuItems, navLinks } from "../../constants";
-import { ProfileMenuComponent } from "./components/DropdownComponent";
-import SelecBox from "./components/SelecBox";
-import React from "react";
-import NavLink from "./components/NavLink";
 
-const logo = "/assets/images/logo.png";
+import { HeaderMenu, LanguageComponent, Logo, ProfileMenuComponent } from "./components";
+
 const { Header: AntdHeader } = Layout;
 
-const Header = React.memo(() => {
+const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 50);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -33,6 +25,9 @@ const Header = React.memo(() => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
+
+  const iconStyle = { color: "#707070", fontSize: "20px" };
+   console.log("rerender header");
 
   return (
     <AntdHeader
@@ -50,15 +45,10 @@ const Header = React.memo(() => {
         transition: "box-shadow 0.3s ease",
       }}
     >
-      <Link to="/home">
-        <img src={logo} className="w-24" alt="logo" />
-      </Link>
+      <Logo/>
 
-      <div style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
-        {navLinks.map((link,i) => (
-          <NavLink key={i}  link={link} />
-        ))}
-      </div>
+
+      <HeaderMenu/>
 
       <Menu
         mode="horizontal"
@@ -69,19 +59,21 @@ const Header = React.memo(() => {
           alignItems: "center",
         }}
       >
-        <SearchOutlined style={{ color: "#707070" }} className="text-xl" />
-        <ProfileMenuComponent items={menuItems} />
+        <SearchOutlined style={iconStyle} />
+
+        <ProfileMenuComponent />
+
         <Link to="/favorite">
-          <HeartOutlined style={{ color: "#707070" }} className="text-xl" />
+          <HeartOutlined style={iconStyle} />
         </Link>
-        <ShoppingCartOutlined
-          style={{ color: "#707070" }}
-          className="text-xl"
-        />
-        <SelecBox />
+
+        <ShoppingCartOutlined style={iconStyle} />
+
+        <LanguageComponent />
+
       </Menu>
     </AntdHeader>
   );
-});
+};
 
 export default Header;

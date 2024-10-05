@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import  { FC } from "react";
 import { Form, Input, Button, Typography } from "antd";
 import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";

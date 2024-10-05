@@ -34,7 +34,6 @@ const OpenDeleteDialogButton: React.FC<OpenDeleteDialogButtonProps> = ({
           open={open}
           setOpen={setOpen}
           product={product}
-          isDelete={isDelete}
         />
       )}
     </>

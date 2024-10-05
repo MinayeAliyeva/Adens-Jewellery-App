@@ -1,8 +1,7 @@
-import { Avatar, Layout, List, Typography } from "antd";
+import {  Layout, Typography } from "antd";
 import FavoriteList from "./FavoriteList";
 const productImg1 = "/assets/images/product1.jpg";
 const productImg2 = "/assets/images/carusel3.jpg";
-const productImg3 = "/assets/images/carusel2.jpg";
 const backgroundFavorite = "/assets/images/bg-favorite.jpg";
 
 const Favorite = () => {

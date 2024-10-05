@@ -1,6 +1,12 @@
 import { useState } from "react";
 
-const useDropdown = () => {
+type TypeUseDropDown = () => {
+  visible: boolean;
+  toggleDropdown: () => void;
+  closeDropdown: () => void;
+};
+
+const useDropdown: TypeUseDropDown = () => {
   const [visible, setVisible] = useState(false);
 
   const toggleDropdown = () => {

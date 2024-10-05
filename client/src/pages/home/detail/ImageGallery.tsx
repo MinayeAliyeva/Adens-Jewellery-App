@@ -1,5 +1,5 @@
 import { Modal } from "antd";
-import React, { FC, memo, useState } from "react";
+import { FC, memo, useState } from "react";
 
 interface IImageGalleryProps {
   productName: string;
@@ -7,14 +7,14 @@ interface IImageGalleryProps {
   additionalImages: string[];
 }
 
-const ImageGallery: FC<IImageGalleryProps> = ({ mainImageUrl,  productName, additionalImages}) => {
-  console.log({mainImageUrl,  productName, additionalImages});
-  
-  const [previewImage, setPreviewImage] = useState(
-    mainImageUrl
-  );
+const ImageGallery: FC<IImageGalleryProps> = ({
+  mainImageUrl,
+  productName,
+  additionalImages,
+}) => {
+  const [previewImage, setPreviewImage] = useState(mainImageUrl);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
+
   const handleImageClick = (img: string) => {
     setPreviewImage(img);
     setIsModalVisible(true);
@@ -27,16 +27,16 @@ const ImageGallery: FC<IImageGalleryProps> = ({ mainImageUrl,  productName, addi
   return (
     <div style={{ position: "relative", height: "100%" }}>
       <img
-        src={previewImage}
+        src={mainImageUrl} 
         alt={productName}
         style={{
           width: "100%",
-          height: "100%",
+          height: "450px",
           borderRadius: "10px",
           objectFit: "cover",
           transition: "transform 0.5s ease-in-out",
         }}
-        onClick={() => handleImageClick(previewImage)}
+        onClick={() => handleImageClick(mainImageUrl)} 
       />
       <div
         style={{
@@ -47,12 +47,12 @@ const ImageGallery: FC<IImageGalleryProps> = ({ mainImageUrl,  productName, addi
           gap: "10px",
         }}
       >
-        {additionalImages?.map((img, index) => (
+        {[mainImageUrl, ...additionalImages].map((img, index) => (
           <img
             key={index}
             src={img}
             alt={productName}
-            onClick={() => handleImageClick(img)}
+            onClick={() => handleImageClick(img)} 
             style={{
               width: "80px",
               height: "80px",

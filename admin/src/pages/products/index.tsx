@@ -5,6 +5,7 @@ import { columns } from "./data";
 
 const Products = () => {
   const { data } = useGetProductsQuery();
+  
   return (
     <>
       <OpenDialogButton />

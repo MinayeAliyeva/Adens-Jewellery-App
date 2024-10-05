@@ -1,13 +1,12 @@
-import { Layout} from 'antd';
+import { Layout, LayoutProps} from 'antd';
 import React, { CSSProperties, FC } from 'react';
 
 const { Content} = Layout;
 
-interface IContainerProps{
+interface IContainerProps extends LayoutProps{
     width?: string;
     children: React.ReactNode;
     backgroundColor?: CSSProperties['backgroundColor'];
-    className?: string;
     zIndex?: CSSProperties['zIndex'];
     color?: CSSProperties['color'];
     marginTop?: CSSProperties['marginTop'];

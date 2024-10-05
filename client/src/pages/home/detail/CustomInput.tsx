@@ -28,7 +28,6 @@ export const CustomInput = ({  label,
               <Input
                 bordered={false}
                 {...field}
-                // type={type}
                 placeholder={placeholder}
                 className={
                   fieldState.invalid ? 'custom-input error' : 'custom-input'
@@ -42,5 +41,3 @@ export const CustomInput = ({  label,
 
 
 
-// react hook form => form elementlerinin currently value sini gotire bilir
-// <input {...register('userName')} /> => nihad => methodts.getValue("userName") =>  nihad

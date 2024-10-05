@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+// const jwt = require("jsonwebtoken");
 router.get("/", async (req, res) => {
   res.status(200).send();
 });
@@ -23,8 +23,10 @@ router.post("/register", async (req, res) => {
     // profile
   });
   await user.save();
-  
-  res.status(201).send(user);
+  console.log("user", user);
+
+  const token = user.createAuthToken();
+  res.status(201).header("x-auth-token", token).send(user);
 });
 
 router.post("/auth", async (req, res) => {
@@ -36,7 +38,8 @@ router.post("/auth", async (req, res) => {
   if (!isSucces) {
     return res.status(400).send("Hatali Email ya Parala");
   }
-  const token = jwt.sign({ _id: user._id, name: user.name }, "jwtPrivateKey");
+  const token = user.createAuthToken();
   res.send(token);
 });
+
 module.exports = router;

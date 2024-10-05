@@ -1,9 +1,9 @@
-export const style={
-    color: "#000",
-    textAlign: "center",
-    padding: "40px 20px",
-    height: "300px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-  }
+export interface IFooterStyle {
+  color: string;
+  textAlign: "center";
+  padding: string;
+  height: string;
+  display: string;
+  flexDirection: "column";
+  justifyContent: "center";
+}

@@ -13,6 +13,7 @@ app.options("*", cors());
 //   res.send("Merhaba Dünya!");
 // });
 app.use("/api/products", productsRouter);
+//middleware
 app.use("/api/users", usersRouter);
 app.use('/public', express.static(path.join(__dirname, 'public')));
 
