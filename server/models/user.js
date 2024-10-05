@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const userShema = mongoose.Schema(
   {
-    name: {
+    firstName: {
       type: String,
       require: true,
     },
@@ -31,9 +31,15 @@ const userShema = mongoose.Schema(
   },
   { timestamps: true }
 );
-userShema.methods.createAuthToken = () => {
+userShema.methods.createAuthToken = function () {
   const token = jwt.sign(
-    { _id: this._id, name: this.name, isAdmin: this.isAdmin },
+    {
+      _id: this._id,
+      firstName: this.firstName,
+      isAdmin: this.isAdmin,
+      email: this.email,
+      phone: this?.phone,
+    },
     "jwtPrivateKey"
   );
   return token;

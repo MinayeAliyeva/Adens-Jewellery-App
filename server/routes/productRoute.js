@@ -4,6 +4,7 @@ const multer = require("multer");
 const path = require("path");
 const auth = require("../middlware/auth");
 const { Product } = require("../models/product");
+const isAdmin = require("../middlware/isAdmin");
 
 const FILE_TYPE_MAP = {
   "image/png": "png",
@@ -44,7 +45,7 @@ router.get("/:id", async (req, res) => {
 // Ürün oluşturma ve resim yükleme
 router.post(
   "/",
-  auth,
+  [auth, isAdmin],
   upload.fields([
     { name: "mainImageUrl", maxCount: 1 }, // Tek ana resim
     { name: "additionalImages", maxCount: 10 }, // Çoklu ek resimler
@@ -116,7 +117,7 @@ router.post(
   }
 );
 
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/:id", [auth, isAdmin], async (req, res) => {
   const deletedProduct = await Product.findByIdAndDelete(req.params.id);
   // await Product.findByIdAndRemove(req.params.id)
   if (!deletedProduct) {
@@ -129,7 +130,7 @@ router.delete("/:id", auth, async (req, res) => {
 
 router.put(
   "/:id",
-  auth,
+  [auth, isAdmin],
   upload.fields([
     { name: "mainImageUrl", maxCount: 1 }, // Tek dosya
     { name: "additionalImages", maxCount: 10 }, // Çoklu dosya

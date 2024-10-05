@@ -4,7 +4,17 @@ import { BASE_URL } from "../constants";
 
 export const productApi = createApi({
   reducerPath: "productApi",
-  baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  baseQuery: fetchBaseQuery({ 
+    baseUrl: BASE_URL,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("admin-token");
+
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    },  
+  }),
 
   endpoints: (builder) => ({
     getProducts: builder.query<IProduct[], void>({

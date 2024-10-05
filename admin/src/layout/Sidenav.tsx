@@ -4,6 +4,7 @@ import {  Divider, Layout, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 import { menu } from "./data";
 import { ButtonComponent } from "../components/ButtonComponent";
+import Login from "../pages/auth/Login";
 const logo = "/assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
 
@@ -15,7 +16,7 @@ const Sidenav: React.FC = () => {
 
   return (
     <Layout>
-      <Sider
+      {/* <Sider
         style={{
           minHeight: "100vh",
           background: "#91caff14",
@@ -72,7 +73,8 @@ const Sidenav: React.FC = () => {
         >
           <Outlet />
         </Content>
-      </Layout>
+      </Layout> */}
+      <Login/>
     </Layout>
   );
 };

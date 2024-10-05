@@ -9,24 +9,30 @@ router.get("/", async (req, res) => {
 
 //api/users POST
 router.post("/register", async (req, res) => {
+  
   let user = await User.findOne({ email: req.body.email });
   if (user) {
     return res.status(400).send("This email already exsits!!!");
   }
   const hashedPassword = await bcrypt.hash(req.body.password, 10);
   user = new User({
-    name: req?.body?.name,
+    firstName: req?.body?.firstName,
     lastName: req?.body?.lastName,
     phone: req?.body?.phone,
     email: req?.body?.email,
     password: hashedPassword,
     // profile
+    isAdmin: req?.body?.isAdmin ?? false,
   });
   await user.save();
   console.log("user", user);
 
   const token = user.createAuthToken();
-  res.status(201).header("x-auth-token", token).send(user);
+  console.log("token",token);
+  
+  const responseUser = {...user};
+  delete responseUser.isAdmin;
+  res.status(201).header("Authorization", token).send(responseUser);
 });
 
 router.post("/auth", async (req, res) => {
@@ -39,6 +45,8 @@ router.post("/auth", async (req, res) => {
     return res.status(400).send("Hatali Email ya Parala");
   }
   const token = user.createAuthToken();
+  console.log("createAuthToken token ",token);
+  
   res.send(token);
 });
 

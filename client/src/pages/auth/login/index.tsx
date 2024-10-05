@@ -1,10 +1,18 @@
 import React from "react";
-import { Form, Input, Button, Typography } from "antd";
+import { Form, Button, Typography } from "antd";
 import { UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import InputComponent from "../../../components/InputComponent";
 
 const { Title } = Typography;
+
+const schema = yup.object().shape({
+  firstname: yup.string().required("First Name is required"),
+  email: yup.string().email("Invalid email format").required("Email is required"),
+});
 
 interface ILoginFormValues {
   firstname: string;
@@ -17,8 +25,11 @@ const Login: React.FC = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ILoginFormValues>();
-  console.log("rendr");
+  } = useForm<ILoginFormValues>({
+    resolver: yupResolver(schema), 
+  });
+
+  console.log("render LOGIN");
 
   const onSubmit = (data: ILoginFormValues) => {
     console.log(data);
@@ -61,17 +72,12 @@ const Login: React.FC = () => {
             validateStatus={errors.firstname ? "error" : ""}
             help={errors.firstname ? errors.firstname.message : ""}
           >
-            <Controller
+            <InputComponent
               name="firstname"
               control={control}
-              rules={{ required: "Please input your firstname!" }}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  prefix={<UserOutlined />}
-                  placeholder="Firstname"
-                />
-              )}
+              placeholder="Firstname"
+              prefix={<UserOutlined />}
+              rules={{ required: "First Name is required" }} 
             />
           </Form.Item>
 
@@ -80,17 +86,18 @@ const Login: React.FC = () => {
             validateStatus={errors.email ? "error" : ""}
             help={errors.email ? errors.email.message : ""}
           >
-            <Controller
+            <InputComponent
               name="email"
               control={control}
-              rules={{ required: "Please input your Email!" }}
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  prefix={<MailOutlined />}
-                  placeholder="Email"
-                />
-              )}
+              placeholder="Email"
+              prefix={<MailOutlined />}
+              rules={{
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email format",
+                },
+              }} 
             />
           </Form.Item>
 
@@ -108,7 +115,6 @@ const Login: React.FC = () => {
             >
               Login
             </Button>
-
           </Form.Item>
         </Form>
       </Content>
