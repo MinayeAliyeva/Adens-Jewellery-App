@@ -1,6 +1,6 @@
 import React from "react";
 import { Form, Input, Button, Typography } from "antd";
-import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import { UserOutlined, MailOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useForm, Controller } from "react-hook-form";
 
@@ -22,7 +22,7 @@ const Login: React.FC = () => {
 
   const onSubmit = (data: ILoginFormValues) => {
     console.log(data);
-    reset()
+    reset();
   };
 
   return (
@@ -108,6 +108,7 @@ const Login: React.FC = () => {
             >
               Login
             </Button>
+
           </Form.Item>
         </Form>
       </Content>

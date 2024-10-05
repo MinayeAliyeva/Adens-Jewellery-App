@@ -1,9 +1,11 @@
-import React from 'react'
+import CatagoriesSlider from "./CatagoriesSlider";
 
 const Shop = () => {
   return (
-    <div>Shop</div>
-  )
-}
+    <>
+      <CatagoriesSlider />
+    </>
+  );
+};
 
-export default Shop
+export default Shop;

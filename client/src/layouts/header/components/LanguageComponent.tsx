@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 const { Option } = Select;
 
-const SelecBox = () => {
+export const LanguageComponent = () => {
   const { t, i18n } = useTranslation();
   
   const changeLanguage = (lng: string) => {
@@ -19,7 +19,7 @@ const SelecBox = () => {
 
   return (
     <Select
-      value={i18n.language} // Güncel dili ayarlıyoruz
+      value={i18n.language} 
       style={{ width: 120 }}
       onChange={changeLanguage}
       dropdownStyle={{ border: "none" }}
@@ -29,5 +29,3 @@ const SelecBox = () => {
     </Select>
   );
 };
-
-export default memo(SelecBox);

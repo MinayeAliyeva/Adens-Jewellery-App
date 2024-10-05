@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
 const userShema = mongoose.Schema(
   {
     name: {
@@ -26,9 +27,17 @@ const userShema = mongoose.Schema(
       type: String,
       //   require: true,
     },
+    isAdmin: Boolean,
   },
   { timestamps: true }
 );
-
+userShema.methods.createAuthToken = () => {
+  const token = jwt.sign(
+    { _id: this._id, name: this.name, isAdmin: this.isAdmin },
+    "jwtPrivateKey"
+  );
+  return token;
+};
 const User = mongoose.model("User", userShema);
+
 module.exports = { User };

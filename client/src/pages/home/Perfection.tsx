@@ -1,9 +1,17 @@
 import { Button, Col, Layout, Row, Typography } from "antd";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+
 const infoImg = "./assets/images/info.jpg";
 
 const Info = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleShopNowClick = () => {
+    navigate("/shop");
+  };
+
   return (
     <Layout style={{ padding: "20px" }}>
       <Row justify="space-between" align="middle">
@@ -33,9 +41,12 @@ const Info = () => {
               width: "80%",
             }}
           >
-            {t("Jewelry is favored by both men and women because it shows luxury & class own aesthetic taste, affirming position…")}
+            {t(
+              "Jewelry is favored by both men and women because it shows luxury & class own aesthetic taste, affirming position…"
+            )}
           </Typography>
           <Button
+            onClick={handleShopNowClick}
             style={{
               borderRadius: "0",
               border: "1px solid #000",

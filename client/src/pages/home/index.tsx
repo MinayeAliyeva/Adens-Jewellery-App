@@ -1,6 +1,6 @@
 import XCarusel from "../../shared/components/XCarusel";
-import Brends from "./Brends";
-import Info from "./Info";
+import Brends from "./components/Brends";
+import Info from "./Perfection";
 import Products from "./Products";
 import Testiminal from "./testiminal/Testiminal";
 

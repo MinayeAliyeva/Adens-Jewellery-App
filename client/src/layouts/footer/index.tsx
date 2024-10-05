@@ -1,78 +1,98 @@
-import React from "react";
-import { Layout, Row, Col } from "antd";
-
+import { Layout, Row, Col, Typography } from "antd";
+import { Link } from "react-router-dom";
+import { IFooterStyle } from "./style";
 const { Footer } = Layout;
+
+const FooterStyle: IFooterStyle = {
+  color: "#000",
+  textAlign: "center",
+  padding: "40px 20px",
+  height: "300px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+};
 
 const CustomFooter = () => {
   return (
-    <Footer
-      style={{
-        color: "#000",
-        textAlign: "center",
-        padding: "40px 20px",
-        height: "300px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-      }}
-    >
+    <Footer style={FooterStyle}>
       <Row justify="center" gutter={[16, 24]} style={{ width: "100%" }}>
-        <Col span={6} style={{ display: "flex", flexDirection: "column" ,gap:'10px'}}>
-          <h3 style={{ color: "#000", marginBottom: "16px" }}>About</h3>
-          <p>
-            <a href="/about" style={{ color: "#000" }}>
+        <Col
+          span={6}
+          style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+        >
+          <Typography style={{ color: "#000", marginBottom: "16px" }}>
+            About
+          </Typography>
+          <Typography>
+            <Link to="/about" style={{ color: "#000" }}>
               About Us
-            </a>
-          </p>
-          <p>
-            <a href="/company" style={{ color: "#000" }}>
+            </Link>
+          </Typography>
+          <Typography>
+            <Link to="/company" style={{ color: "#000" }}>
               Company
-            </a>
-          </p>
+            </Link>
+          </Typography>
         </Col>
-        <Col span={6} style={{ display: "flex", flexDirection: "column" ,gap:'10px'}}>
-          <h3 style={{ color: "#000", marginBottom: "16px" }}>Services</h3>
-          <p>
-            <a href="/services" style={{ color: "#000" }}>
+        <Col
+          span={6}
+          style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+        >
+          <Typography style={{ color: "#000", marginBottom: "16px" }}>
+            Services
+          </Typography>
+          <Typography>
+            <Link to="/services" style={{ color: "#000" }}>
               Consulting
-            </a>
-          </p>
-          <p>
-            <a href="/services" style={{ color: "#000" }}>
+            </Link>
+          </Typography>
+          <Typography>
+            <Link to="/services" style={{ color: "#000" }}>
               Product Development
-            </a>
-          </p>
+            </Link>
+          </Typography>
         </Col>
-        <Col span={6} style={{ display: "flex", flexDirection: "column" ,gap:'10px'}}>
-          <h3 style={{ color: "#000", marginBottom: "16px" }}>İletişim</h3>
-          <p>
-            <a href="/contact" style={{ color: "#000" }}>
+        <Col
+          span={6}
+          style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+        >
+          <Typography style={{ color: "#000", marginBottom: "16px" }}>
+            İletişim
+          </Typography>
+          <Typography>
+            <Link to="/contact" style={{ color: "#000" }}>
               Contact us
-            </a>
-          </p>
-          <p>
-            <a href="/support" style={{ color: "#000" }}>
+            </Link>
+          </Typography>
+          <Typography>
+            <Link to="/support" style={{ color: "#000" }}>
               Help
-            </a>
-          </p>
+            </Link>
+          </Typography>
         </Col>
-        <Col span={6} style={{ display: "flex", flexDirection: "column" ,gap:'10px'}}>
-          <h3 style={{ color: "#000", marginBottom: "16px" }}>Sosial Media</h3>
-          <p>
-            <a href="https://facebook.com" style={{ color: "#000" }}>
+        <Col
+          span={6}
+          style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+        >
+          <Typography style={{ color: "#000", marginBottom: "16px" }}>
+            Sosial Media
+          </Typography>
+          <Typography>
+            <Link to="https://facebook.com" style={{ color: "#000" }}>
               Facebook
-            </a>
-          </p>
-          <p>
-            <a href="https://instagram.com" style={{ color: "#000" }}>
+            </Link>
+          </Typography>
+          <Typography>
+            <Link to="https://instagram.com" style={{ color: "#000" }}>
               Instagram
-            </a>
-          </p>
+            </Link>
+          </Typography>
         </Col>
       </Row>
-      <p style={{ marginTop: "40px", marginBottom: 0 }}>
+      <Typography style={{ marginTop: "40px", marginBottom: 0 }}>
         © {new Date().getFullYear()} All rights reserved.
-      </p>
+      </Typography>
     </Footer>
   );
 };
