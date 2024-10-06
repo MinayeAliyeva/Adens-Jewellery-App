@@ -1,22 +1,27 @@
 import React, { useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import {  Divider, Layout, theme } from "antd";
-import { Link, Outlet } from "react-router-dom";
+import { Divider, Layout, theme } from "antd";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { menu } from "./data";
 import { ButtonComponent } from "../components/ButtonComponent";
-import Login from "../pages/auth/Login";
+import { BiLogOutCircle } from "react-icons/bi";
+// import Login from "../pages/auth/Login";
 const logo = "/assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
 
-const Sidenav: React.FC = () => {
+const MainLayout: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
+  const navigate = useNavigate();
+  const handleLogOut = () => {
+    localStorage.clear();
+    navigate("/login");
+  };
   return (
     <Layout>
-      {/* <Sider
+      <Sider
         style={{
           minHeight: "100vh",
           background: "#91caff14",
@@ -48,6 +53,13 @@ const Sidenav: React.FC = () => {
             <Divider style={{ backgroundColor: "#292c3261" }} />
           </Content>
         ))}
+        <ButtonComponent
+          icon={<BiLogOutCircle />}
+          buttonText="Log Out"
+          onClick={handleLogOut}
+          block
+          style={{ position: "absolute", bottom: "10px" }}
+        />
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
@@ -73,10 +85,10 @@ const Sidenav: React.FC = () => {
         >
           <Outlet />
         </Content>
-      </Layout> */}
-      <Login/>
+      </Layout>
+      {/* <Login/> */}
     </Layout>
   );
 };
 
-export default Sidenav;
+export default MainLayout;

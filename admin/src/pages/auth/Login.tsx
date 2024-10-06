@@ -1,27 +1,25 @@
-import React from "react";
-import { Form, Input, Button, Typography, Row, Col, Card, Layout } from "antd";
+import { Form, Input, Typography, Row, Col, Card } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useLazyGetAdminLoginQuery } from "../../store/api/admin/admin-api";
-import { jwtDecode } from "jwt-decode";
-
+import { useNavigate } from "react-router-dom";
+import { ButtonComponent } from "../../components/ButtonComponent";
+import { RiLoginCircleLine } from "react-icons/ri";
 const bg = "/assets/images/bg.png";
 const { Title } = Typography;
 
 const Login = () => {
-  const [getAdmin, {data, isLoading}] = useLazyGetAdminLoginQuery();
+  const [getAdmin, { data, isLoading }] = useLazyGetAdminLoginQuery();
+  const navigate = useNavigate();
   console.log("LOGIN DATA", data);
-  
-  const onFinish = (value: {email: string, password: string}) => {
-    console.log(value);
-    getAdmin(value).then(res=>{
-      console.log({res});
-      
-      if(!res.data) return;
 
+  const onFinish = (value: { email: string; password: string }) => {
+    console.log(value);
+    getAdmin(value).then((res) => {
+      console.log({ res });
+      if (!res.data) return;
       localStorage.setItem("token", res.data);
-      const decoded = jwtDecode(res.data as string);
-  console.log({decoded});
+      navigate("/products");
     });
   };
 
@@ -48,11 +46,7 @@ const Login = () => {
         sm={24}
         md={12}
       >
-        <Content
-          style={{ width: "20px" }}
-        >
-          AAAAAA
-        </Content>
+        <Content style={{ width: "20px" }}>AAAAAA</Content>
         <Card
           style={{
             width: "400px", // Adjusted width of the card
@@ -88,17 +82,18 @@ const Login = () => {
             </Form.Item>
 
             <Form.Item>
-              <Button
+              <ButtonComponent
+                icon={<RiLoginCircleLine />}
+                buttonText="Login"
+                loading={isLoading}
                 htmlType="submit"
+              
                 block
                 style={{
                   borderRadius: "5px",
-                  width: "200px",
                   margin: "0 auto",
                 }}
-              >
-                Giriş Yap
-              </Button>
+              />
             </Form.Item>
           </Form>
         </Card>

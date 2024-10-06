@@ -31,13 +31,11 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  console.log("req.params.id", req.params.id);
 
   const product = await Product.findOne({ _id: req.params.id });
   if (!product) {
     return res.status(404).send("Such product is not exsits...");
   }
-  console.log("id li product", product);
 
   res.status(200).send(product);
 });
@@ -69,8 +67,7 @@ router.post(
     const additionalImages = files.additionalImages
       ? files.additionalImages.map((file) => `${basePath}${file.filename}`)
       : [];
-    console.log({ mainImage });
-    console.log({ additionalImages });
+
 
     // Yeni ürün nesnesinin oluşturulması
     const product = new Product({
