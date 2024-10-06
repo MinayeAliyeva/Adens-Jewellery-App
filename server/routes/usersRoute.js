@@ -2,9 +2,12 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
-router.get("/", async (req, res) => {
-  res.status(200).send();
+const auth = require("../middlware/auth");
+const isAdmin = require("../middlware/isAdmin");
+
+router.get("/", [auth, isAdmin], async (req, res) => {
+  let users = await User.find();
+  res.status(200).send(users);
 });
 
 //api/users POST
@@ -46,5 +49,6 @@ router.post("/auth", async (req, res) => {
   
   res.send(token);
 });
+
 
 module.exports = router;
