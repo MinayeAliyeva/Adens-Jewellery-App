@@ -25,10 +25,8 @@ router.post("/register", async (req, res) => {
     isAdmin: req?.body?.isAdmin ?? false,
   });
   await user.save();
-  console.log("user", user);
 
   const token = user.createAuthToken();
-  console.log("token",token);
   
   const responseUser = {...user};
   delete responseUser.isAdmin;
@@ -45,7 +43,6 @@ router.post("/auth", async (req, res) => {
     return res.status(400).send("Hatali Email ya Parala");
   }
   const token = user.createAuthToken();
-  console.log("createAuthToken token ",token);
   
   res.send(token);
 });

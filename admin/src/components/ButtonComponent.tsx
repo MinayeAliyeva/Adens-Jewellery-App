@@ -12,6 +12,7 @@ export const ButtonComponent: FC<IButtonProps> = ({
   danger,
   htmlType,
   iconPosition,
+  block,
   onClick,
   buttonText,
   style,
@@ -28,6 +29,7 @@ export const ButtonComponent: FC<IButtonProps> = ({
         style={style}
         onClick={onClick}
         type={type}
+        block={block}
       >
         {buttonText}
       </Button>
