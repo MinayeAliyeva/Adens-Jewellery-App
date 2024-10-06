@@ -9,7 +9,6 @@ import InputComponent from "../../../components/InputComponent";
 import { useRegisterUserMutation } from "../../../store/api/user/user-api"; 
 
 const { Title } = Typography;
-
 const schema = yup.object().shape({
   firstName: yup.string().required("First Name is required"),
   lastName: yup.string().required("Last Name is required"),
@@ -20,6 +19,10 @@ const schema = yup.object().shape({
   password: yup
     .string()
     .min(6, "Password must be at least 6 characters")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+    .matches(/\d/, "Password must contain at least one number")
+    .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character")
     .required("Password is required"),
   confirmPassword: yup
     .string()

@@ -25,13 +25,46 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, limits: { fileSize: 1024 * 1024 * 5 } });
 
 // Ürün listeleme
+// router.get("/", async (req, res) => {
+//   const products = await Product.find();
+//   res.status(200).send(products);
+// });
+//filterleme !! sayfalama limit() ile edilir select() ile ise data hisselerini select {} limit ise number qebul edir
+//Catagory gore filter price gore min,max  name gore, price asc desc
+//
 router.get("/", async (req, res) => {
-  const products = await Product.find();
+ // console.log("REQUEST QUERY", req.query);
+
+  const products = await Product.find().or([
+    {
+      productName: req?.query?.productName,
+      categoryName: req?.query?.categoryName,
+      price: { $gte: req?.query?.min ?? 0, $lte: req?.query?.max ?? 9000000 },
+    },
+    {
+      productName: req?.query?.productName,
+      categoryName: req?.query?.categoryName,
+    },
+    {
+      price: { $gte: req?.query?.min ?? 0, $lte: req?.query?.max ?? 9000000 },
+      productName: req?.query?.productName,
+    },
+    {
+      price: { $gte: req?.query?.min ?? 0, $lte: req?.query?.max ?? 9000000 },
+      categoryName: req?.query?.categoryName,
+    },
+    {
+      productName: new RegExp(req?.query?.productName, "i"), // Dinamik regex
+    },
+  ]);
+
+
   res.status(200).send(products);
 });
 
-router.get("/:id", async (req, res) => {
 
+//Detail
+router.get("/:id", async (req, res) => {
   const product = await Product.findOne({ _id: req.params.id });
   if (!product) {
     return res.status(404).send("Such product is not exsits...");
@@ -67,7 +100,6 @@ router.post(
     const additionalImages = files.additionalImages
       ? files.additionalImages.map((file) => `${basePath}${file.filename}`)
       : [];
-
 
     // Yeni ürün nesnesinin oluşturulması
     const product = new Product({

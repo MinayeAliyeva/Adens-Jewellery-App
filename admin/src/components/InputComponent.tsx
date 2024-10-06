@@ -34,6 +34,7 @@ const InputComponent: FC<IInputProps> = ({
   labelText,
   control,
   errors,
+  size
 }) => {
     console.log(errorMessage);
     
@@ -45,7 +46,7 @@ const InputComponent: FC<IInputProps> = ({
         control={control}
         defaultValue=""
         rules={{ required }}
-        render={({ field }) => <Input placeholder={placeholder} {...field} />}
+        render={({ field }) => <Input placeholder={placeholder} {...field} size={size}/>}
       />
       {errorMessage ? <Content style={{color: "red"}}>{errorMessage}</Content> : ""}
     </>
