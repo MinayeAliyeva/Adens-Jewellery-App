@@ -14,7 +14,7 @@ const ImageGallery: FC<IImageGalleryProps> = ({
 }) => {
   const [previewImage, setPreviewImage] = useState(mainImageUrl);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  
   const handleImageClick = (img: string) => {
     setPreviewImage(img);
     setIsModalVisible(true);
@@ -23,9 +23,10 @@ const ImageGallery: FC<IImageGalleryProps> = ({
   const handleModalClose = () => {
     setIsModalVisible(false);
   };
+console.log({mainImageUrl,additionalImages});
 
   return (
-    <div style={{ position: "relative", height: "100%" }}>
+    <div style={{ position: "relative" }}>
       <img
         src={mainImageUrl} 
         alt={productName}

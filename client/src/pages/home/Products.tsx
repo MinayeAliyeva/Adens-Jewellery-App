@@ -1,16 +1,17 @@
 import { useGetProductsQuery } from "../../store/api/product/product-api";
 import ProductCard from "../../components/ProductCard";
 import { Layout, Typography } from "antd";
+import { IProduct } from "../../store/api/product/modules";
 
 const Products = () => {
-  const { data } = useGetProductsQuery();
+  const { data } = useGetProductsQuery<any>({});
 
 
   return (
     <>
       <Typography className="text-center text-3xl font-bold my-8">Our Collection</Typography>
       <Layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8 p-5">
-        {data?.map((product) => (
+        {data?.map?.((product:IProduct) => (
           <ProductCard key={product?.productName} product={product} />
         ))}
       </Layout>
