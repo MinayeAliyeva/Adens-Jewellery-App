@@ -8,7 +8,7 @@ import { IProduct } from "../../../store/api/product/modules";
 interface IProductInfoProps {
   product: IProduct;
 }
-//! write view api and send req useParams id take view
+
 const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
   const handlePayment = () => {
     message.success("Payment process started successfully.");
@@ -18,33 +18,63 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
     <div style={{ padding: "20px" }}>
       <Title level={4}>{product?.productName}</Title>
       <Paragraph style={{ fontWeight: "bold", fontSize: "18px" }}>
-        {`₺${product?.price}`} 
+        {`₺${product?.price}`}
       </Paragraph>
-      {/* <Paragraph>{product?.productDetails}</Paragraph> */}
       <Paragraph>{product?.description}</Paragraph>
-
-      <Paragraph>
-        <strong>Size:</strong> {product?.size?.join(", ")} 
-      </Paragraph>
-      <Paragraph>
-        <strong>Color:</strong> {product?.color}
-      </Paragraph>
-      <Paragraph>
-        <strong>Stock:</strong> {product?.stock}
-      </Paragraph>
-      <Paragraph>
-        <strong>Weight:</strong> {product?.weight} kg
-      </Paragraph>
-
-      {/* <div style={{ marginBottom: "20px" }}>
-        <Statistic
-          title="View Count"
-          value={product?.view}
-          prefix={<EyeOutlined style={{ color: "#1890ff" }} />}
-          valueStyle={{ fontSize: "16px", fontWeight: "bold" }}
-        />
-      </div> */}
-
+      {product?.size && product?.size.length > 0 && (
+        <Paragraph>
+          <strong>Size:</strong> {product?.size.join(", ")}{" "}
+          {/* Size dizisi olarak gösteriliyor */}
+        </Paragraph>
+      )}
+      {product?.color && (
+        <Paragraph>
+          <strong>Color:</strong> {product?.color}
+        </Paragraph>
+      )}
+      {product?.stock && (
+        <Paragraph>
+          <strong>Stock:</strong> {product?.stock}
+        </Paragraph>
+      )}
+      {product?.weight && (
+        <Paragraph>
+          <strong>Weight:</strong> {product?.weight} kg
+        </Paragraph>
+      )}
+      {product?.dimensions && (
+        <Paragraph>
+          <strong>Dimensions:</strong> {product?.dimensions}
+        </Paragraph>
+      )}
+      {product?.warrantyDuration && (
+        <Paragraph>
+          <strong>Warranty Duration:</strong> {product?.warrantyDuration} years
+        </Paragraph>
+      )}
+      {product?.brand && (
+        <Paragraph>
+          <strong>Brand:</strong> {product?.brand}
+        </Paragraph>
+      )}
+      {product?.creationDate && (
+        <Paragraph>
+          <strong>Creation Date:</strong>{" "}
+          {new Date(product.creationDate).toLocaleDateString()}
+        </Paragraph>
+      )}
+      //!API ile
+      {/* Görüntülenme sayısı gösterme kısmı, isteğe bağlı
+      {product?.view && (
+        <div style={{ marginBottom: "20px" }}>
+          <Statistic
+            title="View Count"
+            value={product?.view}
+            prefix={<EyeOutlined style={{ color: "#1890ff" }} />}
+            valueStyle={{ fontSize: "16px", fontWeight: "bold" }}
+          />
+        </div>
+      )} */}
       <Button
         type="primary"
         icon={<DollarCircleOutlined />}

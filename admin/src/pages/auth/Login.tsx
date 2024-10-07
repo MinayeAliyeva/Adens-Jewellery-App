@@ -6,45 +6,54 @@ import { useNavigate } from "react-router-dom";
 import { ButtonComponent } from "../../components/ButtonComponent";
 import { RiLoginCircleLine } from "react-icons/ri";
 import * as yup from "yup";
-import InputComponent from "../../components/InputComponent";
 const bg = "/assets/images/bg.png";
 const logo = "/assets/images/logo.png";
 const az = "/assets/images/az.svg";
 const en = "/assets/images/en.svg";
 const { Title } = Typography;
+
 const schema = yup.object().shape({
   email: yup
     .string()
-    .email("Invalid email format")
-    .required("Email is required"),
+    .email("Geçerli bir email adresi giriniz!")
+    .required("Email zorunludur!"),
   password: yup
     .string()
-    .min(6, "Password must be at least 6 characters")
-    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-    .matches(/\d/, "Password must contain at least one number")
+    .min(6, "Parola en az 6 karakter olmalıdır!")
+    .matches(/[A-Z]/, "Parola en az bir büyük harf içermelidir!")
+    .matches(/[a-z]/, "Parola en az bir küçük harf içermelidir!")
+    .matches(/\d/, "Parola en az bir rakam içermelidir!")
     .matches(
       /[!@#$%^&*(),.?":{}|<>]/,
-      "Password must contain at least one special character"
+      "Parola en az bir özel karakter içermelidir!"
     )
-    .required("Password is required"),
+    .required("Parola zorunludur!"),
 });
+
 const Login = () => {
   const [getAdmin, { data, isLoading }] = useLazyGetAdminLoginQuery();
-  
   const navigate = useNavigate();
   console.log("LOGIN DATA", data);
 
-  const onFinish = (value: { email: string; password: string }) => {
-    console.log(value);
-    getAdmin(value).then((res) => {
-      console.log({ res });
-      if (!res.data) return;
-      console.log("res.data",res.data);
-      
-      localStorage.setItem("token", res.data);
-      navigate("/products");
-    });
+  const onFinish = async (values: { email: string; password: string }) => {
+    try {
+      // Form validasyonunu kontrol et
+      await schema.validate(values);
+      console.log(values);
+
+      getAdmin(values).then((res) => {
+        console.log({ res });
+        if (!res.data) return;
+        console.log("res.data", res.data);
+        localStorage.setItem("token", res.data);
+        navigate("/products");
+      });
+    } catch (error) {
+      // Validasyon hatası varsa input altında göster
+      if (error instanceof yup.ValidationError) {
+        console.log(error.message);
+      }
+    }
   };
 
   return (
@@ -92,7 +101,16 @@ const Login = () => {
           <Form name="login" onFinish={onFinish} layout="vertical">
             <Form.Item
               name="email"
-              rules={[{ required: true, message: "Kullanıcı email girin!" }]}
+              rules={[
+                {
+                  required: true,
+                  message: "Kullanıcı email girin!",
+                },
+                {
+                  type: "email",
+                  message: "Geçerli bir email adresi giriniz!",
+                },
+              ]}
             >
               <Input
                 size="large"
@@ -100,12 +118,33 @@ const Login = () => {
                 placeholder="Kullanıcı Emaili"
                 className="rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
-             
             </Form.Item>
 
             <Form.Item
               name="password"
-              rules={[{ required: true, message: "Parolanızı girin!" }]}
+              rules={[
+                { required: true, message: "Parolanızı girin!" },
+                {
+                  min: 6,
+                  message: "Parola en az 6 karakter olmalıdır!",
+                },
+                {
+                  pattern: /[A-Z]/,
+                  message: "Parola en az bir büyük harf içermelidir!",
+                },
+                {
+                  pattern: /[a-z]/,
+                  message: "Parola en az bir küçük harf içermelidir!",
+                },
+                {
+                  pattern: /\d/,
+                  message: "Parola en az bir rakam içermelidir!",
+                },
+                {
+                  pattern: /[!@#$%^&*(),.?":{}|<>]/,
+                  message: "Parola en az bir özel karakter içermelidir!",
+                },
+              ]}
             >
               <Input.Password
                 size="large"
@@ -114,6 +153,7 @@ const Login = () => {
                 className="rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </Form.Item>
+
             <Layout
               style={{
                 display: "flex",
