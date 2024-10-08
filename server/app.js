@@ -3,7 +3,8 @@ const app = express();
 const mongoose = require("mongoose");
 const productsRouter = require("../server/routes/productRoute");
 const usersRouter = require("../server/routes/usersRoute");
-const path = require('path');
+const catagoryRouter = require("../server/routes/catagoryRoute");
+const path = require("path");
 const cors = require("cors");
 app.use(express.json());
 app.use(cors());
@@ -16,9 +17,10 @@ app.use("/api/products", productsRouter);
 //middleware
 app.use("/api/users", usersRouter);
 //catagories
-app.use("/api/products/catagories", usersRouter);
-app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use("/api/catagories", catagoryRouter);
 
+
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 const connectInfo = {
   USER_NAME: "eliyevaminayee",

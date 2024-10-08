@@ -5,6 +5,7 @@ import Login from "../pages/auth/Login";
 import Products from "../pages/products";
 import PrivateRouting from "./PrivateRouting";
 import MainLayout from "../layout/MainLayout";
+import Category from "../pages/categories";
 
 const routes: TypeRouteObject[] = [
   {
@@ -14,6 +15,7 @@ const routes: TypeRouteObject[] = [
     children: [
       { index: true, element: <Navigate to="/products" /> , auth: true},
       { path: "/products", element: <Products />,  auth: true},
+      { path: "/categories", element: <Category />,  auth: true},
     ],
   },
   {

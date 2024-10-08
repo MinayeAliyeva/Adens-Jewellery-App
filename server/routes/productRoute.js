@@ -35,28 +35,25 @@ const upload = multer({ storage, limits: { fileSize: 1024 * 1024 * 5 } });
 
 router.get("/", async (req, res) => {
   try {
-    const { categoryName, productName, min, max } = req.query;
-
-    if (!categoryName && !productName && !min && !max) {
+    const { category, productName, min, max } = req.query;
+    if (!category && !productName && !min && !max) {
       const allProducts = await Product.find();
       return res.status(200).send(allProducts);
     }
 
-    const categories = categoryName ? categoryName.split(",") : null;
+    const categories = category ? category.split(",") : null;
 
     const query = {
-      ...(categories && { categoryName: { $in: categories } }),
+      ...(categories && { category: { $in: categories } }),
       ...(productName && { productName: new RegExp(productName, "i") }),
       ...(min && { price: { $gte: Number(min) } }),
       ...(max && { price: { $lte: Number(max) } }),
     };
 
     const products = await Product.find(query);
-
     if (!products.length) {
       return res.status(404).send("Ürün bulunamadı");
     }
-
     res.status(200).send(products);
   } catch (error) {
     console.error("Ürünleri alırken hata:", error);
@@ -111,7 +108,7 @@ router.post(
       size: req.body.size ? req.body.size.split(",") : [], // Boyutlar virgülle ayrılmışsa diziye çevir
       price: req.body.price,
       measure: req.body.measure,
-      categoryName: req.body.categoryName,
+      category: req.body.category,
       color: req.body.color,
       comments: req.body.comments,
       mainImageUrl: mainImage, // Ana resim URL'si

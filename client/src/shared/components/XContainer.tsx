@@ -1,18 +1,17 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
+import { Row, Col } from "antd";
 
 export const XContainer = ({
   minWidth = "100%",
   height = "100vh",
-  sx = {},
+  style = {},
   children,
 }: any) => {
   return (
-    <>
-      <Container sx={{ minWidth }}>
-        <Box sx={{  height, ...sx }}>{children}</Box>
-      </Container>
-    </>
+    <Row justify="center" style={{ minWidth }}>
+      <Col style={{ height, width: minWidth, ...style }}>
+        {children}
+      </Col>
+    </Row>
   );
 };
