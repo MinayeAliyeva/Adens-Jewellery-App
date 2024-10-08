@@ -15,7 +15,36 @@ export const catagoryApi = createApi({
     getCategories: builder.query<ICatagoryResponse[], void>({
       query: () => `/api/catagories`,
     }),
+    createCategory: builder.mutation<ICatagoryResponse[], { name: string }>({
+      query: (body) => ({
+        url: "/api/catagories",
+        method: "POST",
+        body,
+      }),
+    }),
+    deleteCategoryById: builder.mutation<ICatagoryResponse, string>({
+      query: (id) => ({
+        url: `/api/catagories/${id}`,
+        method: "DELETE",
+      }),
+    }),
+    updateCategoryById: builder.mutation<
+      ICatagoryResponse,
+      { name: string; id: string }
+    >({
+      query: (body) => ({
+        url: `/api/catagories/${body?.id}`,
+        method: "PUT",
+        body,
+      }),
+    }),
   }),
 });
 
-export const { useGetCategoriesQuery } = catagoryApi;
+export const {
+  useGetCategoriesQuery,
+  useLazyGetCategoriesQuery,
+  useCreateCategoryMutation,
+  useDeleteCategoryByIdMutation,
+  useUpdateCategoryByIdMutation,
+} = catagoryApi;

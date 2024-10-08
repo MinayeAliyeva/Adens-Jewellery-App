@@ -14,11 +14,9 @@ interface IDecodedValue {
   phone?: string;
 }
 const PrivateRouting: FC<IPrivateRouting> = ({ children }) => {
-  console.log("PrivateRouting");
   
   const token = localStorage.getItem("token") ?? ""
   const decoded: IDecodedValue = token? jwtDecode(token) : {isAdmin: false};
-  console.log({ decoded });
 
   const location = useLocation() as Location<LocationState>;
 

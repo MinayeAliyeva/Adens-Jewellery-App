@@ -1,18 +1,21 @@
-import { Button, Input, TableColumnsType } from "antd";
+import { Button, Input, TableColumnsType, Typography } from "antd";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
-export interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  id?: string | null;
-}
+import { ICatagoryResponse } from "../../store/api/catagory/modules";
+import InputComponent from "../../components/InputComponent";
+import {
+  Control,
+  FieldErrors,
+  FieldValues,
+  UseFormHandleSubmit,
+} from "react-hook-form";
+import { IFormField } from ".";
 
 export const columns = ({
+  control,
   filteredInfo,
   setAgeSort,
   sortedInfo,
@@ -21,32 +24,55 @@ export const columns = ({
   isCreate,
   editCategory,
   selectedId,
+  errors,
+  onFinish,
+  handleSubmit,
+  onCancel,
+  onDeleteCategoryById
 }: {
+  handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
+  control: Control<IFormField>;
   filteredInfo?: Record<string, FilterValue | null>;
   setAgeSort?: () => void;
-  sortedInfo?: SorterResult<DataType>;
+  sortedInfo?: SorterResult<ICatagoryResponse>;
   editTable?: (isEdit: boolean) => void;
   isEdit?: boolean;
   isCreate?: boolean;
   editCategory?: (id: string) => void;
   selectedId?: string | null;
-}): TableColumnsType<DataType> => [
+  errors: FieldErrors<IFormField>;
+  onFinish: (values: IFormField) => void;
+  onCancel: () => void;
+  onDeleteCategoryById: (id: string) => void;
+}): TableColumnsType<ICatagoryResponse> => [
   {
-    title: "Category",
-    dataIndex: "category",
-    key: "category",
-    render: (name: string, record: DataType) => {
+    title: "name",
+    dataIndex: "name",
+    key: "name",
+    render: (name: string, record: ICatagoryResponse) => {
+      if (!record?._id && !record?.name) {
+        return (
+          <InputComponent
+            // defaultValue={name}
+            name="name"
+            control={control as any}
+            placeholder="Category Name"
+            errorMessage={errors?.name}
+          />
+        );
+      }
       return (
         <>
-          {selectedId === record?.id ? (
-            <Input
-              value={name}
-              onChange={(e) => {
-                console.log("", e.target.value);
-              }}
+          {selectedId === record?._id ? (
+            <InputComponent
+              defaultValue={name}
+              name="name"
+              control={control as any}
+              placeholder="Category Name"
+              errorMessage={errors?.name}
             />
           ) : (
-            <div>{name}</div>
+            <Typography>{name}</Typography>
           )}
         </>
       );
@@ -88,125 +114,138 @@ export const columns = ({
     sortOrder: sortedInfo?.columnKey === "name" ? sortedInfo.order : null,
     ellipsis: true,
   },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-    render: (age: number, record: DataType) => {
-      return (
-        <>
-          {selectedId === record?.id ? (
-            <Input
-              type="number"
-              value={age} 
-              onChange={(e) => {
-                console.log("Updated age:", e.target.value);
-              }}
-            />
-          ) : (
-            <div>{age}</div>
-          )}
-        </>
-      );
-    },
-    sorter: (a, b) => a?.age - b?.age,
-    sortOrder: sortedInfo?.columnKey === "age" ? sortedInfo.order : null,
-    ellipsis: true,
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-    render: (address: string, record: DataType) => {
-      return (
-        <>
-          {selectedId === record?.id ? (
-            <Input
-              value={address} 
-              onChange={(e) => {
-                console.log("Updated address:", e.target.value);
-              }}
-            />
-          ) : (
-            <div>{address}</div>
-          )}
-        </>
-      );
-    },
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder="Search address"
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => confirm()}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => confirm()}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => {
-            setSelectedKeys([]);
-            confirm();
-          }}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filteredValue: filteredInfo?.address || null,
-    onFilter: (value, record) =>
-      record.address.toLowerCase().includes((value as string).toLowerCase()),
-    sorter: (a, b) => a?.address?.length - b?.address?.length,
-    sortOrder: sortedInfo?.columnKey === "address" ? sortedInfo.order : null,
-    ellipsis: true,
-  },
+  // {
+  //   title: "Age",
+  //   dataIndex: "age",
+  //   key: "age",
+  //   render: (age: number, record:  ICatagoryResponse) => {
+  //     return (
+  //       <>
+  //         {selectedId === record?.id ? (
+  //            <Form.Item
+  //            name="age"
+  //            style={{ margin: 0 }}
+  //            rules={[
+  //              {
+  //                required: true,
+  //                message: `Please Input age!`,
+  //              },
+  //            ]}
+  //          >
+  //            <Input
+  //             type="number"
+  //             // value={age}
+  //             // onChange={(e) => {
+  //             //   console.log("Updated age:", e.target.value);
+  //             // }}
+  //           />
+  //          </Form.Item>
+
+  //         ) : (
+  //           <div>{age}</div>
+  //         )}
+  //       </>
+  //     );
+  //   },
+  //   sorter: (a, b) => a?.age - b?.age,
+  //   sortOrder: sortedInfo?.columnKey === "age" ? sortedInfo.order : null,
+  //   ellipsis: true,
+  // },
+  // {
+  //   title: "Address",
+  //   dataIndex: "address",
+  //   key: "address",
+  //   render: (address: string, record:  ICatagoryResponse) => {
+  //     return selectedId === record?.id ? (
+  //           <Input
+  //             value={address}
+  //             onChange={(e) => {
+  //               console.log("Updated address:", e.target.value);
+  //             }}
+  //           />
+  //         ) : (
+  //           <div>{address}</div>
+  //         )
+  //   },
+  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
+  //     <div style={{ padding: 8 }}>
+  //       <Input
+  //         placeholder="Search address"
+  //         value={selectedKeys[0]}
+  //         onChange={(e) =>
+  //           setSelectedKeys(e.target.value ? [e.target.value] : [])
+  //         }
+  //         onPressEnter={() => confirm()}
+  //         style={{ width: 188, marginBottom: 8, display: "block" }}
+  //       />
+  //       <Button
+  //         type="primary"
+  //         onClick={() => confirm()}
+  //         size="small"
+  //         style={{ width: 90, marginRight: 8 }}
+  //       >
+  //         Search
+  //       </Button>
+  //       <Button
+  //         onClick={() => {
+  //           setSelectedKeys([]);
+  //           confirm();
+  //         }}
+  //         size="small"
+  //         style={{ width: 90 }}
+  //       >
+  //         Reset
+  //       </Button>
+  //     </div>
+  //   ),
+  //   filteredValue: filteredInfo?.address || null,
+  //   onFilter: (value, record) =>
+  //     record.address.toLowerCase().includes((value as string).toLowerCase()),
+  //   sorter: (a, b) => a?.address?.length - b?.address?.length,
+  //   sortOrder: sortedInfo?.columnKey === "address" ? sortedInfo.order : null,
+  //   ellipsis: true,
+  // },
   {
     title: "",
     dataIndex: "actions",
     key: "actions",
-    render: (_, record: DataType) => {
-      console.log("record", record.id === selectedId);
+    render: (_, record: ICatagoryResponse) => {
+      // if(!record?._id && !record?.name){}
 
       return (
-        <>
-          {record.id === selectedId ? (
+        <div>
+          {(record._id && record._id !== selectedId) ||
+          record?._id === undefined ? (
             <>
               <Button
-                type="primary"
-                icon={<FaSave />}
-                onClick={() => {
-                  console.log("Save changes for:", record.id);
-                }}
+                htmlType="button"
+                icon={<CiEdit />}
+                onClick={() => editCategory?.(record._id)}
               />
-
               <Button
-                icon={<MdOutlineCancel />}
-                onClick={() => {
-                  console.log("Cancel editing for:", record.id);
-                }}
+                onClick={() => onDeleteCategoryById(record?._id)}
+                icon={<MdDelete />}
+                htmlType="button"
               />
             </>
           ) : (
             <>
               <Button
-                icon={<CiEdit />}
-                onClick={() => editCategory?.(record.id!)}
+                type="primary"
+                htmlType="button"
+                icon={<FaSave />}
+                onClick={handleSubmit((values) =>
+                  onFinish({ ...values, id: record?._id })
+                )}
               />
-              <Button icon={<MdDelete />} />
+              <Button
+                icon={<MdOutlineCancel />}
+                htmlType="button"
+                onClick={onCancel}
+              />
             </>
           )}
-        </>
+        </div>
       );
     },
 

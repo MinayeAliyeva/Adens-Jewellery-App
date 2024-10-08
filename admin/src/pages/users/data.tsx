@@ -26,7 +26,6 @@ export const columns = [
     dataIndex: "lastName",
     key: "lastName",
     render: (item: string[], record: IUser) => {
-      console.log("item", item);
       return item;
     },
   },
