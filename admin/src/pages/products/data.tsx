@@ -83,9 +83,7 @@ export const columns = [
   {
     title: "",
     key: "actions",
-    render: (text: any, record: IProduct) => {
-      console.log("record", record);
-
+    render: (_: any, record: IProduct) => {
       return (
         <Content style={{ display: "flex", gap: "20px" }}>
           <OpenEditDialogButton product={record} />

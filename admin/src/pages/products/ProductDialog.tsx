@@ -16,6 +16,7 @@ import { UploadChangeParam, UploadFile } from "antd/es/upload";
 import { ButtonComponent } from "../../components/ButtonComponent";
 import { IProduct } from "../../store/api/product/modules";
 import { omit } from "lodash";
+import { useGetCategoriesQuery } from "../../store/api/catagory/catagory-api";
 
 interface IProductDialog {
   open: boolean;
@@ -33,6 +34,8 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
   const [updateProductById, { isLoading: isLoadingUpdatedProduct }] =
     useUpdateProductByIdMutation();
 
+  const { data: categoriesData } = useGetCategoriesQuery();
+
   const handleChangeMainImage = (info: UploadChangeParam<UploadFile<File>>) => {
     console.log("info main", info);
 
@@ -46,13 +49,15 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
   };
 
   const onFinish = async (values: any) => {
+    console.log("values", values);
+
     const formData = new FormData();
     const formattedDate = dayjs(values.creationDate).format("DD.MM.YYYY");
 
     formData.append("productName", values.productName);
     formData.append("size", values.size);
     formData.append("price", values.price);
-    formData.append("categoryName", values.categoryName || "");
+    formData.append("category", values.category);
     formData.append("color", values.color || "");
     formData.append("brand", values.brand || "");
     formData.append("description", values.description || "");
@@ -77,8 +82,8 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
 
       formData.append("additionalImages", file.originFileObj ?? file);
     });
-  console.log("formData update", formData);
-  
+    console.log("formData update", formData);
+
     console.log({ values });
     console.log({ formData });
 
@@ -115,7 +120,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           productName: product?.productName,
           size: product?.size,
           price: product?.price,
-          categoryName: product?.categoryName,
+          category: product?.category,
           color: product?.color,
           brand: product?.brand,
           description: product?.description,
@@ -127,7 +132,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             ? dayjs(product.creationDate)
             : null,
           mainImage: product?.mainImageUrl,
-          additionalImages: product?.additionalImages
+          additionalImages: product?.additionalImages,
         }}
       >
         <Row gutter={24}>
@@ -180,12 +185,23 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           <Col span={12}>
             <Form.Item
               label="Category Name"
-              name="categoryName"
-              rules={[
-                { required: true, message: "Category name is required!" },
-              ]}
+              name="category"
+              // rules={[
+              //   { required: true, message: "Category name is required!" },
+              // ]}
             >
-              <Input placeholder="Enter category..." />
+              {/* <Input placeholder="Enter category..." /> */}
+          
+              <SelectBox
+                name="category"
+                sizeOptions={
+                  categoriesData?.map((category) => ({
+                    label: category?.name,
+                    value: category?._id,
+                  }))!
+                }
+                handleChange={(value) => form.setFieldsValue({ category: value })}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -251,12 +267,18 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                 listType="picture"
                 beforeUpload={() => false}
                 maxCount={1}
-                defaultFileList={product ? [{
-                  uid: product?._id ?? '',
-                  name: product?.productName ?? "",
-                  status: 'done',
-                  url: product?.mainImageUrl,
-                }]: undefined}
+                defaultFileList={
+                  product
+                    ? [
+                        {
+                          uid: product?._id ?? "",
+                          name: product?.productName ?? "",
+                          status: "done",
+                          url: product?.mainImageUrl,
+                        },
+                      ]
+                    : undefined
+                }
               >
                 <Button icon={<UploadOutlined />}>Upload Main Image</Button>
               </Upload>
@@ -275,18 +297,22 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                 beforeUpload={() => false}
                 multiple
                 listType="picture"
-                defaultFileList={product ? 
-                  Array.from({length: product?.additionalImages.length}).map((_,i)=>{
-                   console.log({i,addition: product?.additionalImages});
-                   
-                    return {
-                      uid: product?._id ?? '',
-                    name: product?.productName ?? "",
-                    status: 'done',
-                    url: product?.additionalImages[i],
-                    }
-                  })
-                 : undefined}
+                defaultFileList={
+                  product
+                    ? Array.from({
+                        length: product?.additionalImages.length,
+                      }).map((_, i) => {
+                        console.log({ i, addition: product?.additionalImages });
+
+                        return {
+                          uid: product?._id ?? "",
+                          name: product?.productName ?? "",
+                          status: "done",
+                          url: product?.additionalImages[i],
+                        };
+                      })
+                    : undefined
+                }
               >
                 <Button icon={<UploadOutlined />}>
                   Upload Additional Images

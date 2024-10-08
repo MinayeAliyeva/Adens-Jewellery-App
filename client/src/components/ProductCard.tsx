@@ -20,7 +20,7 @@ interface IProps {
     stock: number;
     discount: number;
     brand: string;
-    catagoryName: string;
+    category: string;
     additionalImages: string[];
   };
 }

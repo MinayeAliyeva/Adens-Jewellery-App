@@ -11,4 +11,10 @@ export const menu = [
     icon: <FaUsers />,
     path: "users",
   },
+  {
+    title: "Categories",
+    icon: <FaUsers />,
+    path: "categories",
+  },
+  
 ];

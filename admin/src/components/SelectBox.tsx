@@ -4,7 +4,7 @@ import { SelectProps } from "antd/es/select";
 
 interface ISelectBox extends SelectProps<string[]> {
   sizeOptions: { label: string; value: string }[];
-  handleChange?: (value: string[]) => void;
+  handleChange?: (value: string[] | string) => void;
   name: string;
 }
 

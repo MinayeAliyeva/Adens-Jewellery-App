@@ -24,6 +24,7 @@ const commentSchema = new mongoose.Schema({
 });
 
 // Ana ürün şeması
+
 const productSchema = new mongoose.Schema({
   productName: {
     type: String,
@@ -35,11 +36,14 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   measure: Number,
-  categoryName: String,
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+  },
   color: String,
   comments: [commentSchema], // Yorumlar şema olarak referans edilir
-  mainImageUrl:mongoose.Schema.Types.Mixed,
-  additionalImages:mongoose.Schema.Types.Mixed,
+  mainImageUrl: mongoose.Schema.Types.Mixed,
+  additionalImages: mongoose.Schema.Types.Mixed,
   // favorite: {
   //   userId: String,
   //   isFavorite: Boolean,
@@ -85,5 +89,4 @@ const productSchema = new mongoose.Schema({
 // });
 // Modeli oluştur
 const Product = mongoose.model("Product", productSchema);
-module.exports = {Product};
-
+module.exports = { Product };
