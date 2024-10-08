@@ -27,10 +27,8 @@ const routes: TypeRouteObject[] = [
 
 const authMap = (routes: TypeRouteObject[]) => {
   return routes.map((route: TypeRouteObject) => {
-    console.log("route", route);
     
     if (route.auth){
-        console.log("daxil");
         
         route.element = <PrivateRouting>{route.element}</PrivateRouting>;
     }

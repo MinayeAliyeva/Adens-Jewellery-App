@@ -33,25 +33,20 @@ const schema = yup.object().shape({
 const Login = () => {
   const [getAdmin, { data, isLoading }] = useLazyGetAdminLoginQuery();
   const navigate = useNavigate();
-  console.log("LOGIN DATA", data);
 
   const onFinish = async (values: { email: string; password: string }) => {
     try {
       // Form validasyonunu kontrol et
       await schema.validate(values);
-      console.log(values);
 
       getAdmin(values).then((res) => {
-        console.log({ res });
         if (!res.data) return;
-        console.log("res.data", res.data);
         localStorage.setItem("token", res.data);
         navigate("/products");
       });
     } catch (error) {
       // Validasyon hatası varsa input altında göster
       if (error instanceof yup.ValidationError) {
-        console.log(error.message);
       }
     }
   };

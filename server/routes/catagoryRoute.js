@@ -9,8 +9,8 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const category = await Category.findById(req.params.id);
-  console.log("category",category);
-  
+  console.log("category", category);
+
   if (!category) {
     return res.status(404).send("aradığınız kategori yok.");
   }
@@ -23,11 +23,12 @@ router.post("/", async (req, res) => {
   });
 
   const newCategory = await category.save();
-  res.send(newCategory);
+  res.status(201).send(newCategory);
 });
 
 router.put("/:id", async (req, res) => {
   const category = await Category.findById(req.params.id);
+  console.log("BODY", req?.body);
 
   if (!category) {
     return res.status(404).send("aradığınız kategori yok.");
@@ -41,7 +42,6 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   const category = await Category.findByIdAndDelete(req.params.id);
-
   if (!category) {
     return res.status(400).send(error.details[0].message);
   }

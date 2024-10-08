@@ -1,54 +1,44 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import {
-  Control,
   Controller,
+  FieldError,
   FieldErrors,
   FieldValues,
+  Control,
 } from "react-hook-form";
 import { Input, InputProps } from "antd";
 import { Content } from "antd/es/layout/layout";
 
-/*
-
- <InputComponent 
-    control={control}  
-    errorMessage={errors.userName?.message} 
-    {...register("userName")}
-/>
-*/
-
-
-interface IInputProps extends InputProps {
-  errorMessage?: ReactNode;
+// IInputProps uses a generic T that extends FieldValues
+interface IInputProps<T extends FieldValues> extends Omit<InputProps, 'name'> {
+  errorMessage?: FieldError;
   labelText?: string;
-  control?: any;
-//   control?: Control<{[key: string]: string}, any>;
-  errors?: FieldErrors<FieldValues>;
+  control: Control<T>; // control should be typed based on generic T
+  errors?: FieldErrors<T>;
+  name: keyof T; // name should be a key of the generic type
 }
 
-const InputComponent: FC<IInputProps> = ({
-  name = "name",
+const InputComponent: FC<IInputProps<FieldValues>> = ({
+  name,
   placeholder,
   required,
   errorMessage,
   labelText,
   control,
-  errors,
-  size
+  size,
+  defaultValue,
 }) => {
-    console.log(errorMessage);
-    
   return (
     <>
       {labelText && <label>{labelText}</label>}
       <Controller
-        name={name}
+        name={name as string} // Explicit cast to string
         control={control}
-        defaultValue=""
+        defaultValue={defaultValue}
         rules={{ required }}
-        render={({ field }) => <Input placeholder={placeholder} {...field} size={size}/>}
+        render={({ field }) => <Input placeholder={placeholder} {...field} size={size} />}
       />
-      {errorMessage ? <Content style={{color: "red"}}>{errorMessage}</Content> : ""}
+      {errorMessage ? <Content style={{ color: "red" }}>{errorMessage.message}</Content> : ""}
     </>
   );
 };

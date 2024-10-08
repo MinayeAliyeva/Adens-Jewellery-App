@@ -37,19 +37,16 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
   const { data: categoriesData } = useGetCategoriesQuery();
 
   const handleChangeMainImage = (info: UploadChangeParam<UploadFile<File>>) => {
-    console.log("info main", info);
 
     setMainImage(info.file); // Set the main image
   };
 
   const handleChangeAdditions = (info: UploadChangeParam<UploadFile<File>>) => {
-    console.log("info add", info);
 
     setFileList(info.fileList); // Update additional images
   };
 
   const onFinish = async (values: any) => {
-    console.log("values", values);
 
     const formData = new FormData();
     const formattedDate = dayjs(values.creationDate).format("DD.MM.YYYY");
@@ -68,30 +65,23 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
     formData.append("creationDate", formattedDate);
 
     // Append the main image if available
-    console.log("mainImage.originFileObj", mainImage?.originFileObj);
 
     if (mainImage) {
-      console.log("daxil mainImage", mainImage);
 
       formData.append("mainImageUrl", mainImage as any);
     }
 
     // Append additional images
     fileList.forEach((file: any) => {
-      console.log("file.originFileObj", file.originFileObj);
 
       formData.append("additionalImages", file.originFileObj ?? file);
     });
-    console.log("formData update", formData);
 
-    console.log({ values });
-    console.log({ formData });
 
     try {
       if (product?._id) {
         await updateProductById({ id: product._id, body: formData });
       } else {
-        console.log("ADD", formData);
 
         await addProduct(formData);
       }
@@ -302,7 +292,6 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                     ? Array.from({
                         length: product?.additionalImages.length,
                       }).map((_, i) => {
-                        console.log({ i, addition: product?.additionalImages });
 
                         return {
                           uid: product?._id ?? "",

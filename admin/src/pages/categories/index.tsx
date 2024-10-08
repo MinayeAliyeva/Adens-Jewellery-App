@@ -1,115 +1,62 @@
-import { FC, useState } from "react";
-import { Button, Form, Input, InputNumber, Space, Table } from "antd";
-import type { TableColumnsType, TableProps } from "antd";
-import { columns, DataType } from "./data";
+import { FC, useEffect, useState } from "react";
+import { Button, Form, Space, Table } from "antd";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { IoIosAddCircleOutline } from "react-icons/io";
+import type { TableProps } from "antd";
+import { columns } from "./data";
+import {
+  useCreateCategoryMutation,
+  useDeleteCategoryByIdMutation,
+  useLazyGetCategoriesQuery,
+  useUpdateCategoryByIdMutation,
+} from "../../store/api/catagory/catagory-api";
+import { ICatagoryResponse } from "../../store/api/catagory/modules";
+import { ButtonComponent } from "../../components/ButtonComponent";
 
-const originData = Array.from({ length: 100 }).map<DataType>((_, i) => ({
-  key: i.toString(),
-  name: `Edward ${i}`,
-  age: 32,
-  address: `London Park no. ${i}`,
-  id: `${i}`,
-}));
-
-interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
-  editing: boolean;
-  dataIndex: string;
-  title: any;
-  inputType: "number" | "text";
-  record: DataType;
-  index: number;
-}
-
-const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
-  editing,
-  dataIndex,
-  title,
-  inputType,
-  record,
-  index,
-  children,
-  ...restProps
-}) => {
-  const inputNode = inputType === "number" ? <InputNumber /> : <Input />;
-
-  return (
-    <td {...restProps}>
-      {editing ? (
-        <Form.Item
-          name={dataIndex}
-          style={{ margin: 0 }}
-          rules={[
-            {
-              required: true,
-              message: `Please Input ${title}!`,
-            },
-          ]}
-        >
-          {inputNode}
-        </Form.Item>
-      ) : (
-        children
-      )}
-    </td>
-  );
-};
-
-type OnChange = NonNullable<TableProps<DataType>["onChange"]>;
+type OnChange = NonNullable<TableProps<ICatagoryResponse>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
 type GetSingle<T> = T extends (infer U)[] ? U : never;
 type Sorts = GetSingle<Parameters<OnChange>[2]>;
 
-// const data: DataType[] = [
-//   {
-//     key: "1",
-//     name: "John Brown",
-//     age: 32,
-//     address: "New York No. 1 Lake Park",
-//     id: "1",
-//   },
-//   {
-//     key: "2",
-//     name: "Jim Green",
-//     age: 42,
-//     address: "London No. 1 Lake Park",
-//     id: "2",
-//   },
-//   {
-//     key: "3",
-//     name: "Joe Black",
-//     age: 32,
-//     address: "Sydney No. 1 Lake Park",
-//     id: "3",
-//   },
-//   {
-//     key: "4",
-//     name: "Jim Red",
-//     age: 32,
-//     address: "London No. 2 Lake Park",
-//     id: "4",
-//   },
-// ];
+export interface IFormField {
+  name: string;
+  id?: string;
+}
+const schema = yup.object().shape({
+  name: yup.string().required("First Name is required"),
+});
 
 const Category: FC = () => {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const editCategory = (id?: string | null) => {
-    setSelectedId(id!);
-  };
-  const [tableAction, setTableAction] = useState<{
-    isEdit: boolean;
-    isCreate: boolean;
-  }>({
-    isEdit: false,
-    isCreate: false,
-  });
+  const [getCategory, { data: categoryData, isLoading: isLoadingCategory }] =
+    useLazyGetCategoriesQuery();
+
+  const [craeteCategory, { isLoading: isLoadingCreatedCategory }] =
+    useCreateCategoryMutation();
+  const [deleteCategoryById, { isLoading: isLoadingDeleteCategoryById }] =
+    useDeleteCategoryByIdMutation();
+  const [updateCategoryById, { isLoading: isLoadingUpdateCategoryById }] =
+    useUpdateCategoryByIdMutation();
+  const [tableData, setTableData] = useState<ICatagoryResponse[]>([]);
+  const isLoading =
+    isLoadingCreatedCategory ||
+    isLoadingDeleteCategoryById ||
+    isLoadingUpdateCategoryById;
+  useEffect(() => {
+    if (!isLoading) {
+      console.log("RERENDER EFFECT");
+
+      getCategory().then((res) => setTableData(res?.data!));
+    }
+  }, [isLoading]);
+
+  const [selectedId, setSelectedId] = useState<string | null>();
+
   const [filteredInfo, setFilteredInfo] = useState<Filters>({});
   const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
-  const editTable = (isEdit: boolean) => {
-    setTableAction({ ...tableAction, isEdit });
-  };
   const handleChange: OnChange = (pagination, filters, sorter) => {
-    console.log("Various parameters", pagination, filters, sorter);
     setFilteredInfo(filters);
     setSortedInfo(sorter as Sorts);
   };
@@ -130,63 +77,82 @@ const Category: FC = () => {
     });
   };
 
-  const [form] = Form.useForm();
-  const [data, setData] = useState<DataType[]>(originData);
-  const [editingKey, setEditingKey] = useState("");
+  const {
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+  } = useForm<IFormField>({
+    resolver: yupResolver(schema),
+  });
 
-  const isEditing = (record: DataType) => record.key === editingKey;
-
-  const edit = (record: Partial<DataType> & { key: React.Key }) => {
-    form.setFieldsValue({ name: "", age: "", address: "", ...record });
-    setEditingKey(record.key);
-  };
-
-  const cancel = () => {
-    setEditingKey("");
-  };
-
-  const save = async (key: React.Key) => {
-    try {
-      const row = (await form.validateFields()) as DataType;
-
-      const newData = [...data];
-      const index = newData.findIndex((item) => key === item.key);
-      if (index > -1) {
-        const item = newData[index];
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        });
-        setData(newData);
-        setEditingKey("");
-      } else {
-        newData.push(row);
-        setData(newData);
-        setEditingKey("");
-      }
-    } catch (errInfo) {
-      console.log("Validate Failed:", errInfo);
+  const onFinish = (category: IFormField) => {
+    if (selectedId) {
+      updateCategoryById({ name: category?.name, id: category?.id! });
+    } else {
+      craeteCategory({ name: category?.name });
     }
+    setSelectedId(null);
+    reset();
+  };
+
+  console.log("RERENDER");
+
+  const editCategory = (id?: string | null) => {
+    reset();
+    setSelectedId(id!);
+  };
+
+  const onCancel = () => {
+    reset();
+    setSelectedId(null);
+    setTableData(categoryData!);
+  };
+
+  const onCreateCategory = () => {
+    if (tableData.find((data) => data?._id === "")) return;
+    setTableData((prev) => [{ name: "", _id: "" }, ...prev!]);
+  };
+  const onDeleteCategoryById = (id: string) => {
+    deleteCategoryById(id);
   };
 
   return (
     <>
       <Space style={{ marginBottom: 16 }}>
+      {/* <Button color="primary" variant="outlined">
+           jjjj
+          </Button> */}
         <Button onClick={clearFilters}>Clear filters</Button>
         <Button onClick={clearAll}>Clear filters and sorters</Button>
-        <Button>Create New Category</Button>
+        <ButtonComponent
+          icon={<IoIosAddCircleOutline />}
+          variant="outlined"
+          buttonText="Create New Category"
+          onClick={onCreateCategory}
+          //border="2px solid red"
+        />
       </Space>
-      <Table<DataType>
-        columns={columns({
-          filteredInfo,
-          setAgeSort,
-          sortedInfo,
-          editCategory,
-          selectedId,
-        })}
-        dataSource={data}
-        onChange={handleChange}
-      />
+      <Form>
+        <Table<ICatagoryResponse>
+          columns={columns({
+            handleSubmit,
+            onFinish,
+            errors,
+            control,
+            filteredInfo,
+            setAgeSort,
+            sortedInfo,
+            editCategory,
+            selectedId,
+            onCancel,
+            onDeleteCategoryById,
+          })}
+          loading={isLoadingCategory || isLoading}
+          dataSource={tableData}
+          onChange={handleChange}
+        />
+      </Form>
     </>
   );
 };

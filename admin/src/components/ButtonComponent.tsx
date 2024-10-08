@@ -1,8 +1,9 @@
-import { FC } from "react";
+import { CSSProperties, FC } from "react";
 import { Button } from "antd";
 import { ButtonProps } from "antd";
 interface IButtonProps extends ButtonProps {
   customColor?: string;
+  border?: CSSProperties["border"];
   buttonText?: string;
 }
 
@@ -16,20 +17,29 @@ export const ButtonComponent: FC<IButtonProps> = ({
   onClick,
   buttonText,
   style,
-  type="primary",
+  type,
+  customColor,
+  border,
+  color = "primary",
+  variant='solid',
 }) => {
   return (
     <>
       <Button
+        variant={variant}
         danger={danger}
         icon={icon}
         loading={loading}
         iconPosition={iconPosition}
         htmlType={htmlType}
-        style={style}
+        color={color}
         onClick={onClick}
         type={type}
         block={block}
+        style={{
+          ...style,
+          border: border, 
+        }}
       >
         {buttonText}
       </Button>
