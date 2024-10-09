@@ -1,117 +1,70 @@
-import { FC, useRef } from "react";
-import { SearchOutlined } from "@ant-design/icons";
-import type { InputRef, TableColumnsType, TableColumnType } from "antd";
-import { Button, Input, Space, Table } from "antd";
-import type { FilterDropdownProps } from "antd/es/table/interface";
-import { map } from "lodash";
-import { IUser } from "./modules";
+import React from 'react';
+import { Table } from 'antd';
+import type { TableColumnsType } from 'antd';
 
-type DataIndex = keyof IUser;
+interface DataType {
+  key: React.Key;
+  firstName: string;
+  lastName: number;
+  phone: string;
+  description: string;
+  email:string
+}
 
-const UsersTable: FC<{
-  data?: IUser[];
-  columns?: TableColumnsType<IUser>;
-}> = ({ data, columns }) => {
-  const searchInput = useRef<InputRef>(null);
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: FilterDropdownProps["confirm"],
-    dataIndex: DataIndex
-  ) => {
-    confirm();
-  };
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-  };
-  const getColumnSearchProps = (
-    dataIndex: DataIndex
-  ): TableColumnType<IUser> => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-      close,
-    }) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
-          style={{ marginBottom: 8, display: "block" }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => {
-              clearFilters && handleReset(clearFilters);
-              handleSearch(selectedKeys as string[], confirm, dataIndex);
-            }}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              confirm({ closeDropdown: false });
-            }}
-          >
-            Filter
-          </Button>
-          <Button
-            type="link"
-            size="small"
-            onClick={() => {
-              close();
-            }}
-          >
-            close
-          </Button>
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
-    ),
-    onFilter: (value, record) => {
-      return record?.[dataIndex!]
-        ?.toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase())!;
-    },
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
-    },
-  });
-  const tableColumns = map(columns, (column) => {
-    return {
-      ...column,
-      ...getColumnSearchProps(column?.key as any),
-    };
-  });
+const columns: TableColumnsType<DataType> = [
+  { title: 'firstName', dataIndex: 'firstName', key: 'firstName' },
+  { title: 'lastName', dataIndex: 'lastName', key: 'lastName' },
+  { title: 'phone', dataIndex: 'phone', key: 'phone' },
+  { title: 'email', dataIndex: 'email', key: 'email' },
+  {
+    title: 'Action',
+    dataIndex: '',
+    key: 'x',
+    render: () => <a>Delete</a>,
+  },
+];
 
-  return <Table columns={tableColumns} dataSource={data} />;
-};
+const data: DataType[] = [
+  {
+    key: 1,
+    firstName: 'John Brown',
+    lastName: 32,
+    phone: 'New York No. 1 Lake Park',
+    email: 'ffg@fghj',
+    description: 'My firstName is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
+  },
+  // {
+  //   key: 2,
+  //   firstName: 'Jim Green',
+  //   lastName: 42,
+  //   phone: 'London No. 1 Lake Park',
+  //   description: 'My firstName is Jim Green, I am 42 years old, living in London No. 1 Lake Park.',
+  // },
+  // {
+  //   key: 3,
+  //   firstName: 'Not Expandable',
+  //   lastName: 29,
+  //   phone: 'Jiangsu No. 1 Lake Park',
+  //   description: 'This not expandable',
+  // },
+  // {
+  //   key: 4,
+  //   firstName: 'Joe Black',
+  //   lastName: 32,
+  //   phone: 'Sydney No. 1 Lake Park',
+  //   description: 'My firstName is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park.',
+  // },
+];
+
+const UsersTable: React.FC = () => (
+  <Table<DataType>
+    columns={columns}
+    expandable={{
+      expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
+      rowExpandable: (record) => record.firstName !== 'Not Expandable',
+    }}
+    dataSource={data}
+  />
+);
 
 export default UsersTable;

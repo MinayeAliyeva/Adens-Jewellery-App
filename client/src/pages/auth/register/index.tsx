@@ -6,9 +6,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import InputComponent from "../../../components/InputComponent";
-import { useRegisterUserMutation } from "../../../store/api/user/user-api"; 
+import { useRegisterUserMutation } from "../../../store/api/user/user-api";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
+
+// Form doğrulama şeması
 const schema = yup.object().shape({
   firstName: yup.string().required("First Name is required"),
   lastName: yup.string().required("Last Name is required"),
@@ -22,7 +25,10 @@ const schema = yup.object().shape({
     .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
     .matches(/[a-z]/, "Password must contain at least one lowercase letter")
     .matches(/\d/, "Password must contain at least one number")
-    .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character")
+    .matches(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must contain at least one special character"
+    )
     .required("Password is required"),
   confirmPassword: yup
     .string()
@@ -30,6 +36,7 @@ const schema = yup.object().shape({
     .required("Confirm Password is required"),
 });
 
+// Form değerleri arayüzü
 interface IRegisterFormValues {
   firstName: string;
   lastName: string;
@@ -39,7 +46,10 @@ interface IRegisterFormValues {
 }
 
 const Register: FC = () => {
-  const [registerUser] = useRegisterUserMutation(); 
+  const [registerUser] = useRegisterUserMutation();
+  const navigate = useNavigate();
+  
+  // Form ayarları
   const {
     handleSubmit,
     reset,
@@ -47,14 +57,26 @@ const Register: FC = () => {
     formState: { errors },
   } = useForm<IRegisterFormValues>({
     resolver: yupResolver(schema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   const onSubmit = async (data: IRegisterFormValues) => {
-    console.log("data",data);
-    
     try {
-      await registerUser(data); 
-      reset(); 
+      const response = await registerUser(data).unwrap();
+       console.log("response",response);
+       
+      const token = response?.token; 
+      localStorage.setItem("authToken", token);
+        console.log("token",token);
+        
+      reset();
+      navigate('/home'); 
     } catch (error) {
       console.error("Registration failed:", error);
     }

@@ -10,8 +10,9 @@ import Login from "../pages/auth/login";
 import About from "../pages/about";
 import Favorite from "../pages/favorites";
 import Products from "../pages/home/Products";
-import Fag from "../pages/fag";
 import Error from "../pages/error";
+import FAQPage from "../pages/fag";
+import UserProfile from "../pages/profile";
 export type MyRouterObject = RouteObject;
 export enum RoutePaths {
   MAIN = "/",
@@ -25,6 +26,7 @@ export enum RoutePaths {
   FAVORITE = "/favorite",
   PRODUCTS = "/products",
   FAG = "/fag",
+  PROFILE = "/profile",
   ERROR = "*",
 }
 
@@ -75,7 +77,11 @@ export const routes: MyRouterObject[] = [
       },
       {
         path: RoutePaths.FAG,
-        element: <Fag />,
+        element: <FAQPage />,
+      },
+      {
+        path: RoutePaths.PROFILE,
+        element: <UserProfile />,
       },
       {
         path: RoutePaths.ERROR,
