@@ -6,6 +6,7 @@ const usersRouter = require("../server/routes/usersRoute");
 const catagoryRouter = require("../server/routes/catagoryRoute");
 const path = require("path");
 const cors = require("cors");
+
 app.use(express.json());
 app.use(cors());
 app.options("*", cors());
