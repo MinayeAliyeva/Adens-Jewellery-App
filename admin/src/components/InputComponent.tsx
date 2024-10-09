@@ -10,7 +10,7 @@ import { Input, InputProps } from "antd";
 import { Content } from "antd/es/layout/layout";
 
 // IInputProps uses a generic T that extends FieldValues
-interface IInputProps<T extends FieldValues> extends Omit<InputProps, 'name'> {
+interface IInputProps<T extends FieldValues> extends Omit<InputProps, "name"> {
   errorMessage?: FieldError;
   labelText?: string;
   control: Control<T>; // control should be typed based on generic T
@@ -36,9 +36,15 @@ const InputComponent: FC<IInputProps<FieldValues>> = ({
         control={control}
         defaultValue={defaultValue}
         rules={{ required }}
-        render={({ field }) => <Input placeholder={placeholder} {...field} size={size} />}
+        render={({ field }) => (
+          <Input placeholder={placeholder} {...field} size={size} />
+        )}
       />
-      {errorMessage ? <Content style={{ color: "red" }}>{errorMessage.message}</Content> : ""}
+      {errorMessage ? (
+        <Content style={{ color: "red" }}>{errorMessage.message}</Content>
+      ) : (
+        ""
+      )}
     </>
   );
 };

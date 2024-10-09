@@ -2,6 +2,9 @@ import { Content } from "antd/es/layout/layout";
 import OpenEditDialogButton from "./OpenEditDialog";
 import { IProduct } from "../../store/api/product/modules";
 import OpenDeleteDialogButton from "./OpenDeleteDialog";
+import { ICatagoryResponse } from "../../store/api/catagory/modules";
+import Typography from "antd/es/typography/Typography";
+import { IBrandsResponse } from "../../store/api/brand/modules";
 
 export const sizeOptions = [
   { label: "Small", value: "S" },
@@ -44,13 +47,15 @@ export const columns = [
   },
   {
     title: "Catagory",
-    dataIndex: "categoryName",
-    key: "categoryName",
+    dataIndex: "category",
+    key: "category",
+    render: (category: ICatagoryResponse) => <Typography>{category?.name}</Typography>
   },
   {
     title: "Brand",
     dataIndex: "brand",
     key: "brand",
+    render: (brand: IBrandsResponse) => <Typography>{brand?.name}</Typography>
   },
   {
     title: "Stock",

@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const productsRouter = require("../server/routes/productRoute");
 const usersRouter = require("../server/routes/usersRoute");
 const catagoryRouter = require("../server/routes/catagoryRoute");
+const brandRouter = require("../server/routes/brandRoute");
 const path = require("path");
 const cors = require("cors");
 
@@ -19,6 +20,7 @@ app.use("/api/products", productsRouter);
 app.use("/api/users", usersRouter);
 //catagories
 app.use("/api/catagories", catagoryRouter);
+app.use("/api/brands", brandRouter);
 
 
 app.use("/public", express.static(path.join(__dirname, "public")));

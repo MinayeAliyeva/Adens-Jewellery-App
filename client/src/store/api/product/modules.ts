@@ -6,6 +6,10 @@ export interface IComment {
   username: string;
   userId: string;
 }
+export interface IBrandsResponse {
+  name: string;
+  _id: string;
+}
 
 export interface IProduct {
   productAvailability: {
@@ -20,7 +24,7 @@ export interface IProduct {
   comments: any[];
   mainImageUrl: string;
   additionalImages: string[];
-  brand: string;
+  brand: IBrandsResponse;
   description: string;
   stock: number;
   weight: number;

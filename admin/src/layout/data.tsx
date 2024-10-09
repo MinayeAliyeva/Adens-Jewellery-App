@@ -15,6 +15,11 @@ export const menu = [
     path: "categories",
   },
   {
+    title: "Brand",
+    icon: <TbCategoryFilled />,
+    path: "brands",
+  },
+  {
     title: "Analytics",
     icon: <SiSimpleanalytics />,
     path: "analytics",

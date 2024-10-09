@@ -2,21 +2,23 @@ import { FC } from "react";
 import { Select, Space } from "antd";
 import { SelectProps } from "antd/es/select";
 
-interface ISelectBox extends SelectProps<string[]> {
-  sizeOptions: { label: string; value: string }[];
+interface ISelectBox extends SelectProps<string[] | string> {
+  options: { label: string; value: string }[];
   handleChange?: (value: string[] | string) => void;
   name: string;
 }
 
 const SelectBox: FC<ISelectBox> = ({
-  sizeOptions,
+  options,
   handleChange,
+  defaultValue,
   name,
   ...rest
 }) => (
   <Select
     {...rest}
-    options={sizeOptions}
+    defaultValue={defaultValue}
+    options={options}
     onChange={handleChange}
     optionRender={(option) => <Space key={option.value}>{option.label}</Space>}
   />
