@@ -6,15 +6,12 @@ import { FaSave } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import InputComponent from "../../components/InputComponent";
-import { Control, FieldErrors, UseFormHandleSubmit } from "react-hook-form";
+import {
+  Control,
+  FieldErrors,
+  UseFormHandleSubmit,
+} from "react-hook-form";
 import { IFormField } from ".";
-import { IBrandsResponse } from "../../store/api/brand/modules";
-import SelectBoxComponent from "../../components/SelectBoxComponent";
-
-const brandOptions = (brands?: IBrandsResponse[]) =>brands?.map((item) => ({
-  label: item.name,
-  value: item._id,
-}))
 
 export const columns = ({
   control,
@@ -24,14 +21,13 @@ export const columns = ({
   editTable,
   isEdit,
   isCreate,
-  brandData,
   editCategory,
   selectedId,
   errors,
   onFinish,
   handleSubmit,
   onCancel,
-  onDeleteCategoryById,
+  onDeleteCategoryById
 }: {
   handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
   control: Control<IFormField>;
@@ -47,12 +43,20 @@ export const columns = ({
   onFinish: (values: IFormField) => void;
   onCancel: () => void;
   onDeleteCategoryById: (id: string) => void;
-  brandData?: IBrandsResponse[];
 }): TableColumnsType<ICatagoryResponse> => [
   {
-    title: "Category name",
+    title: '№',
+    dataIndex: "_id",
+    key: '_id',
+    width: 170,
+    
+    render: (text, record, index) => index + 1
+  },
+  {
+    title: "Brand Name",
     dataIndex: "name",
     key: "name",
+    // align:"center",
     render: (name: string, record: ICatagoryResponse) => {
       if (!record?._id && !record?.name) {
         return (
@@ -60,7 +64,7 @@ export const columns = ({
             // defaultValue={name}
             name="name"
             control={control as any}
-            placeholder="Category Name"
+            placeholder="Brand Name"
             errorMessage={errors?.name}
           />
         );
@@ -72,7 +76,7 @@ export const columns = ({
               defaultValue={name}
               name="name"
               control={control as any}
-              placeholder="Category Name"
+              placeholder="Brand Name"
               errorMessage={errors?.name}
             />
           ) : (
@@ -118,128 +122,37 @@ export const columns = ({
     sortOrder: sortedInfo?.columnKey === "name" ? sortedInfo.order : null,
     ellipsis: true,
   },
-  {
-    title: "Brand name",
-    dataIndex: "brand",
-    key: "brand",
-    render: (brand: any, record: ICatagoryResponse) => {
-      if (!record?._id && !record?.name) {
-        return (
-          <SelectBoxComponent
-            control={control as any}
-            name="brand"
-            allowClear
-            options={brandOptions(brandData)}
-            style={{width: "100%"}}
-          />
-        );
-      }
-      return (
-        <>
-          {selectedId === record?._id ? (
-            <SelectBoxComponent
-              control={control as any}
-              name="brand"
-              allowClear
-              defaultValue={brand?.name}
-              options={brandOptions(brandData)}
-              style={{width: "100%"}}
-            />
-          ) : (
-            <Typography>{brand?.name}</Typography>
-          )}
-        </>
-      );
-    },
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder="Search address"
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => confirm()}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => confirm()}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => {
-            setSelectedKeys([]);
-            confirm();
-          }}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filteredValue: filteredInfo?.name || null,
-    onFilter: (value, record) => record.name.includes(value as string),
-    sorter: (a, b) => a?.name?.length - b?.name?.length,
-    sortOrder: sortedInfo?.columnKey === "name" ? sortedInfo.order : null,
-    ellipsis: true,
-  },
   // {
-  //   title: "Age",
-  //   dataIndex: "age",
-  //   key: "age",
-  //   render: (age: number, record:  ICatagoryResponse) => {
+  //   title: "brand",
+  //   dataIndex: "brand",
+  //   key: "brand",
+  //   render: (name: string, record: ICatagoryResponse) => {
+  //     if (!record?._id && !record?.name) {
+  //       return (
+  //         <InputComponent
+  //           // defaultValue={name}
+  //           name="name"
+  //           control={control as any}
+  //           placeholder="Brand Name"
+  //           errorMessage={errors?.name}
+  //         />
+  //       );
+  //     }
   //     return (
   //       <>
-  //         {selectedId === record?.id ? (
-  //            <Form.Item
-  //            name="age"
-  //            style={{ margin: 0 }}
-  //            rules={[
-  //              {
-  //                required: true,
-  //                message: `Please Input age!`,
-  //              },
-  //            ]}
-  //          >
-  //            <Input
-  //             type="number"
-  //             // value={age}
-  //             // onChange={(e) => {
-  //             //   console.log("Updated age:", e.target.value);
-  //             // }}
+  //         {selectedId === record?._id ? (
+  //           <InputComponent
+  //             defaultValue={name}
+  //             name="name"
+  //             control={control as any}
+  //             placeholder="Brand Name"
+  //             errorMessage={errors?.name}
   //           />
-  //          </Form.Item>
-
   //         ) : (
-  //           <div>{age}</div>
+  //           <Typography>{name}</Typography>
   //         )}
   //       </>
   //     );
-  //   },
-  //   sorter: (a, b) => a?.age - b?.age,
-  //   sortOrder: sortedInfo?.columnKey === "age" ? sortedInfo.order : null,
-  //   ellipsis: true,
-  // },
-  // {
-  //   title: "Address",
-  //   dataIndex: "address",
-  //   key: "address",
-  //   render: (address: string, record:  ICatagoryResponse) => {
-  //     return selectedId === record?.id ? (
-  //           <Input
-  //             value={address}
-  //             onChange={(e) => {
-  //               console.log("Updated address:", e.target.value);
-  //             }}
-  //           />
-  //         ) : (
-  //           <div>{address}</div>
-  //         )
   //   },
   //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
   //     <div style={{ padding: 8 }}>
@@ -272,20 +185,18 @@ export const columns = ({
   //       </Button>
   //     </div>
   //   ),
-  //   filteredValue: filteredInfo?.address || null,
-  //   onFilter: (value, record) =>
-  //     record.address.toLowerCase().includes((value as string).toLowerCase()),
-  //   sorter: (a, b) => a?.address?.length - b?.address?.length,
-  //   sortOrder: sortedInfo?.columnKey === "address" ? sortedInfo.order : null,
+  //   filteredValue: filteredInfo?.name || null,
+  //   onFilter: (value, record) => record.name.includes(value as string),
+  //   sorter: (a, b) => a?.name?.length - b?.name?.length,
+  //   sortOrder: sortedInfo?.columnKey === "name" ? sortedInfo.order : null,
   //   ellipsis: true,
   // },
   {
     title: "",
     dataIndex: "actions",
     key: "actions",
+    align:"right",
     render: (_, record: ICatagoryResponse) => {
-      // if(!record?._id && !record?.name){}
-
       return (
         <div>
           {(record._id && record._id !== selectedId) ||

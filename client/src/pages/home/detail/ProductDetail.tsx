@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 import { Card, Col, Row } from "antd";
 import ImageGallery from "./ImageGallery";
 import ProductInfo from "./ProductInfo";
-import { IProduct } from "../../../../../admin/src/store/api/product/modules";
+import { IProduct } from "../../../store/api/product/modules";
 
 interface IProductDetailProps {
   product: IProduct;
@@ -15,12 +15,8 @@ const ProductDetail: FC<IProductDetailProps> = memo(({ product }) => {
   };
   console.log("product,", product);
 
-  const {
-    mainImageUrl,
-    additionalImages,
-    productName,
-
-  } = product ?? initialProductValue;
+  const { mainImageUrl, additionalImages, productName } =
+    product ?? initialProductValue;
   console.log({ mainImageUrl, additionalImages, productName });
 
   return (

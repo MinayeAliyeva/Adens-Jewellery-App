@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { FaSave } from "react-icons/fa";
-import { Button, Form, Input, Modal, Row, Col, Upload } from "antd";
+import { Button, Form, Input, Modal, Row, Col, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 import {
@@ -15,8 +15,9 @@ import { useForm } from "react-hook-form";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
 import { ButtonComponent } from "../../components/ButtonComponent";
 import { IProduct } from "../../store/api/product/modules";
-import { omit } from "lodash";
 import { useGetCategoriesQuery } from "../../store/api/catagory/catagory-api";
+import SelectBoxComponent from "../../components/SelectBoxComponent";
+import { useGetBrandsQuery } from "../../store/api/brand/brand-api";
 
 interface IProductDialog {
   open: boolean;
@@ -26,28 +27,26 @@ interface IProductDialog {
 
 const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
   const [addProduct, { isLoading: isLoadingProduct }] = useAddProductMutation();
+  const { data: brandData, isLoading: isLoadingBrand } = useGetBrandsQuery();
+  const [updateProductById, { isLoading: isLoadingUpdatedProduct }] = useUpdateProductByIdMutation();
+
   const { control } = useForm();
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [mainImage, setMainImage] = useState<UploadFile | null>(null); // Track main image state
 
-  const [updateProductById, { isLoading: isLoadingUpdatedProduct }] =
-    useUpdateProductByIdMutation();
-
   const { data: categoriesData } = useGetCategoriesQuery();
 
   const handleChangeMainImage = (info: UploadChangeParam<UploadFile<File>>) => {
-
     setMainImage(info.file); // Set the main image
   };
 
   const handleChangeAdditions = (info: UploadChangeParam<UploadFile<File>>) => {
-
     setFileList(info.fileList); // Update additional images
   };
 
   const onFinish = async (values: any) => {
-
+    
     const formData = new FormData();
     const formattedDate = dayjs(values.creationDate).format("DD.MM.YYYY");
 
@@ -67,22 +66,18 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
     // Append the main image if available
 
     if (mainImage) {
-
       formData.append("mainImageUrl", mainImage as any);
     }
 
     // Append additional images
     fileList.forEach((file: any) => {
-
       formData.append("additionalImages", file.originFileObj ?? file);
     });
-
 
     try {
       if (product?._id) {
         await updateProductById({ id: product._id, body: formData });
       } else {
-
         await addProduct(formData);
       }
       setOpen?.(false);
@@ -90,6 +85,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
       console.error("Error:", error);
     }
   };
+  console.log({ product });
 
   return (
     <Modal
@@ -110,9 +106,9 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           productName: product?.productName,
           size: product?.size,
           price: product?.price,
-          category: product?.category,
+          category: product?.category?.name,
           color: product?.color,
-          brand: product?.brand,
+          brand: product?.brand?.name,
           description: product?.description,
           stock: product?.stock,
           weight: product?.weight,
@@ -143,7 +139,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             >
               <SelectBox
                 name="size"
-                sizeOptions={sizeOptions}
+                options={sizeOptions}
                 style={{ width: "100%" }}
                 placeholder={"Enter size..."}
                 mode="multiple"
@@ -176,35 +172,51 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             <Form.Item
               label="Category Name"
               name="category"
-              // rules={[
-              //   { required: true, message: "Category name is required!" },
-              // ]}
+              rules={[
+                { required: true, message: "Category name is required!" },
+              ]}
             >
-              {/* <Input placeholder="Enter category..." /> */}
-          
               <SelectBox
                 name="category"
-                sizeOptions={
+                options={
                   categoriesData?.map((category) => ({
                     label: category?.name,
                     value: category?._id,
                   }))!
                 }
+                style={{ width: "100%" }}
+                placeholder={"Enter category..."}
+                defaultValue={product?.category?.name! ?? ""}
+                allowClear={true}
                 handleChange={(value) => form.setFieldsValue({ category: value })}
               />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Color" name="color">
-              <Input placeholder="Enter color..." />
+          <Form.Item label="Brand" name="brand">
+          <SelectBox
+                name="brand"
+                options={
+                  brandData?.map((brand) => ({
+                    label: brand?.name,
+                    value: brand?._id,
+                  }))!
+                }
+                style={{ width: "100%" }}
+                placeholder={"Enter brand..."}
+                defaultValue={product?.category?.name! ?? ""}
+                allowClear={true}
+                handleChange={(value) => form.setFieldsValue({ brand: value })}
+              />
             </Form.Item>
+           
           </Col>
         </Row>
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="Brand" name="brand">
-              <Input placeholder="Enter brand..." />
+          <Form.Item label="Color" name="color">
+              <Input placeholder="Enter color..." />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -292,9 +304,8 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                     ? Array.from({
                         length: product?.additionalImages.length,
                       }).map((_, i) => {
-
                         return {
-                          uid: product?._id ?? "",
+                          uid: `${product?._id}#${i}`,
                           name: product?.productName ?? "",
                           status: "done",
                           url: product?.additionalImages[i],

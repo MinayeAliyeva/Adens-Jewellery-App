@@ -7,6 +7,7 @@ import PrivateRouting from "./PrivateRouting";
 import MainLayout from "../layout/MainLayout";
 import Category from "../pages/categories";
 import UsersTable from "../pages/users/usersTable";
+import Brand from "../pages/brands";
 
 const routes: TypeRouteObject[] = [
   {
@@ -17,6 +18,7 @@ const routes: TypeRouteObject[] = [
       { index: true, element: <Navigate to="/products" /> , auth: true},
       { path: "/products", element: <Products />,  auth: true},
       { path: "/categories", element: <Category />,  auth: true},
+      { path: "/brands", element: <Brand />,  auth: true},
       { path: "/users", element: <UsersTable />,  auth: true},
     ],
   },

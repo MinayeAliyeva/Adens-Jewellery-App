@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from "react";
-import {  Form, Space, Table } from "antd";
+import { Form, Space, Table } from "antd";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -7,15 +7,15 @@ import { IoIosAddCircleOutline } from "react-icons/io";
 import { MdClearAll } from "react-icons/md";
 import type { TableProps } from "antd";
 import { columns } from "./data";
-import {
-  useCreateCategoryMutation,
-  useDeleteCategoryByIdMutation,
-  useLazyGetCategoriesQuery,
-  useUpdateCategoryByIdMutation,
-} from "../../store/api/catagory/catagory-api";
+
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import { ButtonComponent } from "../../components/ButtonComponent";
-import { useGetBrandsQuery } from "../../store/api/brand/brand-api";
+import {
+  useCreateBrandMutation,
+  useDeleteBrandByIdMutation,
+  useLazyGetBrandsQuery,
+  useUpdateBrandByIdMutation,
+} from "../../store/api/brand/brand-api";
 
 type OnChange = NonNullable<TableProps<ICatagoryResponse>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -25,35 +25,34 @@ type Sorts = GetSingle<Parameters<OnChange>[2]>;
 export interface IFormField {
   name: string;
   id?: string;
-  brand?: string;
 }
 const schema = yup.object().shape({
   name: yup.string().required("First Name is required"),
 });
 
-const Category: FC = () => {
-  const [getCategory, { data: categoryData, isLoading: isLoadingCategory }] =
-    useLazyGetCategoriesQuery();
+const Brand: FC = () => {
+  const [getBrands, { data: brandData, isLoading: isLoadingBrand }] =
+    useLazyGetBrandsQuery();
 
-    const { data: brandData, isLoading: isLoadingBrand } =
-    useGetBrandsQuery();
+  const [craeteBrand, { isLoading: isLoadingCreatedBrand }] =
+    useCreateBrandMutation();
 
-  const [craeteCategory, { isLoading: isLoadingCreatedCategory }] =
-    useCreateCategoryMutation();
-  const [deleteCategoryById, { isLoading: isLoadingDeleteCategoryById }] =
-    useDeleteCategoryByIdMutation();
-  const [updateCategoryById, { isLoading: isLoadingUpdateCategoryById }] =
-    useUpdateCategoryByIdMutation();
+  const [deleteBrandById, { isLoading: isLoadingDeleteBrandById }] =
+    useDeleteBrandByIdMutation();
+
+  const [updateBrandById, { isLoading: isLoadingUpdateBrandById }] =
+    useUpdateBrandByIdMutation();
+
   const [tableData, setTableData] = useState<ICatagoryResponse[]>([]);
   const isLoading =
-    isLoadingCreatedCategory ||
-    isLoadingDeleteCategoryById ||
-    isLoadingUpdateCategoryById;
+    isLoadingCreatedBrand ||
+    isLoadingDeleteBrandById ||
+    isLoadingUpdateBrandById;
   useEffect(() => {
     if (!isLoading) {
       console.log("RERENDER EFFECT");
 
-      getCategory().then((res) => setTableData(res?.data!));
+      getBrands().then((res) => setTableData(res?.data!));
     }
   }, [isLoading]);
 
@@ -93,12 +92,10 @@ const Category: FC = () => {
   });
 
   const onFinish = (category: IFormField) => {
-    console.log({category});
-    
     if (selectedId) {
-      updateCategoryById({ name: category?.name, id: category?.id!, brand: category.brand! });
+      updateBrandById({ name: category?.name, id: category?.id! });
     } else {
-      craeteCategory({ name: category?.name, brand: category.brand! });
+      craeteBrand({ name: category?.name });
     }
     setSelectedId(null);
     reset();
@@ -114,7 +111,7 @@ const Category: FC = () => {
   const onCancel = () => {
     reset();
     setSelectedId(null);
-    setTableData(categoryData!);
+    setTableData(brandData!);
   };
 
   const onCreateCategory = () => {
@@ -122,23 +119,33 @@ const Category: FC = () => {
     setTableData((prev) => [{ name: "", _id: "" }, ...prev!]);
   };
   const onDeleteCategoryById = (id: string) => {
-    deleteCategoryById(id);
+    deleteBrandById(id);
   };
 
   return (
     <>
       <Space style={{ marginBottom: 16 }}>
-      {/* <Button color="primary" variant="outlined">
+        {/* <Button color="primary" variant="outlined">
            jjjj
           </Button> */}
         {/* <Button onClick={clearFilters}>Clear filters</Button> */}
-        <ButtonComponent      variant="outlined" icon={<MdClearAll/>} onClick={clearFilters} buttonText="Clear filters"/>
+        <ButtonComponent
+          variant="outlined"
+          icon={<MdClearAll />}
+          onClick={clearFilters}
+          buttonText="Clear filters"
+        />
         {/* <Button onClick={clearAll}>Clear filters and sorters</Button> */}
-        <ButtonComponent      variant="outlined" icon={<MdClearAll/>} onClick={clearAll} buttonText="Clear filters and sorters"/>
+        <ButtonComponent
+          variant="outlined"
+          icon={<MdClearAll />}
+          onClick={clearAll}
+          buttonText="Clear filters and sorters"
+        />
         <ButtonComponent
           icon={<IoIosAddCircleOutline />}
           variant="outlined"
-          buttonText="Create New Category"
+          buttonText="Create New Brand"
           onClick={onCreateCategory}
           //border="2px solid red"
         />
@@ -157,9 +164,9 @@ const Category: FC = () => {
             selectedId,
             onCancel,
             onDeleteCategoryById,
-            brandData: brandData,
           })}
-          loading={isLoadingCategory || isLoading}
+          bordered={true}
+          loading={isLoadingBrand || isLoading}
           dataSource={tableData}
           onChange={handleChange}
         />
@@ -168,4 +175,4 @@ const Category: FC = () => {
   );
 };
 
-export default Category;
+export default Brand;

@@ -54,7 +54,7 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
       )}
       {product?.brand && (
         <Paragraph>
-          <strong>Brand:</strong> {product?.brand}
+          <strong>Brand:</strong> {product?.brand?.name}
         </Paragraph>
       )}
       {product?.creationDate && (

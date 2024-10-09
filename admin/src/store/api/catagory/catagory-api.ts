@@ -15,7 +15,7 @@ export const catagoryApi = createApi({
     getCategories: builder.query<ICatagoryResponse[], void>({
       query: () => `/api/catagories`,
     }),
-    createCategory: builder.mutation<ICatagoryResponse[], { name: string }>({
+    createCategory: builder.mutation<ICatagoryResponse[], { name: string, brand: string }>({
       query: (body) => ({
         url: "/api/catagories",
         method: "POST",
@@ -30,7 +30,7 @@ export const catagoryApi = createApi({
     }),
     updateCategoryById: builder.mutation<
       ICatagoryResponse,
-      { name: string; id: string }
+      { name: string; id: string, brand: string }
     >({
       query: (body) => ({
         url: `/api/catagories/${body?.id}`,

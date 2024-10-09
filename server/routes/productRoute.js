@@ -37,7 +37,7 @@ router.get("/", async (req, res) => {
   try {
     const { category, productName, min, max } = req.query;
     if (!category && !productName && !min && !max) {
-      const allProducts = await Product.find();
+      const allProducts = await Product.find().populate('category').populate('brand');
       return res.status(200).send(allProducts);
     }
 
@@ -50,7 +50,7 @@ router.get("/", async (req, res) => {
       ...(max && { price: { $lte: Number(max) } }),
     };
 
-    const products = await Product.find(query);
+    const products = await Product.find(query).populate('category').populate('brand');
     if (!products.length) {
       return res.status(404).send("Ürün bulunamadı");
     }
@@ -64,7 +64,6 @@ router.get("/", async (req, res) => {
 //Detail
 router.get("/:id", async (req, res) => {
   const product = await Product.findOne({ _id: req.params.id });
-  console.log("product",product);
   
   if (!product) {
     return res.status(404).send("Such product is not exsits...");
@@ -194,7 +193,7 @@ router.put(
             size: req.body.size,
             price: req.body.price,
             measure: req.body.measure,
-            categoryName: req.body.categoryName,
+            category: req.body.category,
             color: req.body.color,
             comments: req.body.comments,
             mainImageUrl: mainImageUrl || findedProduct.mainImageUrl, // Eğer yeni dosya yoksa eski dosyayı kullan

@@ -49,7 +49,6 @@ const productSchema = new mongoose.Schema({
   //   isFavorite: Boolean,
   //   favoriteId: String,
   // },
-  brand: String,
   // viewing: Number,
   material: String,
   popularity: Number,
@@ -67,7 +66,10 @@ const productSchema = new mongoose.Schema({
   reviewsCount: Number,
   averageRating: Number,
   color: String,
-  brand: String,
+  brand: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Brand",
+  },
   productAvailability: {
     online: Boolean,
     stores: [String],
