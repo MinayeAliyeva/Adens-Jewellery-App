@@ -9,7 +9,6 @@ import InputComponent from "../../components/InputComponent";
 import {
   Control,
   FieldErrors,
-  FieldValues,
   UseFormHandleSubmit,
 } from "react-hook-form";
 import { IFormField } from ".";
@@ -49,6 +48,75 @@ export const columns = ({
     title: "name",
     dataIndex: "name",
     key: "name",
+    render: (name: string, record: ICatagoryResponse) => {
+      if (!record?._id && !record?.name) {
+        return (
+          <InputComponent
+            // defaultValue={name}
+            name="name"
+            control={control as any}
+            placeholder="Category Name"
+            errorMessage={errors?.name}
+          />
+        );
+      }
+      return (
+        <>
+          {selectedId === record?._id ? (
+            <InputComponent
+              defaultValue={name}
+              name="name"
+              control={control as any}
+              placeholder="Category Name"
+              errorMessage={errors?.name}
+            />
+          ) : (
+            <Typography>{name}</Typography>
+          )}
+        </>
+      );
+    },
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          placeholder="Search address"
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => confirm()}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => confirm()}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => {
+            setSelectedKeys([]);
+            confirm();
+          }}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filteredValue: filteredInfo?.name || null,
+    onFilter: (value, record) => record.name.includes(value as string),
+    sorter: (a, b) => a?.name?.length - b?.name?.length,
+    sortOrder: sortedInfo?.columnKey === "name" ? sortedInfo.order : null,
+    ellipsis: true,
+  },
+  {
+    title: "brand",
+    dataIndex: "brand",
+    key: "brand",
     render: (name: string, record: ICatagoryResponse) => {
       if (!record?._id && !record?.name) {
         return (

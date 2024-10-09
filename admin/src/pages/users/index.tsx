@@ -13,7 +13,8 @@ const Users = () => {
   ];
   return (
     <>
-      <UsersTable data={data} columns={columns} />
+      {/* <UsersTable data={data} columns={columns} /> */}
+      <UsersTable/>
     </>
   );
 };

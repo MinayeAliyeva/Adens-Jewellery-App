@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { IoIosAddCircleOutline } from "react-icons/io";
+import { MdClearAll } from "react-icons/md";
 import type { TableProps } from "antd";
 import { columns } from "./data";
 import {
@@ -123,8 +124,10 @@ const Category: FC = () => {
       {/* <Button color="primary" variant="outlined">
            jjjj
           </Button> */}
-        <Button onClick={clearFilters}>Clear filters</Button>
-        <Button onClick={clearAll}>Clear filters and sorters</Button>
+        {/* <Button onClick={clearFilters}>Clear filters</Button> */}
+        <ButtonComponent      variant="outlined" icon={<MdClearAll/>} onClick={clearFilters} buttonText="Clear filters"/>
+        {/* <Button onClick={clearAll}>Clear filters and sorters</Button> */}
+        <ButtonComponent      variant="outlined" icon={<MdClearAll/>} onClick={clearAll} buttonText="Clear filters and sorters"/>
         <ButtonComponent
           icon={<IoIosAddCircleOutline />}
           variant="outlined"

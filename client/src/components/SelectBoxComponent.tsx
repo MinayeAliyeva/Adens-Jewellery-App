@@ -1,4 +1,4 @@
-import { FC, ReactElement } from "react";
+import { CSSProperties, FC, ReactElement } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Select, SelectProps } from "antd";
 
@@ -9,6 +9,7 @@ interface ISelectBoxProps extends SelectProps {
   labelText?: string;
   name?: string;
   required?: boolean;
+  style?: CSSProperties;
 }
 
 const SelectBoxComponent: FC<ISelectBoxProps> = ({
@@ -18,7 +19,11 @@ const SelectBoxComponent: FC<ISelectBoxProps> = ({
   labelText,
   defaultValue,
   required,
-  options
+  options,
+  style,
+  mode,
+  size = "large", 
+  ...rest 
 }) => {
   const {
     control,
@@ -31,14 +36,22 @@ const SelectBoxComponent: FC<ISelectBoxProps> = ({
       <Controller
         name={name}
         control={control}
-        defaultValue=""
+        defaultValue={defaultValue}
         rules={{ required }}
         render={({ field }) => (
-          <Select defaultValue={defaultValue} style={{ width: 120 }}>
+          <Select
+            {...field}
+            size={size} 
+            mode={mode} 
+            defaultValue={defaultValue}
+            style={style}
+            placeholder={placeholder}
+            {...rest} 
+          >
             {options?.map((item, index: number) => {
               return (
                 <Option value={item.value} key={index}>
-                  {item.label}
+                  {item.label || item?.name}
                 </Option>
               );
             })}

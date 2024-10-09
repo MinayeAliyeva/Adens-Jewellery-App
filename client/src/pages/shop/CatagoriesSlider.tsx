@@ -11,7 +11,7 @@ const CatagoriesSlider = () => {
         backgroundRepeat: "no-repeat",
         height: "40vh",
       }}
-    ></Layout>
+    />
   );
 };
 

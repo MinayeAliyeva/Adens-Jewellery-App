@@ -1,22 +1,27 @@
 import React from "react";
 import { Form, Button, Typography } from "antd";
-import { UserOutlined, MailOutlined } from "@ant-design/icons";
+import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import InputComponent from "../../../components/InputComponent";
+import { useLoginUserMutation } from "../../../store/api/user/user-api";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
 const schema = yup.object().shape({
-  firstname: yup.string().required("First Name is required"),
-  email: yup.string().email("Invalid email format").required("Email is required"),
+  email: yup
+    .string()
+    .email("Invalid email format")
+    .required("Email is required"),
+  password: yup.string().required("Password is required"),
 });
 
 interface ILoginFormValues {
-  firstname: string;
   email: string;
+  password: string;
 }
 
 const Login: React.FC = () => {
@@ -26,14 +31,25 @@ const Login: React.FC = () => {
     reset,
     formState: { errors },
   } = useForm<ILoginFormValues>({
-    resolver: yupResolver(schema), 
+    resolver: yupResolver(schema),
   });
 
-  console.log("render LOGIN");
+  const [loginUser] = useLoginUserMutation();
+  const navigate = useNavigate();
+  const onSubmit = async (data: ILoginFormValues) => {
+    try {
+      const token = await loginUser({
+        email: data.email,
+        password: data.password,
+      }).unwrap();
 
-  const onSubmit = (data: ILoginFormValues) => {
-    console.log(data);
-    reset();
+      console.log("token", token);
+      localStorage.setItem("authToken", token.token);
+
+      navigate("/");
+    } catch (error) {
+      console.error("Login error", error);
+    }
   };
 
   return (
@@ -68,20 +84,6 @@ const Login: React.FC = () => {
 
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Form.Item
-            label="First Name"
-            validateStatus={errors.firstname ? "error" : ""}
-            help={errors.firstname ? errors.firstname.message : ""}
-          >
-            <InputComponent
-              name="firstname"
-              control={control}
-              placeholder="Firstname"
-              prefix={<UserOutlined />}
-              rules={{ required: "First Name is required" }} 
-            />
-          </Form.Item>
-
-          <Form.Item
             label="Email"
             validateStatus={errors.email ? "error" : ""}
             help={errors.email ? errors.email.message : ""}
@@ -91,13 +93,20 @@ const Login: React.FC = () => {
               control={control}
               placeholder="Email"
               prefix={<MailOutlined />}
-              rules={{
-                required: "Email is required",
-                pattern: {
-                  value: /^\S+@\S+$/i,
-                  message: "Invalid email format",
-                },
-              }} 
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Password"
+            validateStatus={errors.password ? "error" : ""}
+            help={errors.password ? errors.password.message : ""}
+          >
+            <InputComponent
+              name="password"
+              control={control}
+              placeholder="Password"
+              prefix={<LockOutlined />}
+              type="password"
             />
           </Form.Item>
 

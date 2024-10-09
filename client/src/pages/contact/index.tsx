@@ -1,6 +1,5 @@
 import React from "react";
-import { FaFacebook } from "react-icons/fa6";
-import { FaTwitter } from "react-icons/fa";
+import { FaFacebook, FaTwitter } from "react-icons/fa";
 import { IoLogoInstagram } from "react-icons/io5";
 import { Card, Form, Input, Button, Typography, Row, Col, Divider } from "antd";
 import {
@@ -17,24 +16,25 @@ const Contact = () => {
   };
 
   return (
-    <div style={{ padding: "50px", backgroundColor: "#f0f2f5",height:'100vh' }}>
-      <Row gutter={16}>
-        <Col xs={24} sm={12}>
+    <div style={{ padding: "50px", backgroundColor: "#f0f2f5", height: '100vh' }}>
+      <Row gutter={16} justify="center" >
+        <Col xs={24} sm={16} md={12}>
           <Card
             style={{
               borderRadius: "10px",
               boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+              padding: "30px",
+              marginBottom: "30px",
             }}
           >
-            <Title level={2}>Contact Details</Title>
-            <Paragraph>
-              If you have any questions, feel free to reach out to us by filling
-              out the form below.
+            <Title level={2} style={{ textAlign: 'center' }}>Contact Us</Title>
+            <Paragraph style={{ textAlign: 'center' }}>
+              If you have any questions, feel free to reach out to us by filling out the form below.
             </Paragraph>
 
             <Form layout="vertical" onFinish={onFinish}>
               <Row gutter={16}>
-                <Col span={8}>
+                <Col span={12}>
                   <Form.Item
                     label="Name"
                     name="name"
@@ -45,7 +45,7 @@ const Contact = () => {
                     <Input placeholder="Enter your name" />
                   </Form.Item>
                 </Col>
-                <Col span={8}>
+                <Col span={12}>
                   <Form.Item
                     label="Email"
                     name="email"
@@ -63,7 +63,10 @@ const Contact = () => {
                     <Input placeholder="Enter your email" />
                   </Form.Item>
                 </Col>
-                <Col span={8}>
+              </Row>
+
+              <Row gutter={16}>
+                <Col span={12}>
                   <Form.Item
                     label="Phone"
                     name="phone"
@@ -77,6 +80,17 @@ const Contact = () => {
                     <Input placeholder="Enter your phone number" />
                   </Form.Item>
                 </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Address"
+                    name="address"
+                    rules={[
+                      { required: true, message: "Please enter your address!" },
+                    ]}
+                  >
+                    <Input placeholder="Enter your address" />
+                  </Form.Item>
+                </Col>
               </Row>
 
               <Form.Item
@@ -86,99 +100,28 @@ const Contact = () => {
                   { required: true, message: "Please enter your message!" },
                 ]}
               >
-                <Input.TextArea rows={8} placeholder="Write your message" />
+                <Input.TextArea rows={6} placeholder="Write your message" />
               </Form.Item>
 
-              <Form.Item>
-                <Row
+              <Form.Item style={{ textAlign: 'center' }}>
+                <Button
+                  type="primary"
+                  htmlType="submit"
                   style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
+                    backgroundColor: "#40331D",
+                    padding: "10px 30px",
+                    borderRadius: "5px",
+                    fontSize: "16px",
                   }}
                 >
-                  {" "}
-                  <Button
-                    type="primary"
-                    htmlType="submit"
-                    style={{
-                      width: "200px",
-                      backgroundColor: "#40331D",
-                      padding: "15px 20px",
-                    }}
-                  >
-                    Send Message
-                  </Button>
-                </Row>
+                  Send Message
+                </Button>
               </Form.Item>
             </Form>
           </Card>
         </Col>
 
-        <Col xs={24} sm={12}>
-          <Card
-            style={{
-              borderRadius: "10px",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-              height: "544px",
-              backgroundColor: "#F5F3EE",
-              padding: "20px",
-            }}
-          >
-            <Title style={{ fontSize: "15px", marginBottom: "16px" }} level={4}>
-              Get In Touch
-            </Title>
 
-            <Typography style={{ fontWeight: "bold", marginBottom: "8px" }}>
-              Email:
-            </Typography>
-            <Paragraph
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "12px",
-              }}
-            >
-              <MailOutlined style={{ marginRight: 8 }} />
-              example@example.com
-            </Paragraph>
-
-            <Divider />
-
-            <Typography style={{ fontWeight: "bold", marginBottom: "8px" }}>
-              Phone:
-            </Typography>
-            <Paragraph
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "12px",
-              }}
-            >
-              <PhoneOutlined style={{ marginRight: 8 }} />
-              +123 456 7890
-            </Paragraph>
-
-            <Divider style={{ margin: "16px 0" }} />
-
-            <Typography style={{ fontWeight: "bold", marginBottom: "8px" }}>
-              Address:
-            </Typography>
-            <Paragraph style={{ display: "flex", alignItems: "center" }}>
-              <EnvironmentOutlined style={{ marginRight: 8 }} />
-              Rains HQ, Jens Olsens Vej 13, 8200 Aarhus N
-            </Paragraph>
-
-            <Typography style={{ fontWeight: "bold", marginTop: "16px" }}>
-              Follow Us:
-            </Typography>
-            <Paragraph style={{ marginTop: "8px" ,display:'flex',gap:'10px'}}>
-              <FaFacebook />
-              <FaTwitter />
-              <IoLogoInstagram />
-            </Paragraph>
-          </Card>
-        </Col>
       </Row>
     </div>
   );
