@@ -66,20 +66,23 @@ const Register: FC = () => {
     },
   });
 
-  const onSubmit = async (data: IRegisterFormValues) => {
-    try {
-      const response = await registerUser(data).unwrap();
-       console.log("response",response);
-       
-      const token = response?.token; 
-      localStorage.setItem("authToken", token);
-        console.log("token",token);
+  const onSubmit =  async(data: IRegisterFormValues) => {
+      registerUser(data).then(res=>{
+       // const h = res.headers['authorization']; 
+        console.log({res});
+        if(res?.data?.user)
+        reset();
+        navigate('/home'); 
+      }).catch(err=>{
+        console.log(err);
+      })
+
+     // const token = response?.token; 
+      // localStorage.setItem("authToken", token);
+      //   console.log("token",token);
         
-      reset();
-      navigate('/home'); 
-    } catch (error) {
-      console.error("Registration failed:", error);
-    }
+     
+    
   };
 
   return (

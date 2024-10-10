@@ -41,6 +41,8 @@ const Login = () => {
 
       getAdmin(values).then((res) => {
         if (!res.data) return;
+        console.log("res.data", res.data);
+
         localStorage.setItem("token", res.data);
         navigate("/products");
       });
