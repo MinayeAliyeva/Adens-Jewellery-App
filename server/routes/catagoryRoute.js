@@ -18,6 +18,16 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  console.log({categoryReg: req.body});
+  
+  let findedCategory = await Category.findOne({ name: req.body.name });
+  console.log("findedCategory", findedCategory);
+
+  if (findedCategory) {
+    return res.status(400).send("Bele category movcuddur !!!");
+  }
+
+
   const category = new Category({
     name: req.body.name,
     brand: req.body.brand,

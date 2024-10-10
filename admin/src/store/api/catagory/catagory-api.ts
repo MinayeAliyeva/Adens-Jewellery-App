@@ -10,33 +10,41 @@ export const catagoryApi = createApi({
     //   Authorization: `Bearer ${localStorage.getItem("token")}` || "",
     // },
   }),
+  tagTypes: ["Category"],
 
   endpoints: (builder) => ({
     getCategories: builder.query<ICatagoryResponse[], void>({
       query: () => `/api/catagories`,
+      providesTags: ["Category"],
     }),
-    createCategory: builder.mutation<ICatagoryResponse[], { name: string, brand: string }>({
+    createCategory: builder.mutation<
+      ICatagoryResponse[],
+      { name: string; brand: string }
+    >({
       query: (body) => ({
         url: "/api/catagories",
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Category"],
     }),
     deleteCategoryById: builder.mutation<ICatagoryResponse, string>({
       query: (id) => ({
         url: `/api/catagories/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Category"],
     }),
     updateCategoryById: builder.mutation<
       ICatagoryResponse,
-      { name: string; id: string, brand: string }
+      { name: string; id: string; brand: string }
     >({
       query: (body) => ({
         url: `/api/catagories/${body?.id}`,
         method: "PUT",
         body,
       }),
+      invalidatesTags: ["Category"],
     }),
   }),
 });

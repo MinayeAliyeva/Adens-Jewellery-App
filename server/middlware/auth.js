@@ -15,24 +15,21 @@
 
 // module.exports = auth;
 
-// postman ile yoxlama
 const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
   let token = req.header("Authorization");
+  console.log("AUTH token", token);
 
-  // Token var mı kontrol ediliyor
   if (!token) {
     return res.status(401).send("yetkiniz yok.");
   }
-
-  // 'Bearer ' ile başlıyorsa ön ekini temizle
+// postman BEARER
   if (token.startsWith("Bearer ")) {
-    token = token.slice(7, token.length).trimLeft(); // 'Bearer ' kısmını çıkar
+    token = token.slice(7, token.length).trimLeft();
   }
 
   try {
-    // Token'ı doğrula
     const decodedToken = jwt.verify(token, "jwtPrivateKey");
     req.user = decodedToken;
     next();

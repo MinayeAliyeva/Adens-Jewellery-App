@@ -10,10 +10,11 @@ export const brandApi = createApi({
     //   Authorization: `Bearer ${localStorage.getItem("token")}` || "",
     // },
   }),
-
+  tagTypes: ["Brand"],
   endpoints: (builder) => ({
     getBrands: builder.query<IBrandsResponse[], void>({
       query: () => `/api/brands`,
+      providesTags: ["Brand"],
     }),
     createBrand: builder.mutation<IBrandsResponse[], { name: string }>({
       query: (body) => ({
@@ -21,12 +22,14 @@ export const brandApi = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["Brand"],
     }),
     deleteBrandById: builder.mutation<IBrandsResponse, string>({
       query: (id) => ({
         url: `/api/brands/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ["Brand"],
     }),
     updateBrandById: builder.mutation<
       IBrandsResponse,
@@ -37,6 +40,7 @@ export const brandApi = createApi({
         method: "PUT",
         body,
       }),
+      invalidatesTags: ["Brand"],
     }),
   }),
 });
@@ -46,5 +50,5 @@ export const {
   useLazyGetBrandsQuery,
   useCreateBrandMutation,
   useDeleteBrandByIdMutation,
-  useUpdateBrandByIdMutation
+  useUpdateBrandByIdMutation,
 } = brandApi;

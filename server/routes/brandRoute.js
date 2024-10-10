@@ -17,6 +17,14 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  console.log({brand: req.body});
+  let findedBrand = await Brand.findOne({ name: req.body.name });
+
+  if (findedBrand) {
+    return res.status(400).send("Bele Brand artiq movcuddur !!!");
+  }
+
+  
   const brand = new Brand({
     name: req.body.name,
   });

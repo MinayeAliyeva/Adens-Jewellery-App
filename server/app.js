@@ -10,7 +10,14 @@ const cors = require("cors");
 
 app.use(express.json());
 app.use(cors());
-app.options("*", cors());
+
+// const corsOptions = {
+//   exposedHeaders: ['Authorization'],
+// };
+app.options("*");
+app.use(cors({
+  exposedHeaders: ['Authorization'],  // Authorization başlığını expose ediyoruz
+}));
 //test
 // app.get("/", (req, res) => {
 //   res.send("Merhaba Dünya!");

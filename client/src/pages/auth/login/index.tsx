@@ -36,15 +36,23 @@ const Login: React.FC = () => {
 
   const [loginUser] = useLoginUserMutation();
   const navigate = useNavigate();
-  const onSubmit = async (data: ILoginFormValues) => {
+  const onSubmit =  (data: ILoginFormValues) => {
+    console.log("ONSUBMIT");
+    
     try {
-      const token = await loginUser({
+      console.log('try');
+      
+     loginUser({
         email: data.email,
         password: data.password,
-      }).unwrap();
+      }).then(res=>{
+        console.log({res});
+        
+       
+        localStorage.setItem("token", res.data);
 
-      console.log("token", token);
-      localStorage.setItem("authToken", token.token);
+      });
+
 
       navigate("/");
     } catch (error) {

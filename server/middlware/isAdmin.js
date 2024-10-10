@@ -4,3 +4,5 @@ module.exports = function (req, res, next) {
   }
   next();
 };
+
+// auth, isAdmin , async (req, res)=>{}

@@ -6,14 +6,20 @@ export const productApi = createApi({
   reducerPath: "productApi",
   baseQuery: fetchBaseQuery({ 
     baseUrl: BASE_URL,
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem("token")}` || ''
-  },
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set('Authorization', `Bearer ${token}`);
+      }
+      return headers;
+    }
   }),
+  tagTypes: ['Product'], 
 
   endpoints: (builder) => ({
     getProducts: builder.query<IProduct[], void>({
       query: () => `/api/products`,
+      providesTags: ['Product'], 
     }),
     addProduct: builder.mutation<any, any>({
       query: (body) => ({
@@ -21,6 +27,7 @@ export const productApi = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ['Product'], 
     }),
 
     deleteProductById: builder.mutation<string, string>({
@@ -28,7 +35,9 @@ export const productApi = createApi({
         url: `/api/products/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: ['Product'],
     }),
+
     updateProductById: builder.mutation<
       IProduct,
       { id: string; body: any }
@@ -38,6 +47,7 @@ export const productApi = createApi({
         method: "PUT",
         body,
       }),
+      invalidatesTags: ['Product'], 
     }),
   }),
 });

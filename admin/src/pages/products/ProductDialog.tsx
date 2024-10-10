@@ -46,6 +46,8 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
   };
 
   const onFinish = async (values: any) => {
+    console.log({values});
+    
     
     const formData = new FormData();
     const formattedDate = dayjs(values.creationDate).format("DD.MM.YYYY");
@@ -106,9 +108,9 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           productName: product?.productName,
           size: product?.size,
           price: product?.price,
-          category: product?.category?.name,
+          category: product?.category?._id,
           color: product?.color,
-          brand: product?.brand?.name,
+          brand: product?.brand?._id,
           description: product?.description,
           stock: product?.stock,
           weight: product?.weight,
@@ -204,6 +206,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                 }
                 style={{ width: "100%" }}
                 placeholder={"Enter brand..."}
+                
                 defaultValue={product?.category?.name! ?? ""}
                 allowClear={true}
                 handleChange={(value) => form.setFieldsValue({ brand: value })}

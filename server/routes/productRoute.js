@@ -225,6 +225,8 @@ router.put(
         },
         { new: true }
       );
+      console.log({updatedProduct});
+      
 
       res.status(200).send(updatedProduct);
     } catch (error) {
