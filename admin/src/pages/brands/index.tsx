@@ -51,7 +51,7 @@ const Brand: FC = () => {
   useEffect(() => {
     if (!isLoading) {
       console.log("RERENDER EFFECT");
-      getBrands().then((res) => setTableData(res?.data!));
+      getBrands(undefined, true).then((res) => setTableData(res?.data!));
     }
   }, [isLoading]);
 

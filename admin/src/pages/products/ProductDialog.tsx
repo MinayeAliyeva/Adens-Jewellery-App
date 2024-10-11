@@ -16,7 +16,6 @@ import { UploadChangeParam, UploadFile } from "antd/es/upload";
 import { ButtonComponent } from "../../components/ButtonComponent";
 import { IProduct } from "../../store/api/product/modules";
 import { useGetCategoriesQuery } from "../../store/api/catagory/catagory-api";
-import SelectBoxComponent from "../../components/SelectBoxComponent";
 import { useGetBrandsQuery } from "../../store/api/brand/brand-api";
 
 interface IProductDialog {
@@ -329,7 +328,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           <ButtonComponent
             htmlType="submit"
             buttonText={product ? "Update Product" : "Add Product"}
-            loading={isLoadingProduct || isLoadingUpdatedProduct}
+            loading={isLoadingProduct || isLoadingUpdatedProduct|| isLoadingBrand}
             icon={<FaSave />}
           />
         </Form.Item>

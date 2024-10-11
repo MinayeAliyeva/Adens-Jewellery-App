@@ -10,11 +10,13 @@ import { Control, FieldErrors, UseFormHandleSubmit } from "react-hook-form";
 import { IFormField } from ".";
 import { IBrandsResponse } from "../../store/api/brand/modules";
 import SelectBoxComponent from "../../components/SelectBoxComponent";
+import { Content } from "antd/es/layout/layout";
 
-const brandOptions = (brands?: IBrandsResponse[]) =>brands?.map((item) => ({
-  label: item.name,
-  value: item._id,
-}))
+const brandOptions = (brands?: IBrandsResponse[]) =>
+  brands?.map((item) => ({
+    label: item.name,
+    value: item._id,
+  }));
 
 export const columns = ({
   control,
@@ -50,14 +52,22 @@ export const columns = ({
   brandData?: IBrandsResponse[];
 }): TableColumnsType<ICatagoryResponse> => [
   {
+    title: "№",
+    dataIndex: "_id",
+    key: "_id",
+     width: 70,
+
+    render: (text, record, index) => index + 1,
+  },
+  {
     title: "Category name",
     dataIndex: "name",
     key: "name",
+    width: 150,
     render: (name: string, record: ICatagoryResponse) => {
       if (!record?._id && !record?.name) {
         return (
           <InputComponent
-            // defaultValue={name}
             name="name"
             control={control as any}
             placeholder="Category Name"
@@ -122,6 +132,7 @@ export const columns = ({
     title: "Brand name",
     dataIndex: "brand",
     key: "brand",
+    width: 250,
     render: (brand: any, record: ICatagoryResponse) => {
       if (!record?._id && !record?.name) {
         return (
@@ -130,7 +141,7 @@ export const columns = ({
             name="brand"
             allowClear
             options={brandOptions(brandData)}
-            style={{width: "100%"}}
+            style={{ width: "100%" }}
           />
         );
       }
@@ -143,7 +154,7 @@ export const columns = ({
               allowClear
               defaultValue={brand?.name}
               options={brandOptions(brandData)}
-              style={{width: "100%"}}
+              style={{ width: "100%" }}
             />
           ) : (
             <Typography>{brand?.name}</Typography>
@@ -188,122 +199,35 @@ export const columns = ({
     sortOrder: sortedInfo?.columnKey === "name" ? sortedInfo.order : null,
     ellipsis: true,
   },
-  // {
-  //   title: "Age",
-  //   dataIndex: "age",
-  //   key: "age",
-  //   render: (age: number, record:  ICatagoryResponse) => {
-  //     return (
-  //       <>
-  //         {selectedId === record?.id ? (
-  //            <Form.Item
-  //            name="age"
-  //            style={{ margin: 0 }}
-  //            rules={[
-  //              {
-  //                required: true,
-  //                message: `Please Input age!`,
-  //              },
-  //            ]}
-  //          >
-  //            <Input
-  //             type="number"
-  //             // value={age}
-  //             // onChange={(e) => {
-  //             //   console.log("Updated age:", e.target.value);
-  //             // }}
-  //           />
-  //          </Form.Item>
 
-  //         ) : (
-  //           <div>{age}</div>
-  //         )}
-  //       </>
-  //     );
-  //   },
-  //   sorter: (a, b) => a?.age - b?.age,
-  //   sortOrder: sortedInfo?.columnKey === "age" ? sortedInfo.order : null,
-  //   ellipsis: true,
-  // },
-  // {
-  //   title: "Address",
-  //   dataIndex: "address",
-  //   key: "address",
-  //   render: (address: string, record:  ICatagoryResponse) => {
-  //     return selectedId === record?.id ? (
-  //           <Input
-  //             value={address}
-  //             onChange={(e) => {
-  //               console.log("Updated address:", e.target.value);
-  //             }}
-  //           />
-  //         ) : (
-  //           <div>{address}</div>
-  //         )
-  //   },
-  //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
-  //     <div style={{ padding: 8 }}>
-  //       <Input
-  //         placeholder="Search address"
-  //         value={selectedKeys[0]}
-  //         onChange={(e) =>
-  //           setSelectedKeys(e.target.value ? [e.target.value] : [])
-  //         }
-  //         onPressEnter={() => confirm()}
-  //         style={{ width: 188, marginBottom: 8, display: "block" }}
-  //       />
-  //       <Button
-  //         type="primary"
-  //         onClick={() => confirm()}
-  //         size="small"
-  //         style={{ width: 90, marginRight: 8 }}
-  //       >
-  //         Search
-  //       </Button>
-  //       <Button
-  //         onClick={() => {
-  //           setSelectedKeys([]);
-  //           confirm();
-  //         }}
-  //         size="small"
-  //         style={{ width: 90 }}
-  //       >
-  //         Reset
-  //       </Button>
-  //     </div>
-  //   ),
-  //   filteredValue: filteredInfo?.address || null,
-  //   onFilter: (value, record) =>
-  //     record.address.toLowerCase().includes((value as string).toLowerCase()),
-  //   sorter: (a, b) => a?.address?.length - b?.address?.length,
-  //   sortOrder: sortedInfo?.columnKey === "address" ? sortedInfo.order : null,
-  //   ellipsis: true,
-  // },
   {
     title: "",
     dataIndex: "actions",
     key: "actions",
+    width:100,
     render: (_, record: ICatagoryResponse) => {
-      // if(!record?._id && !record?.name){}
-
       return (
         <div>
           {(record._id && record._id !== selectedId) ||
           record?._id === undefined ? (
-            <>
+            <Content style={{display:'flex',gap:'20px'}}>
               <Button
                 htmlType="button"
                 icon={<CiEdit />}
                 onClick={() => editCategory?.(record._id)}
+                color="primary"
+                variant="dashed"
               />
               <Button
                 onClick={() => onDeleteCategoryById(record?._id)}
                 icon={<MdDelete />}
                 htmlType="button"
+                color="danger"
+                variant="dashed"
               />
-            </>
+            </Content>
           ) : (
-            <>
+            <Content  style={{display:'flex',gap:'20px'}}>
               <Button
                 type="primary"
                 htmlType="button"
@@ -316,8 +240,10 @@ export const columns = ({
                 icon={<MdOutlineCancel />}
                 htmlType="button"
                 onClick={onCancel}
+                color="danger"
+                variant="solid"
               />
-            </>
+            </Content>
           )}
         </div>
       );

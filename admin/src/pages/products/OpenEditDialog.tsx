@@ -18,6 +18,7 @@ const OpenEditDialogButton: FC<IProductComponentProps> = ({ product }) => {
         buttonText="Edit"
         onClick={() => setOpen(true)}
         icon={<FaRegEdit/>}
+        variant="dashed"
       />
       {open && <ProductDialog product={product} open setOpen={setOpen} />}
     </>

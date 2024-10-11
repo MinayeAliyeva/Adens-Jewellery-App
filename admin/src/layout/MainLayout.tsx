@@ -5,7 +5,6 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { menu } from "./data";
 import { ButtonComponent } from "../components/ButtonComponent";
 import { BiLogOutCircle } from "react-icons/bi";
-// import Login from "../pages/auth/Login";
 const logo = "/assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
 
@@ -19,46 +18,86 @@ const MainLayout: React.FC = () => {
     localStorage.clear();
     navigate("/login");
   };
+
   return (
     <Layout>
       <Sider
         style={{
           minHeight: "100vh",
           background: "#91caff14",
-          width: "300px",
+          width: collapsed ? "80px" : "300px",
           boxShadow: "1px 3px 5px rgb(0 0 0 / 38%)",
         }}
         trigger={null}
         collapsible
         collapsed={collapsed}
+        width={300}
       >
-        <Content style={{ height: "64px" }}>
-          <img src={logo} alt="logo" style={{ width: "150px" }} />
+        <Content
+          style={{
+            height: "64px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: "10px",
+          }}
+        >
+          <Link to="/">
+            <img
+              src={logo}
+              alt="logo"
+              style={{
+                width: collapsed ? "40px" : "150px",
+                transition: "width 0.3s",
+              }}
+            />
+          </Link>
         </Content>
         <Divider style={{ backgroundColor: "#292c3261" }} />
+
         {menu.map((item) => (
-          <Content>
+          <Content key={item.path}>
             <Content
               style={{
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                padding: "10px 20px",
               }}
             >
-              {item.icon}
-              <Link style={{ color: "#000" }} to={item.path}>
-                {item.title}
+              <Link
+                to={item.path}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  color: "black",
+                }}
+              >
+                {item.icon}
+                {!collapsed && (
+                  <span style={{ color: "#000", marginLeft: "10px" }}>
+                    {item.title}
+                  </span>
+                )}
               </Link>
             </Content>
             <Divider style={{ backgroundColor: "#292c3261" }} />
           </Content>
         ))}
+
         <ButtonComponent
           icon={<BiLogOutCircle />}
-          buttonText="Log Out"
+          buttonText={collapsed ? "" : "Log Out"}
           onClick={handleLogOut}
           block
-          style={{ position: "absolute", bottom: "10px" }}
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            width: collapsed ? "80px" : "100%",
+            textAlign: collapsed ? "center" : "left", 
+            marginLeft: collapsed ? "0" : "30px",
+            maxWidth: "250px",
+          }}
         />
       </Sider>
       <Layout>
@@ -69,8 +108,9 @@ const MainLayout: React.FC = () => {
             onClick={() => setCollapsed(!collapsed)}
             style={{
               fontSize: "16px",
-              width: 64,
-              height: 64,
+              width: 44,
+              height: 44,
+              marginLeft: "20px",
             }}
           />
         </Header>
@@ -86,7 +126,6 @@ const MainLayout: React.FC = () => {
           <Outlet />
         </Content>
       </Layout>
-      {/* <Login/> */}
     </Layout>
   );
 };

@@ -4,12 +4,12 @@ import OpenDialogButton from "./OpenDialog";
 import { columns } from "./data";
 
 const Products = () => {
-  const { data } = useGetProductsQuery();
+  const { data ,isLoading} = useGetProductsQuery();
   
   return (
     <>
       <OpenDialogButton />
-      <ProductsTable data={data!} columns={columns} />
+      <ProductsTable loading={isLoading} data={data!} columns={columns} />
     </>
   );
 };

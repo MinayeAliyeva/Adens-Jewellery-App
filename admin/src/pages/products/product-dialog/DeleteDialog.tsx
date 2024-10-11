@@ -27,34 +27,77 @@ const DeleteDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
 
   return (
     <Modal
-      title="Delete Confirmation"
+      title={
+        <Typography.Title
+          level={4}
+          style={{
+            color: "#1f1f1f", // Başlıkta koyu gri renk
+            textAlign: "center",
+            fontWeight: 600, // Kalın başlık
+          }}
+        >
+          Delete Confirmation
+        </Typography.Title>
+      }
       centered
       open={open}
       onOk={toggleOpen}
       onCancel={toggleOpen}
-      width={"800px"}
-      style={{ minHeight: "460px" }}
-      footer={null} 
+      width={"500px"}
+      bodyStyle={{
+        backgroundColor: "#ffffff", // Temiz ve sade beyaz arka plan
+        padding: "20px",
+        borderRadius: "10px", // Modal köşeleri hafif yuvarlatıldı
+      }}
+      footer={null}
     >
-      <Typography.Paragraph>
+      <Typography.Paragraph
+        style={{
+          textAlign: "center",
+          fontSize: "16px",
+          color: "#595959", // Daha açık gri metin
+        }}
+      >
         Are you sure you want to delete the product{" "}
-        <strong>"{product?.productName}"</strong>? This action cannot be undone.
+        <strong style={{ color: "#faad14" }}> {/* Ürünün adı parlak turuncu */}
+          "{product?.productName}"
+        </strong>
+        ? This action cannot be undone.
       </Typography.Paragraph>
-      <Divider />
-
-      <Row justify="end" style={{ marginTop: 20 }}>
+      <Divider style={{ margin: "20px 0", borderColor: "#d9d9d9" }} />{" "}
+      {/* Daha ince gri çizgi */}
+      <Row justify="center" gutter={16} style={{ marginTop: 20 }}>
         <Col>
           <ButtonComponent
-            style={{ marginRight: 10 }}
+            variant="filled"
+            color="primary"
+            style={{
+              borderColor: "#d9d9d9", 
+              color: "#595959",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              fontSize: "16px",
+            }}
             onClick={toggleOpen}
             buttonText="Cancel"
           />
+        </Col>
+        <Col>
           <ButtonComponent
             loading={isLoadingDeletedProduct}
             onClick={handleDelete}
             buttonText="Delete"
             danger
             icon={<MdDelete />}
+            variant="filled"
+            color="danger"
+            style={{
+              borderColor: "#ff4d4f", 
+              color: "#ff4d4f",
+              padding: "10px 20px",
+              borderRadius: "8px",
+              fontSize: "16px",
+            }}
           />
         </Col>
       </Row>

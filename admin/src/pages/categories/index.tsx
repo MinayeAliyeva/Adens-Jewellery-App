@@ -52,8 +52,7 @@ const Category: FC = () => {
   useEffect(() => {
     if (!isLoading) {
       console.log("RERENDER EFFECT");
-
-      getCategory().then((res) => setTableData(res?.data!));
+      getCategory(undefined,true).then((res) => setTableData(res?.data!));
     }
   }, [isLoading]);
 
