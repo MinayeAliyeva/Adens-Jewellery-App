@@ -11,10 +11,10 @@ type DataIndex = keyof IProduct;
 const ProductsTable: FC<{
   data: IProduct[];
   columns: TableColumnsType<IProduct>;
-}> = ({ data, columns }) => {
-
-
+  loading: boolean;
+}> = ({ data, columns, loading }) => {
   const searchInput = useRef<InputRef>(null);
+
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps["confirm"],
@@ -22,9 +22,11 @@ const ProductsTable: FC<{
   ) => {
     confirm();
   };
+
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
   };
+
   const getColumnSearchProps = (
     dataIndex: DataIndex
   ): TableColumnType<IProduct> => ({
@@ -95,7 +97,10 @@ const ProductsTable: FC<{
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) => {
-      return record?.[dataIndex!]?.toString().toLowerCase().includes((value as string).toLowerCase())!;
+      return record?.[dataIndex!]
+        ?.toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase())!;
     },
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
@@ -103,14 +108,18 @@ const ProductsTable: FC<{
       }
     },
   });
+
   const tableColumns = map(columns, (column) => {
+    if (column.key === "mainImageUrl" || column.key === "actions") {
+      return column;
+    }
     return {
       ...column,
       ...getColumnSearchProps(column?.key as any),
-    } ;
+    };
   });
 
-  return <Table columns={tableColumns} dataSource={data} />;
+  return <Table loading={loading} columns={tableColumns} dataSource={data} />;
 };
 
 export default ProductsTable;

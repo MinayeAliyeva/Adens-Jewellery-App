@@ -2,6 +2,7 @@ import { FaUsers } from "react-icons/fa";
 import { CgProductHunt } from "react-icons/cg";
 import { TbCategoryFilled } from "react-icons/tb";
 import { SiSimpleanalytics } from "react-icons/si";
+import { TbBrandBunpo } from "react-icons/tb";
 export const menu = [
   {
     title: "Products",
@@ -15,11 +16,6 @@ export const menu = [
     path: "categories",
   },
   {
-    title: "Brand",
-    icon: <TbCategoryFilled />,
-    path: "brands",
-  },
-  {
     title: "Analytics",
     icon: <SiSimpleanalytics />,
     path: "analytics",
@@ -28,5 +24,11 @@ export const menu = [
     title: "Users",
     icon: <FaUsers />,
     path: "users",
+  },
+
+  {
+    title: "Brands",
+    icon: <TbBrandBunpo />,
+    path: "brands",
   },
 ];

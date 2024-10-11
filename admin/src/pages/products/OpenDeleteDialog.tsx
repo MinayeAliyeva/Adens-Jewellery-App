@@ -28,6 +28,8 @@ const OpenDeleteDialogButton: React.FC<OpenDeleteDialogButtonProps> = ({
         buttonText="Delete"
         onClick={handleDeleteClick}
         icon={<MdDelete/>}
+        variant="dashed"
+        color="danger"
       />
       {open && (
         <DeleteDialog
