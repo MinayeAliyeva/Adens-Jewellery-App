@@ -114,8 +114,8 @@ const Brand: FC = () => {
   };
 
   const onCreateCategory = () => {
-    if (tableData.find((data) => data?._id === "")) return;
-    setTableData((prev) => [{ name: "", _id: "" }, ...prev!]);
+    if (tableData?.find((data) => data?._id === "")) return;
+    setTableData((prev) => [{ name: "", _id: "" }, ...prev! ?? []]);
   };
   const onDeleteCategoryById = (id: string) => {
     deleteBrandById(id);
@@ -168,6 +168,7 @@ const Brand: FC = () => {
           loading={isLoadingBrand || isLoading}
           dataSource={tableData}
           onChange={handleChange}
+       
         />
       </Form>
     </>

@@ -8,6 +8,8 @@ import MainLayout from "../layout/MainLayout";
 import Category from "../pages/categories";
 import UsersTable from "../pages/users/usersTable";
 import Brand from "../pages/brands";
+import SettingsPage from "../pages/settings";
+import Users from "../pages/users";
 
 const routes: TypeRouteObject[] = [
   {
@@ -19,7 +21,8 @@ const routes: TypeRouteObject[] = [
       { path: "/products", element: <Products />,  auth: true},
       { path: "/categories", element: <Category />,  auth: true},
       { path: "/brands", element: <Brand />,  auth: true},
-      { path: "/users", element: <UsersTable />,  auth: true},
+      { path: "/users", element: <Users />,  auth: true},
+      { path: "/settings", element: <SettingsPage />,  auth: true},
     ],
   },
   {

@@ -5,6 +5,7 @@ import { adminApi } from "./api/admin/admin-api";
 import { authSlice } from "./slice";
 import { catagoryApi } from "./api/catagory/catagory-api";
 import { brandApi } from "./api/brand/brand-api";
+import { usersApi } from "./api/users/users-api";
 
 // Create the Redux store
 export const store = configureStore({
@@ -14,13 +15,15 @@ export const store = configureStore({
     [productApi.reducerPath]: productApi.reducer,
     [catagoryApi.reducerPath]: catagoryApi.reducer,
     [brandApi.reducerPath]: brandApi.reducer,
+    [usersApi.reducerPath]: usersApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       productApi.middleware,
       adminApi.middleware,
       catagoryApi.middleware,
-      brandApi.middleware
+      brandApi.middleware,
+      usersApi.middleware
     ),
 });
 

@@ -14,7 +14,7 @@ const { Option } = Select;
 interface ISelectBoxProps<T extends FieldValues> extends SelectProps {
   labelText?: string;
   name: keyof T;
-  control: Control<T>;
+  control?: Control<T>;
   required?: boolean;
   style?: CSSProperties;
   errors?: FieldErrors<T>;
