@@ -8,7 +8,10 @@ const cors = require('cors');
 
 
 //! ALL USERS 
-router.get("/", [auth, isAdmin], async (req, res) => {
+//[auth, isAdmin] sildim yazmaliyam
+router.get("/",  async (req, res) => {
+  console.log("res",res);
+  
   let users = await User.find();
   res.status(200).send(users);
 });

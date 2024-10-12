@@ -18,15 +18,11 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  console.log({categoryReg: req.body});
-  
   let findedCategory = await Category.findOne({ name: req.body.name });
-  console.log("findedCategory", findedCategory);
 
   if (findedCategory) {
     return res.status(400).send("Bele category movcuddur !!!");
   }
-
 
   const category = new Category({
     name: req.body.name,
@@ -37,15 +33,30 @@ router.post("/", async (req, res) => {
   res.status(201).send(newCategory);
 });
 
+
+// update category
 router.put("/:id", async (req, res) => {
+
+  
+  // let findedCategory = await Category.findOne({ name: req.body.name });
+  // console.log({findedCategory});
+  
+  
+  // if (findedCategory && findedCategory?.brand?._id === req.body?.brand) {
+  //   return res.status(400).send("Bele category movcuddur !!!");
+  // }
+
+  //  if(!findedCategory){
+  //   res.status(400).send("Update Edeceyiniz Kategori Bulunamadı");
+  //   return;
+  //  }
+
   const category = await Category.findById(req.params.id);
-  console.log("BODY", req?.body);
 
+  
   if (!category) {
-    return res.status(404).send("aradığınız kategori yok.");
+    return res.status(404).send("Aradığınız kategori yok.");
   }
-
-  category.name = req.body.name;
   category.brand = req.body.brand;
 
   const updatedCategory = await category.save();

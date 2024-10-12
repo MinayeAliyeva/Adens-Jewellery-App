@@ -12,7 +12,6 @@ const userShema = mongoose.Schema(
     },
     phone: {
       type: String,
-      //   require: true,
     },
     email: {
       type: String,
@@ -23,6 +22,7 @@ const userShema = mongoose.Schema(
       type: String,
       require: true,
     },
+
     profile: {
       type: String,
       //   require: true,
