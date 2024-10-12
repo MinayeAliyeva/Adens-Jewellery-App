@@ -1,88 +1,66 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { Form, Button, Typography } from "antd";
-import { UserOutlined, LockOutlined, MailOutlined } from "@ant-design/icons";
+import {
+  UserOutlined,
+  LockOutlined,
+  MailOutlined,
+  EyeOutlined,
+  EyeInvisibleOutlined,
+  PhoneOutlined,
+} from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+
 import InputComponent from "../../../components/InputComponent";
 import { useRegisterUserMutation } from "../../../store/api/user/user-api";
 import { useNavigate } from "react-router-dom";
+import { registerSchema } from "../../../validation/registerValidation";
 
 const { Title } = Typography;
 
-// Form doğrulama şeması
-const schema = yup.object().shape({
-  firstName: yup.string().required("First Name is required"),
-  lastName: yup.string().required("Last Name is required"),
-  email: yup
-    .string()
-    .email("Invalid email format")
-    .required("Email is required"),
-  password: yup
-    .string()
-    .min(6, "Password must be at least 6 characters")
-    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-    .matches(/\d/, "Password must contain at least one number")
-    .matches(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      "Password must contain at least one special character"
-    )
-    .required("Password is required"),
-  confirmPassword: yup
-    .string()
-    .oneOf([yup.ref("password")], "Passwords must match")
-    .required("Confirm Password is required"),
-});
-
-// Form değerleri arayüzü
 interface IRegisterFormValues {
   firstName: string;
   lastName: string;
   password: string;
   email: string;
   confirmPassword: string;
+  phone: string;
 }
 
 const Register: FC = () => {
   const [registerUser] = useRegisterUserMutation();
+
   const navigate = useNavigate();
-  
-  // Form ayarları
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const {
     handleSubmit,
     reset,
     control,
     formState: { errors },
   } = useForm<IRegisterFormValues>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(registerSchema),
     defaultValues: {
       firstName: "",
       lastName: "",
       email: "",
       password: "",
       confirmPassword: "",
+      phone: "",
     },
   });
 
-  const onSubmit =  async(data: IRegisterFormValues) => {
-      registerUser(data).then(res=>{
-       // const h = res.headers['authorization']; 
-        console.log({res});
-        if(res?.data?.user)
-        reset();
-        navigate('/home'); 
-      }).catch(err=>{
-        console.log(err);
-      })
-
-     // const token = response?.token; 
-      // localStorage.setItem("authToken", token);
-      //   console.log("token",token);
-        
-     
-    
+  const onSubmit = async (data: IRegisterFormValues) => {
+    try {
+      const res = await registerUser(data);
+      console.log({ res });
+      if (res?.data?.user) reset();
+      navigate("/home");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -157,6 +135,19 @@ const Register: FC = () => {
           </Form.Item>
 
           <Form.Item
+            label="Phone"
+            validateStatus={errors.phone ? "error" : ""}
+            help={errors.phone?.message}
+          >
+            <InputComponent
+              name="phone"
+              control={control}
+              placeholder="Phone"
+              prefix={<PhoneOutlined />}
+            />
+          </Form.Item>
+
+          <Form.Item
             label="Password"
             validateStatus={errors.password ? "error" : ""}
             help={errors.password?.message}
@@ -166,6 +157,16 @@ const Register: FC = () => {
               control={control}
               placeholder="Password"
               prefix={<LockOutlined />}
+              type={showPassword ? "text" : "password"}
+              suffix={
+                showPassword ? (
+                  <EyeInvisibleOutlined
+                    onClick={() => setShowPassword(false)}
+                  />
+                ) : (
+                  <EyeOutlined onClick={() => setShowPassword(true)} />
+                )
+              }
             />
           </Form.Item>
 
@@ -179,6 +180,16 @@ const Register: FC = () => {
               control={control}
               placeholder="Confirm Password"
               prefix={<LockOutlined />}
+              type={showConfirmPassword ? "text" : "password"}
+              suffix={
+                showConfirmPassword ? (
+                  <EyeInvisibleOutlined
+                    onClick={() => setShowConfirmPassword(false)}
+                  />
+                ) : (
+                  <EyeOutlined onClick={() => setShowConfirmPassword(true)} />
+                )
+              }
             />
           </Form.Item>
 

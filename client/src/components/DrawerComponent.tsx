@@ -1,7 +1,8 @@
-import { Drawer, List, Button, Typography, Avatar, Divider } from "antd";
+import { Drawer, List, Button, Typography, Avatar, Divider, Modal } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { FC, memo, useState } from "react";
-import { IoIosSend } from "react-icons/io";
+import { IoIosSend, IoMdEye } from "react-icons/io";
+
 interface IProduct {
   _id: string;
   productName: string;
@@ -53,6 +54,9 @@ const DrawerComponent: FC<IDrawerComponentProps> = ({
     productsData.map((product) => ({ ...product, quantity: 1 }))
   );
 
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const increaseQuantity = (id: string) => {
     setProducts((prev) =>
       prev.map((product) =>
@@ -85,58 +89,95 @@ const DrawerComponent: FC<IDrawerComponentProps> = ({
     onClose();
   };
 
+  const showModal = (product: IProduct) => {
+    setSelectedProduct(product);
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+    setSelectedProduct(null);
+  };
+
   return (
-    <Drawer
-      title="Shopping Cart"
-      placement="right"
-      onClose={onClose}
-      visible={isDrawerVisible}
-      width={400}
-    >
-      {products.length > 0 ? (
-        <>
-          <List
-            itemLayout="horizontal"
-            dataSource={products}
-            renderItem={(product) => (
-              <List.Item key={product._id}>
-                <List.Item.Meta
-                  avatar={<Avatar src={product.mainImageUrl} />}
-                  title={product.productName}
-                  description={`Color: ${product.color} | Price: $${product.price}`}
-                />
-                <div style={{ display: "flex", alignItems: "center" }}>
-                  <Button onClick={() => decreaseQuantity(product._id)}>
-                    -
-                  </Button>
-                  <span style={{ margin: "0 8px" }}>{product.quantity}</span>
-                  <Button onClick={() => increaseQuantity(product._id)}>
-                    +
-                  </Button>
-                </div>
-              </List.Item>
-            )}
-          />
-          <Divider />
-          <Content style={{ position: "absolute", bottom: "20px" }}>
-            {" "}
-            <Typography.Title level={4} style={{ textAlign: "right" }}>
-              Total Price: ${totalPrice.toFixed(2)}
-            </Typography.Title>
-            <Button
-              type="primary"
-              style={{ width: "100%", marginTop: "10px" }}
-              onClick={handleOrder}
-              icon={<IoIosSend />}
-            >
-              Order It
-            </Button>
-          </Content>
-        </>
-      ) : (
-        <p>Your cart is empty.</p>
-      )}
-    </Drawer>
+    <>
+      <Drawer
+        title="Shopping Cart"
+        placement="right"
+        onClose={onClose}
+        visible={isDrawerVisible}
+        width={400}
+      >
+        {products.length > 0 ? (
+          <>
+            <List
+              itemLayout="horizontal"
+              dataSource={products}
+              renderItem={(product) => (
+                <List.Item key={product._id}>
+                  <List.Item.Meta
+                    avatar={<Avatar src={product.mainImageUrl} />}
+                    title={product.productName}
+                    description={`Color: ${product.color} | Price: $${product.price}`}
+                  />
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <Button onClick={() => decreaseQuantity(product._id)}>
+                      -
+                    </Button>
+                    <span style={{ margin: "0 8px" }}>{product.quantity}</span>
+                    <Button onClick={() => increaseQuantity(product._id)}>
+                      +
+                    </Button>
+                    <Button
+                      icon={<IoMdEye />}
+                      onClick={() => showModal(product)}
+                      style={{ marginLeft: "10px" }}
+                    />
+                  </div>
+                </List.Item>
+              )}
+            />
+            <Divider />
+            <Content style={{ position: "absolute", bottom: "20px" }}>
+              <Typography.Title level={4} style={{ textAlign: "right" }}>
+                Total Price: ${totalPrice.toFixed(2)}
+              </Typography.Title>
+              <Button
+                type="primary"
+                style={{ width: "100%", marginTop: "10px" }}
+                onClick={handleOrder}
+                icon={<IoIosSend />}
+              >
+                Order It
+              </Button>
+            </Content>
+          </>
+        ) : (
+          <p>Your cart is empty.</p>
+        )}
+      </Drawer>
+
+      <Modal
+        title={selectedProduct?.productName}
+        visible={isModalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+      >
+        {selectedProduct && (
+          <div>
+            <img
+              src={selectedProduct.mainImageUrl}
+              alt={selectedProduct.productName}
+              style={{ width: "100%" }}
+            />
+            <p>{selectedProduct.description}</p>
+            <p>Color: {selectedProduct.color}</p>
+            <p>Price: ${selectedProduct.price}</p>
+            <p>Stock: {selectedProduct.quantity}</p>
+          </div>
+        )}
+      </Modal>
+    </>
   );
 };
 
