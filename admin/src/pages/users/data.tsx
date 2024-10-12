@@ -17,9 +17,9 @@ export const columns = [
     },
   },
   {
-    title: "Name",
-    dataIndex: "name",
-    key: "name",
+    title: "FirstName",
+    dataIndex: "firstName",
+    key: "firstName",
   },
   {
     title: "Last Name",

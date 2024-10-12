@@ -3,6 +3,7 @@ import { CgProductHunt } from "react-icons/cg";
 import { TbCategoryFilled } from "react-icons/tb";
 import { SiSimpleanalytics } from "react-icons/si";
 import { TbBrandBunpo } from "react-icons/tb";
+import { IoMdSettings } from "react-icons/io";
 export const menu = [
   {
     title: "Products",
@@ -30,5 +31,11 @@ export const menu = [
     title: "Brands",
     icon: <TbBrandBunpo />,
     path: "brands",
+  },
+
+  {
+    title: "Settings",
+    icon: <IoMdSettings />,
+    path: "settings",
   },
 ];

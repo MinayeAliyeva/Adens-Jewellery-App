@@ -53,7 +53,6 @@ export const columns = ({
     title: "Brand Name",
     dataIndex: "name",
     key: "name",
-
     // align:"center",
     render: (name: string, record: ICatagoryResponse) => {
       if (!record?._id && !record?.name) {
@@ -63,7 +62,7 @@ export const columns = ({
             name="name"
             control={control as any}
             placeholder="Brand Name"
-            errorMessage={errors?.name}
+            errorMessage={errors?.name?.message}
           />
         );
       }
@@ -75,7 +74,7 @@ export const columns = ({
               name="name"
               control={control as any}
               placeholder="Brand Name"
-              errorMessage={errors?.name}
+              errorMessage={errors?.name?.message}
             />
           ) : (
             <Typography>{name}</Typography>
@@ -126,7 +125,6 @@ export const columns = ({
     dataIndex: "actions",
     key: "actions",
     align: "right",
-    width:150,
     render: (_, record: ICatagoryResponse) => {
       return (
         <div>
@@ -162,8 +160,8 @@ export const columns = ({
                 icon={<MdOutlineCancel />}
                 htmlType="button"
                 onClick={onCancel}
-                color="danger"
                 variant="solid"
+                color="danger"
               />
             </Content>
           )}

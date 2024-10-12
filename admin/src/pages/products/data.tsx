@@ -11,6 +11,7 @@ export const sizeOptions = [
   { label: "Medium", value: "M" },
   { label: "Large", value: "L" },
 ];
+
 export const columns = [
   {
     title: "Image",

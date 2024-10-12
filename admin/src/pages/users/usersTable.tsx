@@ -1,70 +1,67 @@
-import React from 'react';
-import { Table } from 'antd';
-import type { TableColumnsType } from 'antd';
+import React, { FC } from "react";
+import { Table, Popconfirm, Typography } from "antd";
+import type { TableColumnsType } from "antd";
+import { Content } from "antd/es/layout/layout";
 
 interface DataType {
-  key: React.Key;
+  key: React.Key; 
+  _id: string; 
   firstName: string;
-  lastName: number;
+  lastName: string;
   phone: string;
-  description: string;
-  email:string
+  email: string;
 }
 
 const columns: TableColumnsType<DataType> = [
-  { title: 'firstName', dataIndex: 'firstName', key: 'firstName' },
-  { title: 'lastName', dataIndex: 'lastName', key: 'lastName' },
-  { title: 'phone', dataIndex: 'phone', key: 'phone' },
-  { title: 'email', dataIndex: 'email', key: 'email' },
+  { title: "First Name", dataIndex: "firstName", key: "firstName" },
+  { title: "Last Name", dataIndex: "lastName", key: "lastName" },
+  { title: "Phone", dataIndex: "phone", key: "phone" },
+  { title: "Email", dataIndex: "email", key: "email" },
   {
-    title: 'Action',
-    dataIndex: '',
-    key: 'x',
-    render: () => <a>Delete</a>,
+    title: "Action",
+    dataIndex: "",
+    key: "action",
+    render: (_, record) => (
+      <Popconfirm
+        title="Are you sure to delete this user?"
+        onConfirm={() => handleDelete(record._id)} 
+        okText="Yes"
+        cancelText="No"
+      >
+        <a>Delete</a>
+      </Popconfirm>
+    ),
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: 1,
-    firstName: 'John Brown',
-    lastName: 32,
-    phone: 'New York No. 1 Lake Park',
-    email: 'ffg@fghj',
-    description: 'My firstName is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-  },
-  // {
-  //   key: 2,
-  //   firstName: 'Jim Green',
-  //   lastName: 42,
-  //   phone: 'London No. 1 Lake Park',
-  //   description: 'My firstName is Jim Green, I am 42 years old, living in London No. 1 Lake Park.',
-  // },
-  // {
-  //   key: 3,
-  //   firstName: 'Not Expandable',
-  //   lastName: 29,
-  //   phone: 'Jiangsu No. 1 Lake Park',
-  //   description: 'This not expandable',
-  // },
-  // {
-  //   key: 4,
-  //   firstName: 'Joe Black',
-  //   lastName: 32,
-  //   phone: 'Sydney No. 1 Lake Park',
-  //   description: 'My firstName is Joe Black, I am 32 years old, living in Sydney No. 1 Lake Park.',
-  // },
-];
+const handleDelete = (id: string) => {
+  console.log("User with id", id, "deleted");
+};
 
-const UsersTable: React.FC = () => (
-  <Table<DataType>
-    columns={columns}
-    expandable={{
-      expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.description}</p>,
-      rowExpandable: (record) => record.firstName !== 'Not Expandable',
-    }}
-    dataSource={data}
-  />
-);
+const UsersTable: FC<{ data: any[] }> = ({ data }) => {
+  return (
+    <Table<DataType>
+      columns={columns}
+      expandable={{
+        expandedRowRender: (record) => (
+          <Content>
+            <Typography style={{ margin: 0 }}>First Name: {record.firstName}</Typography>
+            <Typography style={{ margin: 0 }}>Last Name: {record.lastName}</Typography>
+            <Typography style={{ margin: 0 }}>Phone: {record.phone}</Typography>
+            <Typography style={{ margin: 0 }}>Email: {record.email}</Typography>
+          </Content>
+        ),
+      }}
+      dataSource={data?.map((user) => ({
+        key: user._id,
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        phone: user.phone || "N/A",
+        email: user.email,
+      }))}
+    />
+  );
+};
 
 export default UsersTable;

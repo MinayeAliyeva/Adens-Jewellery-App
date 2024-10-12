@@ -11,7 +11,7 @@ import { Content } from "antd/es/layout/layout";
 
 // IInputProps uses a generic T that extends FieldValues
 interface IInputProps<T extends FieldValues> extends Omit<InputProps, "name"> {
-  errorMessage?: FieldError;
+  errorMessage?: string;
   labelText?: string;
   control: Control<T>; // control should be typed based on generic T
   errors?: FieldErrors<T>;
@@ -41,7 +41,7 @@ const InputComponent: FC<IInputProps<FieldValues>> = ({
         )}
       />
       {errorMessage ? (
-        <Content style={{ color: "red" }}>{errorMessage.message}</Content>
+        <Content style={{ color: "red" }}>{errorMessage}</Content>
       ) : (
         ""
       )}

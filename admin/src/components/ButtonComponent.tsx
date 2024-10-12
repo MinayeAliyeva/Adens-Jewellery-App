@@ -9,6 +9,7 @@ interface IButtonProps extends ButtonProps {
 
 export const ButtonComponent: FC<IButtonProps> = ({
   loading,
+  disabled,
   icon,
   danger,
   htmlType,
@@ -26,6 +27,7 @@ export const ButtonComponent: FC<IButtonProps> = ({
   return (
     <>
       <Button
+        disabled={disabled}
         variant={variant}
         danger={danger}
         icon={icon}

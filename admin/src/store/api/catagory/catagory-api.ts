@@ -6,45 +6,55 @@ export const catagoryApi = createApi({
   reducerPath: "catagoryApi",
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
-    // headers: {
-    //   Authorization: `Bearer ${localStorage.getItem("token")}` || "",
-    // },
   }),
   tagTypes: ["Category"],
 
   endpoints: (builder) => ({
     getCategories: builder.query<ICatagoryResponse[], void>({
       query: () => `/api/catagories`,
-      providesTags: ["Category"],
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({ type: "Category" as const, id: _id })),
+              { type: "Category", id: "LIST" },
+            ]
+          : [{ type: "Category", id: "LIST" }],
     }),
-    createCategory: builder.mutation<
-      ICatagoryResponse[],
-      { name: string; brand: string }
-    >({
+    
+    createCategory: builder.mutation<ICatagoryResponse[], { name: string; brand: string }>({
       query: (body) => ({
         url: "/api/catagories",
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Category"],
+      invalidatesTags: (result, error) => {
+        return error ? [] : [{ type: "Category", id: "LIST" }];
+      },
     }),
+    
     deleteCategoryById: builder.mutation<ICatagoryResponse, string>({
       query: (id) => ({
         url: `/api/catagories/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Category"],
+      invalidatesTags: (result, error) => {
+        return error ? [] : [{ type: "Category", id: "LIST" }];
+      },
     }),
+
     updateCategoryById: builder.mutation<
       ICatagoryResponse,
       { name: string; id: string; brand: string }
     >({
       query: (body) => ({
-        url: `/api/catagories/${body?.id}`,
+        url: `/api/catagories/${body.id}`,
         method: "PUT",
         body,
       }),
-      invalidatesTags: ["Category"],
+      invalidatesTags: (result, error, { id }) => {
+        // Səhv olmadıqda yalnız spesifik Category-nin və ümumi siyahının tag-larını invalidates edir
+        return error ? [] : [{ type: "Category", id }, { type: "Category", id: "LIST" }];
+      },
     }),
   }),
 });

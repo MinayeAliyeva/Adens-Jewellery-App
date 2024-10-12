@@ -1,16 +1,21 @@
 import { FC, useEffect, useState } from "react";
-import {  Form, Space, Table } from "antd";
+import { Form, Space, Table } from "antd";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { MdClearAll } from "react-icons/md";
 import type { TableProps } from "antd";
-import { columns } from "./data";
+import {
+  columns,
+  defaultPaginationData,
+  IPaginationData,
+  paginationSizeOptions,
+} from "./data";
 import {
   useCreateCategoryMutation,
   useDeleteCategoryByIdMutation,
-  useLazyGetCategoriesQuery,
+  useGetCategoriesQuery,
   useUpdateCategoryByIdMutation,
 } from "../../store/api/catagory/catagory-api";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
@@ -27,16 +32,43 @@ export interface IFormField {
   id?: string;
   brand?: string;
 }
+
+interface IState {
+  selectedId: string;
+  createCategory: boolean;
+  updateCategory: boolean;
+  paginationData: IPaginationData;
+  tableData: ICatagoryResponse[];
+}
+
 const schema = yup.object().shape({
   name: yup.string().required("First Name is required"),
 });
 
 const Category: FC = () => {
-  const [getCategory, { data: categoryData, isLoading: isLoadingCategory }] =
-    useLazyGetCategoriesQuery();
+  const [state, setState] = useState<IState>({
+    selectedId: "",
+    createCategory: false,
+    updateCategory: false,
+    paginationData: defaultPaginationData,
+    tableData: [],
+  });
 
-    const { data: brandData, isLoading: isLoadingBrand } =
-    useGetBrandsQuery();
+  const {
+    handleSubmit,
+    reset,
+    control,
+    formState: { errors },
+    setError,
+    clearErrors,
+    getValues,
+  } = useForm<IFormField>({
+    resolver: state.createCategory ? yupResolver(schema) : undefined,
+  });
+  const { data: categoryData, isLoading: isLoadingCategory } =
+    useGetCategoriesQuery();
+
+  const { data: brandData, isLoading: isLoadingBrand } = useGetBrandsQuery();
 
   const [craeteCategory, { isLoading: isLoadingCreatedCategory }] =
     useCreateCategoryMutation();
@@ -44,19 +76,19 @@ const Category: FC = () => {
     useDeleteCategoryByIdMutation();
   const [updateCategoryById, { isLoading: isLoadingUpdateCategoryById }] =
     useUpdateCategoryByIdMutation();
-  const [tableData, setTableData] = useState<ICatagoryResponse[]>([]);
+
   const isLoading =
+  isLoadingCategory ||
+    isLoadingBrand ||
     isLoadingCreatedCategory ||
     isLoadingDeleteCategoryById ||
     isLoadingUpdateCategoryById;
-  useEffect(() => {
-    if (!isLoading) {
-      console.log("RERENDER EFFECT");
-      getCategory(undefined,true).then((res) => setTableData(res?.data!));
-    }
-  }, [isLoading]);
 
-  const [selectedId, setSelectedId] = useState<string | null>();
+  useEffect(() => {
+    if (categoryData?.length) {
+      setState(prev =>({ ...prev, tableData: categoryData! }));
+    }
+  }, [categoryData]);
 
   const [filteredInfo, setFilteredInfo] = useState<Filters>({});
   const [sortedInfo, setSortedInfo] = useState<Sorts>({});
@@ -81,45 +113,84 @@ const Category: FC = () => {
       columnKey: "age",
     });
   };
-
-  const {
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors },
-  } = useForm<IFormField>({
-    resolver: yupResolver(schema),
-  });
-
-  const onFinish = (category: IFormField) => {
-    console.log({category});
-    
-    if (selectedId) {
-      updateCategoryById({ name: category?.name, id: category?.id!, brand: category.brand! });
-    } else {
-      craeteCategory({ name: category?.name, brand: category.brand! });
-    }
-    setSelectedId(null);
+  const onCreateCategory = () => {
+    state.paginationData = defaultPaginationData;
     reset();
+    clearErrors("name");
+    setState(prev =>({
+      ...(prev ?? {}),
+      selectedId: "",
+      createCategory: true,
+      updateCategory: false,
+    }));
+
+    const findedId = state.tableData?.find((data) => data?._id === "");
+  console.log({findedId});
+  
+    if (findedId) return;
+    setState((prev) => ({
+      ...(prev ?? {}),
+      tableData: [ { name: "", _id: "" } , ...prev.tableData],
+    }));
   };
 
-  console.log("RERENDER");
+  const onFinish = (category: IFormField) => {
+    if (state.selectedId === category.id && state.updateCategory) {
+      updateCategoryById({
+        name: category?.name,
+        id: category?.id!,
+        brand: category.brand!,
+      }).then((res: any) => {
+        setState({
+          ...state,
+          selectedId: "",
+          createCategory: false,
+          updateCategory: false,
+        });
+      });
+    } else {
+      craeteCategory({ name: category?.name, brand: category.brand! })
+        .then((res: any) => {
+          if (res?.error?.data)
+            setError("name", { type: "required", message: res?.error?.data });
+          else {
+            setState(prev=>({
+              ...prev,
+              paginationData: defaultPaginationData,
+              selectedId: "",
+              createCategory: false,
+              updateCategory: false,
+            }));
+          }
+        })
+        .catch((err) => {
+          console.log("err", err);
+        });
+    }
+  };
 
   const editCategory = (id?: string | null) => {
     reset();
-    setSelectedId(id!);
+    clearErrors("name");
+    setState({
+      ...state,
+      selectedId: id!,
+      createCategory: false,
+      updateCategory: true,
+    });
   };
 
   const onCancel = () => {
     reset();
-    setSelectedId(null);
-    setTableData(categoryData!);
+    clearErrors("name");
+    setState(prev=>({
+      ...prev,
+      selectedId: "",
+      createCategory: false,
+      updateCategory: false,
+    }));
   };
 
-  const onCreateCategory = () => {
-    if (tableData.find((data) => data?._id === "")) return;
-    setTableData((prev) => [{ name: "", _id: "" }, ...prev!]);
-  };
   const onDeleteCategoryById = (id: string) => {
     deleteCategoryById(id);
   };
@@ -127,19 +198,24 @@ const Category: FC = () => {
   return (
     <>
       <Space style={{ marginBottom: 16 }}>
-      {/* <Button color="primary" variant="outlined">
-           jjjj
-          </Button> */}
-        {/* <Button onClick={clearFilters}>Clear filters</Button> */}
-        <ButtonComponent      variant="outlined" icon={<MdClearAll/>} onClick={clearFilters} buttonText="Clear filters"/>
-        {/* <Button onClick={clearAll}>Clear filters and sorters</Button> */}
-        <ButtonComponent      variant="outlined" icon={<MdClearAll/>} onClick={clearAll} buttonText="Clear filters and sorters"/>
+        <ButtonComponent
+          variant="outlined"
+          icon={<MdClearAll />}
+          onClick={clearFilters}
+          buttonText="Clear filters"
+        />
+        <ButtonComponent
+          variant="outlined"
+          icon={<MdClearAll />}
+          onClick={clearAll}
+          buttonText="Clear filters and sorters"
+        />
         <ButtonComponent
           icon={<IoIosAddCircleOutline />}
           variant="outlined"
           buttonText="Create New Category"
           onClick={onCreateCategory}
-          //border="2px solid red"
+          disabled={state.updateCategory}
         />
       </Space>
       <Form>
@@ -153,14 +229,38 @@ const Category: FC = () => {
             setAgeSort,
             sortedInfo,
             editCategory,
-            selectedId,
+            selectedId: state.selectedId,
+            createCategory: state.createCategory,
+            updateCategory: state.updateCategory,
             onCancel,
             onDeleteCategoryById,
             brandData: brandData,
+            getValues,
           })}
           loading={isLoadingCategory || isLoading}
-          dataSource={tableData}
+          dataSource={state.tableData}
           onChange={handleChange}
+          pagination={{
+            pageSize: state.paginationData?.pageSize,
+            current: state.paginationData?.current,
+            onShowSizeChange(current, pageSize) {
+              setState({
+                ...state,
+                paginationData: { ...state.paginationData, pageSize },
+              });
+              // state.paginationData?.pageSize = size
+            },
+            onChange(page, pageSize) {
+              setState({
+                ...state,
+                paginationData: {
+                  ...state.paginationData,
+                  current: page,
+                  pageSize,
+                },
+              });
+            },
+          }}
         />
       </Form>
     </>

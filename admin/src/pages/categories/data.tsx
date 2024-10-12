@@ -6,11 +6,30 @@ import { FaSave } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import InputComponent from "../../components/InputComponent";
-import { Control, FieldErrors, UseFormHandleSubmit } from "react-hook-form";
+import {
+  Control,
+  FieldErrors,
+  UseFormGetValues,
+  UseFormHandleSubmit,
+} from "react-hook-form";
 import { IFormField } from ".";
 import { IBrandsResponse } from "../../store/api/brand/modules";
 import SelectBoxComponent from "../../components/SelectBoxComponent";
 import { Content } from "antd/es/layout/layout";
+
+
+export interface IPaginationData{
+  current: number;
+  pageSize: number;
+};
+
+export const defaultPaginationData: IPaginationData= {
+  current: 1,
+  pageSize: 10
+};
+
+export const paginationSizeOptions: string[] = ["10, 20, 30"];
+
 
 const brandOptions = (brands?: IBrandsResponse[]) =>
   brands?.map((item) => ({
@@ -29,6 +48,9 @@ export const columns = ({
   brandData,
   editCategory,
   selectedId,
+  createCategory,
+  updateCategory,
+  getValues,
   errors,
   onFinish,
   handleSubmit,
@@ -45,17 +67,20 @@ export const columns = ({
   isCreate?: boolean;
   editCategory?: (id: string) => void;
   selectedId?: string | null;
+  updateCategory: boolean;
   errors: FieldErrors<IFormField>;
   onFinish: (values: IFormField) => void;
   onCancel: () => void;
   onDeleteCategoryById: (id: string) => void;
   brandData?: IBrandsResponse[];
+  createCategory: boolean;
+  getValues: UseFormGetValues<IFormField>;
 }): TableColumnsType<ICatagoryResponse> => [
   {
     title: "№",
     dataIndex: "_id",
     key: "_id",
-     width: 70,
+    width: 320,
 
     render: (text, record, index) => index + 1,
   },
@@ -63,27 +88,17 @@ export const columns = ({
     title: "Category name",
     dataIndex: "name",
     key: "name",
-    width: 150,
+    width: 520,
     render: (name: string, record: ICatagoryResponse) => {
-      if (!record?._id && !record?.name) {
-        return (
-          <InputComponent
-            name="name"
-            control={control as any}
-            placeholder="Category Name"
-            errorMessage={errors?.name}
-          />
-        );
-      }
       return (
         <>
-          {selectedId === record?._id ? (
+          {!record?._id ? (
             <InputComponent
               defaultValue={name}
               name="name"
               control={control as any}
               placeholder="Category Name"
-              errorMessage={errors?.name}
+              errorMessage={errors?.name?.message}
             />
           ) : (
             <Typography>{name}</Typography>
@@ -132,7 +147,7 @@ export const columns = ({
     title: "Brand name",
     dataIndex: "brand",
     key: "brand",
-    width: 250,
+    width: 520,
     render: (brand: any, record: ICatagoryResponse) => {
       if (!record?._id && !record?.name) {
         return (
@@ -199,35 +214,42 @@ export const columns = ({
     sortOrder: sortedInfo?.columnKey === "name" ? sortedInfo.order : null,
     ellipsis: true,
   },
-
   {
     title: "",
     dataIndex: "actions",
     key: "actions",
-    width:100,
+    // width: 820,
     render: (_, record: ICatagoryResponse) => {
+      const isEdit =
+        (record?._id !== selectedId && !createCategory && !updateCategory) ||
+        (createCategory && record?._id !== selectedId && !updateCategory) ||
+        (updateCategory && record?._id !== selectedId);
+      // ||  (updateCategory && record?._id !== selectedId && errors?.name?.message);
+
       return (
         <div>
-          {(record._id && record._id !== selectedId) ||
-          record?._id === undefined ? (
-            <Content style={{display:'flex',gap:'20px'}}>
+          {isEdit ? (
+            <Content style={{ display: "flex", gap: "20px" }}>
               <Button
                 htmlType="button"
+                disabled={createCategory || updateCategory}
+                color="primary"
+                // style={{ color: "blue" }}
                 icon={<CiEdit />}
                 onClick={() => editCategory?.(record._id)}
-                color="primary"
                 variant="dashed"
               />
               <Button
                 onClick={() => onDeleteCategoryById(record?._id)}
                 icon={<MdDelete />}
+                disabled={createCategory || updateCategory}
                 htmlType="button"
                 color="danger"
                 variant="dashed"
               />
             </Content>
           ) : (
-            <Content  style={{display:'flex',gap:'20px'}}>
+            <Content style={{ display: "flex", gap: "20px" }}>
               <Button
                 type="primary"
                 htmlType="button"
@@ -240,8 +262,8 @@ export const columns = ({
                 icon={<MdOutlineCancel />}
                 htmlType="button"
                 onClick={onCancel}
-                color="danger"
                 variant="solid"
+                color="danger"
               />
             </Content>
           )}
