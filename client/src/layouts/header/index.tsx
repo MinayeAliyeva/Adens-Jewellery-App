@@ -5,6 +5,7 @@ import {
   SearchOutlined,
   HeartOutlined,
   ShoppingCartOutlined,
+  SettingOutlined, // Import the settings icon
 } from "@ant-design/icons";
 
 import {
@@ -14,12 +15,15 @@ import {
   ProfileMenuComponent,
 } from "./components";
 import DrawerComponent from "../../components/DrawerComponent";
+import SettingsSidebar from "../SettingsSidebar";
 
 const { Header: AntdHeader } = Layout;
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
+  const [isSettingsVisible, setIsSettingsVisible] = useState(false); // State for settings sidebar
+  const [pageColor, setPageColor] = useState("white"); // State for page color
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +38,6 @@ const Header = () => {
   }, []);
 
   const iconStyle = { color: "#707070", fontSize: "20px" };
-  console.log("rerender header");
 
   const showDrawer = () => {
     setIsDrawerVisible(true);
@@ -43,7 +46,17 @@ const Header = () => {
   const onClose = () => {
     setIsDrawerVisible(false);
   };
-  const exsitsUser = localStorage.getItem("authToken");
+
+  const showSettings = () => {
+    setIsSettingsVisible(true);
+  };
+
+  const closeSettings = () => {
+    setIsSettingsVisible(false);
+  };
+
+  const existsUser = localStorage.getItem("authToken");
+
   return (
     <>
       <AntdHeader
@@ -51,7 +64,7 @@ const Header = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
-          backgroundColor: "#fff",
+          backgroundColor: pageColor,
           padding: "0 20px",
           position: isScrolled ? "fixed" : "static",
           top: isScrolled ? 0 : "auto",
@@ -62,7 +75,6 @@ const Header = () => {
         }}
       >
         <Logo />
-
         <HeaderMenu />
 
         <Menu
@@ -74,24 +86,27 @@ const Header = () => {
             alignItems: "center",
           }}
         >
-
-          {exsitsUser && <ProfileMenuComponent />}
+          {existsUser && <ProfileMenuComponent />}
           <Link to={"/login"}>Login</Link>
           <Link to={"/register"}>Register</Link>
           <Link to="/favorite">
             <HeartOutlined style={iconStyle} />
           </Link>
-
           <ShoppingCartOutlined style={iconStyle} onClick={showDrawer} />
           <DrawerComponent
             onClose={onClose}
             isDrawerVisible={isDrawerVisible}
           />
-          <LanguageComponent />
+          <SettingOutlined style={iconStyle} onClick={showSettings} />{" "}
+          <SettingsSidebar
+            onClose={closeSettings}
+            isVisible={isSettingsVisible}
+          />
+    
         </Menu>
       </AntdHeader>
     </>
   );
 };
 
-export default Header;
+export default memo(Header);
