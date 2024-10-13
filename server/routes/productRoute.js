@@ -36,22 +36,31 @@ const upload = multer({ storage, limits: { fileSize: 1024 * 1024 * 5 } });
 
 router.get("/", async (req, res) => {
   try {
-    const { category, productName, min, max, size, brand, weight, duration ,dimention} =
-      req.query;
-    console.log("brand", brand);
+    const {
+      category,
+      productName,
+      minPrice,
+      maxPrice,
+      size,
+      brand,
+      minwWeight,
+      maxwWeight,
+      duration,
+      dimention,
+    } = req.query;
 
     if (
       !category &&
       !productName &&
-      !min &&
-      !max &&
+      !minPrice &&
+      !maxPrice &&
       !size &&
       !brand &&
-      !weight &&
+      !minwWeight &&
+      !maxwWeight &&
       !duration &&
       !dimention
     ) {
-      console.log("nothing");
 
       const allProducts = await Product.find()
         .populate("category")
@@ -71,12 +80,15 @@ router.get("/", async (req, res) => {
       ...(brands && { brand: { $in: brands } }),
       ...(sizes && { size: { $in: sizes } }),
       ...(productName && { productName: new RegExp(productName, "i") }),
-      ...(min && { price: { $gte: Number(min) } }),
-      ...(max && { price: { $lte: Number(max) } }),
-      //
-      ...(weight && { weight: { $eq: Number(weight) } }),
-      ...(duration && { duration: { $eq: Number(duration) } }),
-      ...(dimention && { dimention: { $eq: Number(dimention) } }),
+      ...(minPrice && { price: { $gte: Number(minPrice) } }),
+      ...(maxPrice && { price: { $lte: Number(maxPrice) } }),
+     
+      ...(minwWeight && { weight: { $gte: Number(minwWeight) } }),
+      ...(maxwWeight && { weight: { $lte: Number(maxwWeight) } }),
+      ...((minPrice && maxPrice) && { price: { $gte: Number(minPrice), $lte: Number(maxPrice) } }),
+      ...((minwWeight && maxwWeight)  && { weight: { $gte: Number(minwWeight), $lte: Number(maxwWeight) } }),
+      ...(duration && { warrantyDuration: { $eq: Number(duration) } }),
+      ...(dimention && { dimensions: { $eq: Number(dimention) } }),
     };
 
     const products = await Product.find(query)

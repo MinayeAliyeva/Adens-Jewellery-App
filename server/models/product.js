@@ -57,7 +57,7 @@ const productSchema = new mongoose.Schema({
   stock: Number,
   weight: Number,
   dimensions: Number,
-  warrantyDuration: String,
+  warrantyDuration: Number,
   certification: String,
   returnPolicy: String,
   totalSales: Number,

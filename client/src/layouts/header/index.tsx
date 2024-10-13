@@ -19,22 +19,22 @@ import { Profile } from "../../components/Profile";
 const { Header: AntdHeader } = Layout;
 
 const Header = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
+  // const [isScrolled, setIsScrolled] = useState(false);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const [isSettingsVisible, setIsSettingsVisible] = useState(false);
   const [pageColor, setPageColor] = useState("white"); 
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     setIsScrolled(window.scrollY > 50);
+  //   };
 
-    window.addEventListener("scroll", handleScroll);
+  //   window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("scroll", handleScroll);
+  //   };
+  // }, []);
 
   const iconStyle = { color: "#707070", fontSize: "20px" };
 
@@ -65,11 +65,11 @@ const Header = () => {
           justifyContent: "space-between",
           backgroundColor: pageColor,
           padding: "0 20px",
-          position: isScrolled ? "fixed" : "static",
-          top: isScrolled ? 0 : "auto",
+          // position: isScrolled ? "fixed" : "static",
+          // top: isScrolled ? 0 : "auto",
           width: "100%",
           zIndex: 1000,
-          boxShadow: isScrolled ? "0 2px 10px rgba(0, 0, 0, 0.1)" : "none",
+          // boxShadow: isScrolled ? "0 2px 10px rgba(0, 0, 0, 0.1)" : "none",
           transition: "box-shadow 0.3s ease",
         }}
       >

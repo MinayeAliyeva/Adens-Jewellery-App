@@ -4,7 +4,7 @@ import { Layout, Typography } from "antd";
 import { IProduct } from "../../store/api/product/modules";
 
 const Products = () => {
-  const { data } = useGetProductsQuery<{ data: IProduct[] }>({});
+  const { data } = useGetProductsQuery<{ data: IProduct[] }>("");
  console.log('data',data);
  
   return (

@@ -9,53 +9,9 @@ export const productApi = createApi({
   endpoints: (builder) => ({
     getProducts: builder.query<
       IProduct[],
-      {
-        categoryNames?: string[]; // Dizi olarak kategori alıyoruz
-        brand?: string[];
-        productName?: string;
-        min?: number;
-        max?: number;
-        size?: string[];
-        weight?: number;
-        duration?: number;
-        dimention?: number;
-      }
+      string
     >({
-      query: ({
-        categoryNames,
-        productName,
-        min,
-        max,
-        size,
-        brand,
-        weight,
-        duration,
-        dimention,
-      }) => {
-        const params = new URLSearchParams();
-
-        if (categoryNames && categoryNames.length > 0) {
-          categoryNames.forEach((category) =>
-            params.append("category", category)
-          );
-        }
-        if (brand && brand.length > 0) {
-          brand.forEach((brand) => params.append("brand", brand));
-        }
-        if (size && size.length > 0) {
-          size.forEach((size) => params.append("size", size));
-        }
-        if (productName) params.append("productName", productName);
-        if (min !== undefined) params.append("min", min.toString());
-        if (max !== undefined) params.append("max", max.toString());
-        if (weight !== undefined) params.append("weight", weight.toString());
-        if (duration !== undefined)
-          params.append("duration", duration.toString());
-        if (dimention !== undefined)
-          params.append("dimention", dimention.toString());
-
-        return `/api/products?${params.toString()}`;
-      },
+      query: (params) => `/api/products?${params}`
     }),
     getProducDetailById: builder.query<IProduct, string>({
       query: (id) => `/api/products/${id}`,
