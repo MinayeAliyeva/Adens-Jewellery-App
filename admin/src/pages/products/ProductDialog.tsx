@@ -244,7 +244,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item label="Warranty Duration" name="warrantyDuration">
-              <Input placeholder="Enter warranty duration" />
+              <Input type="number" placeholder="Enter warranty duration" />
             </Form.Item>
           </Col>
           <Col span={12}>

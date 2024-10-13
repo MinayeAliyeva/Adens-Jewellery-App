@@ -1,7 +1,7 @@
 import CatagoriesSlider from "./CatagoriesSlider";
 import { IFieldType, SideBar } from "./SideBar";
 import { Content } from "antd/es/layout/layout";
-import { Col, Row } from "antd";
+import { Col, Row, Typography } from "antd";
 import { useLazyGetProductsQuery } from "../../store/api/product/product-api";
 import { IProduct } from "../../store/api/product/modules";
 import { useForm } from "react-hook-form";
@@ -10,72 +10,118 @@ import { useDebounce } from "../../hooks/useDebounce";
 import ProductCard from "../../components/ProductCard";
 import InputComponent from "../../shared/components/form-components/InputComponent";
 import { SearchOutlined } from "@ant-design/icons";
+import "./index.css";
+import { useSearchParams } from "react-router-dom";
 
 const Shop = () => {
+  const params = new URLSearchParams();
   const [getPrducts, { data: productsData }] = useLazyGetProductsQuery<{
     data: IProduct[];
-  }>({});
+  }>();
+  // const [searchParams, setSearchParams] = useSearchParams();
 
   const {
     control,
     formState: { errors },
     watch,
     getValues,
-  } = useForm<any>();
+    setError,
+  } = useForm<{ productName: string }>({
+    defaultValues: { productName: undefined },
+  });
 
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);  
-
-  const productName = useDebounce(watch("productName"), 300);
+  const productName = useDebounce(watch("productName"), 300) ?? undefined;
+  console.log("RERENDER D=SHOPP");
 
   useEffect(() => {
     if (productName && productName.length < 3) {
-      setErrorMessage("Arama yapmak için en az 3 harf giriniz."); 
+      setError("productName", {
+        type: "manual",
+        message: "Please enter at least 3 characters",
+      });
     } else {
-      setErrorMessage(null); 
+      setError("productName", { type: "manual", message: "" });
     }
 
     if (!productName || productName.length >= 3) {
-      getPrducts({ productName }, true);
+      if (productName) params.append("productName", productName!);
+      getPrducts(params.toString(), true);
     }
   }, [productName]);
 
   const onFilter = (values: IFieldType) => {
+    console.log("values", values);
+
     const {
-      category,
+      categories,
       minPrice,
       maxPrice,
       raiting,
-      brand,
+      brands,
       size,
-      weight,
+      minwWeight,
+      maxwWeight,
       dimention,
       duration,
     } = values;
 
-    const filterParams = {
-      categoryNames: category ? category : undefined,
-      brand: brand ? brand : undefined,
-      productName: productName || undefined,
-      min: minPrice || undefined,
-      max: maxPrice || undefined,
-      weight: weight || undefined,
-      dimention: dimention || undefined,
-      duration: duration || undefined,
-      size: size ? size : undefined,
-    };
-    getPrducts(filterParams, true);
+    if (categories && categories?.length > 0) {
+      categories.forEach((category) => params.append("category", category));
+    }
+
+    if (brands && brands.length > 0) {
+      brands.forEach((brand) => params.append("brand", brand));
+    }
+    if (size && size.length > 0) {
+      size.forEach((value) => params.append("size", value));
+    }
+    if (productName) params.append("productName", productName);
+    if (minPrice) params.append("minPrice", minPrice.toString());
+    if (maxPrice) params.append("maxPrice", maxPrice.toString());
+
+    if (minwWeight) params.append("minwWeight", minwWeight.toString());
+    if (maxwWeight) params.append("maxwWeight", maxwWeight.toString());
+
+
+    if (duration)
+      params.append("duration", duration.toString());
+    if (dimention)
+      params.append("dimention", dimention.toString());
+
+    getPrducts(params.toString(), true);
+    params.delete("category");
+    params.delete("brand");
+    params.delete("size");
+    params.delete("productName");
+    params.delete("minPrice");
+    params.delete("maxPrice");
+    params.delete("minwWeight");
+    params.delete("maxwWeight");
+    params.delete("duration");
+    params.delete("dimention");
   };
 
   return (
     <>
       <CatagoriesSlider />
-      <Content style={{ marginTop: "20px" }}>
+      <Content style={{ minHeight: "100vh", marginTop: "30px" }}>
         <Row>
-          <Col span={4}>
+          <Col
+            span={5}
+            style={{
+              // width: "400px",
+              // height: "100vh",
+              padding: "0 24px",
+              backgroundColor: "#f7f7f7",
+              borderRight: "1px solid #ddd",
+              overflowY: "auto",
+              minHeight: "100vh",
+            }}
+          >
             <SideBar onFilter={onFilter} />
           </Col>
 
-          <Col span={20}>
+          <Col span={19}>
             <Content
               style={{
                 display: "flex",
@@ -92,13 +138,13 @@ const Shop = () => {
                   size="large"
                   name="productName"
                   suffix={<SearchOutlined style={{ fontSize: "30px" }} />}
-                  control={control}
+                  control={control as any}
                   placeholder="Search product by name..."
                 />
-                {errorMessage && (  
-                  <p style={{ color: "red", marginTop: "5px" }}>
-                    {errorMessage}
-                  </p>
+                {errors?.productName?.message && (
+                  <Typography.Text style={{ color: "red", marginTop: "5px" }}>
+                    {errors?.productName?.message}
+                  </Typography.Text>
                 )}
               </div>
             </Content>

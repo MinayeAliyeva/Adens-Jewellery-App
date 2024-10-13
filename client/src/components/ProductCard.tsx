@@ -84,7 +84,20 @@ const ProductCard: FC<IProps> = ({ product }) => {
           Category: {product?.category?.name}
         </Typography>
         <Typography className="text-xl font-semibold text-gray-800">
+          Brand: {product?.brand?.name}
+        </Typography>
+        <Typography className="text-xl font-semibold text-gray-800">
           Price: {product?.price}
+        </Typography>
+
+        <Typography className="text-xl font-semibold text-gray-800">
+          weight: {product?.weight}
+        </Typography>
+        <Typography className="text-xl font-semibold text-gray-800">
+        dimensions: {product?.dimensions}
+        </Typography>
+        <Typography className="text-xl font-semibold text-gray-800">
+        warrantyDuration: {product?.warrantyDuration}
         </Typography>
 
         {product?.stock > 0 ? (
