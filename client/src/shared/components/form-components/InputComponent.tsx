@@ -1,35 +1,53 @@
-import { Controller } from "react-hook-form";
-import { Input } from "antd";
+import { FC } from "react";
+import {
+  Controller,
+  FieldError,
+  FieldErrors,
+  FieldValues,
+  Control,
+} from "react-hook-form";
+import { Input, InputProps } from "antd";
+import { Content } from "antd/es/layout/layout";
+import { unescape } from "querystring";
 
-export interface CustomInputProps {
-  label: string;
-  control: any;
-  name: string;
-  rules: Record<string, any>;
-  placeholder: string;
-  type: string;
+// IInputProps uses a generic T that extends FieldValues
+interface IInputProps<T extends FieldValues> extends Omit<InputProps, "name"> {
+  errorMessage?: string;
+  labelText?: string;
+  control: Control<T>; // control should be typed based on generic T
+  errors?: FieldErrors<T>;
+  name: keyof T; // name should be a key of the generic type
 }
 
-export const InputComponent = ({
-  type = "text",
-  placeholder = "Enter Response",
+const InputComponent: FC<IInputProps<FieldValues>> = ({
+  name,
+  placeholder,
+  required,
+  errorMessage,
+  labelText,
   control,
-  name = "input",
-  ...rest
-}: CustomInputProps) => {
+  size,
+  defaultValue,
+}) => {
   return (
-    <Controller
-      name={name}
-      control={control}
-      rules={rest.rules}
-      render={({ field, fieldState }) => (
-        <Input
-          {...field}
-          type={type}
-          placeholder={placeholder}
-          className={fieldState.invalid ? "custom-input error" : "custom-input"}
-        />
+    <>
+      {labelText && <label>{labelText}</label>}
+      <Controller
+        name={name as string}
+        control={control}
+        defaultValue={defaultValue}
+        rules={{ required }}
+        render={({ field }) => (
+          <Input placeholder={placeholder} {...field} size={size} />
+        )}
+      />
+      {errorMessage ? (
+        <Content style={{ color: "red" }}>{errorMessage}</Content>
+      ) : (
+        ""
       )}
-    />
+    </>
   );
 };
+
+export default InputComponent;

@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
 
     const products = await Product.find(query).populate('category').populate('brand');
     if (!products.length) {
-      return res.status(404).send("Ürün bulunamadı");
+      return res.status(200).send([]);
     }
     res.status(200).send(products);
   } catch (error) {

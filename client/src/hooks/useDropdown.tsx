@@ -6,7 +6,7 @@ type TypeUseDropDown = () => {
   closeDropdown: () => void;
 };
 
-const useDropdown: TypeUseDropDown = () => {
+export const useDropdown: TypeUseDropDown = () => {
   const [visible, setVisible] = useState(false);
 
   const toggleDropdown = () => {
@@ -19,5 +19,3 @@ const useDropdown: TypeUseDropDown = () => {
 
   return { visible, toggleDropdown, closeDropdown };
 };
-
-export default useDropdown;
