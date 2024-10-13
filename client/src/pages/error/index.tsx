@@ -2,7 +2,7 @@ import { Button, Layout, Result } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ErrorContentStyle } from "./style";
 
-const { Footer, Content } = Layout;
+const { Content } = Layout;
 
 const ErrorPage = () => {
   const navigate = useNavigate();
@@ -13,9 +13,7 @@ const ErrorPage = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Content
-        style={ErrorContentStyle}
-      >
+      <Content style={ErrorContentStyle}>
         <Result
           status="404"
           title="404"

@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Card, Image, Typography, Layout, Button } from "antd";
+import {  Image, Typography, Button } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { FaMinus } from "react-icons/fa";

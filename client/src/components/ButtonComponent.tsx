@@ -4,7 +4,6 @@ import { FC, ReactNode } from "react";
 interface IButtonComponentProps extends ButtonProps {
   buttonText: string;
   icon?: ReactNode;
-
 }
 
 const ButtonComponent: FC<IButtonComponentProps> = ({
@@ -12,7 +11,7 @@ const ButtonComponent: FC<IButtonComponentProps> = ({
   style,
   onClick,
   icon,
-  size='large'
+  size = "large",
 }) => {
   return (
     <Button

@@ -8,7 +8,7 @@ export const HeaderMenu = () => {
     console.log("HEADER MENU RERENDER ");
   return (
     <Content style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
-        {navLinksData.map(renderNavLink)}
+        {navLinksData?.map(renderNavLink)}
     </Content>
   )
 }

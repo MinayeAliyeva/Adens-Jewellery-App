@@ -47,23 +47,24 @@ const Info = () => {
           </Typography>
           <Button
             onClick={handleShopNowClick}
-            style={{
-              borderRadius: "0",
-              border: "1px solid #000",
-              color: "#000",
-              backgroundColor: "transparent",
-              padding: "30px",
-            }}
+            className="border border-black text-black bg-transparent rounded-none py-4 px-8"
           >
             {t("Shop Now")}
           </Button>
         </Col>
         <Col span={12}>
-          <img
-            src={infoImg}
-            alt="Jewelry"
-            style={{ width: "100%", height: "auto" }}
-          />
+          <div className="overflow-hidden perspective" style={{ position: 'relative' }}>
+            <img
+              src={infoImg}
+              alt="Jewelry"
+              className="w-full h-auto object-cover transition-transform duration-500 ease-in-out transform hover:scale-110 hover:z-10"
+              style={{ 
+                transformStyle: 'preserve-3d', 
+                position: 'relative', 
+                backfaceVisibility: 'hidden' 
+              }}
+            />
+          </div>
         </Col>
       </Row>
     </Layout>

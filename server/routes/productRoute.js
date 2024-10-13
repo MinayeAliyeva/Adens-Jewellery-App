@@ -5,6 +5,7 @@ const path = require("path");
 const auth = require("../middlware/auth");
 const { Product } = require("../models/product");
 const isAdmin = require("../middlware/isAdmin");
+const { log } = require("util");
 
 const FILE_TYPE_MAP = {
   "image/png": "png",
@@ -31,26 +32,56 @@ const upload = multer({ storage, limits: { fileSize: 1024 * 1024 * 5 } });
 // });
 //filterleme !! sayfalama limit() ile edilir select() ile ise data hisselerini select {} limit ise number qebul edir
 //Catagory gore filter price gore min,max  name gore, price asc desc
-//!color,brand ,weight,dimensions brand dimensions catagory arrey olacak 
+//!color,brand ,weight,dimensions brand dimensions catagory arrey olacak
 
 router.get("/", async (req, res) => {
   try {
-    const { category, productName, min, max } = req.query;
-    if (!category && !productName && !min && !max) {
-      const allProducts = await Product.find().populate('category').populate('brand');
+    const { category, productName, min, max, size, brand, weight, duration ,dimention} =
+      req.query;
+    console.log("brand", brand);
+
+    if (
+      !category &&
+      !productName &&
+      !min &&
+      !max &&
+      !size &&
+      !brand &&
+      !weight &&
+      !duration &&
+      !dimention
+    ) {
+      console.log("nothing");
+
+      const allProducts = await Product.find()
+        .populate("category")
+        .populate("brand");
       return res.status(200).send(allProducts);
     }
+    console.log("size backend", size);
 
-    const categories = category ? category.split(",") : null;
+    const categories = Array.isArray(category)
+      ? category
+      : category?.split(",");
+    const sizes = Array.isArray(size) ? size : size?.split(",");
+    const brands = Array.isArray(brand) ? brand : brand?.split(",");
 
     const query = {
       ...(categories && { category: { $in: categories } }),
+      ...(brands && { brand: { $in: brands } }),
+      ...(sizes && { size: { $in: sizes } }),
       ...(productName && { productName: new RegExp(productName, "i") }),
       ...(min && { price: { $gte: Number(min) } }),
       ...(max && { price: { $lte: Number(max) } }),
+      //
+      ...(weight && { weight: { $eq: Number(weight) } }),
+      ...(duration && { duration: { $eq: Number(duration) } }),
+      ...(dimention && { dimention: { $eq: Number(dimention) } }),
     };
 
-    const products = await Product.find(query).populate('category').populate('brand');
+    const products = await Product.find(query)
+      .populate("category")
+      .populate("brand");
     if (!products.length) {
       return res.status(200).send([]);
     }
@@ -64,7 +95,7 @@ router.get("/", async (req, res) => {
 //Detail
 router.get("/:id", async (req, res) => {
   const product = await Product.findOne({ _id: req.params.id });
-  
+
   if (!product) {
     return res.status(404).send("Such product is not exsits...");
   }
@@ -225,8 +256,7 @@ router.put(
         },
         { new: true }
       );
-      console.log({updatedProduct});
-      
+      console.log({ updatedProduct });
 
       res.status(200).send(updatedProduct);
     } catch (error) {
