@@ -8,13 +8,13 @@ export const productApi = createApi({
 
   endpoints: (builder) => ({
     getProducts: builder.query<
-      IProduct,
+      IProduct[],
       {
         categoryNames?: string[]; // Dizi olarak kategori alıyoruz
         productName?: string;
         min?: number;
         max?: number;
-      }
+      } 
     >({
       query: ({ categoryNames, productName, min, max }) => {
         const params = new URLSearchParams();

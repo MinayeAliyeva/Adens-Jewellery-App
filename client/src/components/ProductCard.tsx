@@ -6,37 +6,24 @@ import {
 } from "@ant-design/icons";
 import { FC, useState } from "react";
 import { Link } from "react-router-dom";
-
+import { IProduct } from "../store/api/product/modules";
 
 interface IProps {
-  product: {
-    productImg: string;
-    productImgHover: string;
-    productName: string;
-    productPrice: string;
-    productDetails?: string;
-    productId: string;
-    availableColors: string[];
-    stock: number;
-    discount: number;
-    brand: string;
-    category: string;
-    additionalImages: string[];
-  };
+  product: IProduct;
 }
 
-const ProductCard: FC<any> = ({ product }) => {
- console.log("product",product);
- console.log("id",product._id);
- 
+const ProductCard: FC<IProps> = ({ product }) => {
+  console.log("product", product);
+  console.log("id", product._id);
+
   const [isHovered, setIsHovered] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-  const calculateDiscountedPrice = () => {
-    const price = parseFloat(product.productPrice.replace("$", ""));
-    const discountedPrice = price - (price * product.discount) / 100;
-    return `$${discountedPrice.toFixed(2)}`;
-  };
+  // const calculateDiscountedPrice = () => {
+  //   const price = parseFloat(product?.price.replace("$", ""));
+  //   const discountedPrice = price - (price * product.discount) / 100;
+  //   return `$${discountedPrice.toFixed(2)}`;
+  // };
   return (
     <div
       className="w-full max-w-md transition-transform hover:scale-105 relative"
@@ -45,14 +32,14 @@ const ProductCard: FC<any> = ({ product }) => {
       style={{ height: "600px", width: "400px" }}
     >
       <div className="relative w-full h-2/3 overflow-hidden">
-        {product.discount > 0 && (
+        {/* {product.discount > 0 && (
           <span
             style={{ backgroundColor: "rgb(84 40 40)" }}
             className="absolute top-2 left-2 text-white px-3 py-1 rounded-full text-xs font-bold z-10"
           >
             {product.discount}% OFF
           </span>
-        )}
+        )} */}
 
         <img
           alt="product"
@@ -122,7 +109,13 @@ const ProductCard: FC<any> = ({ product }) => {
         <h3 className="text-xl font-semibold text-gray-800">
           {product.productName}
         </h3>
-
+        <h3 className="text-xl font-semibold text-gray-800">
+          Category:{product?.category?.name}
+        </h3>
+        <h3 className="text-xl font-semibold text-gray-800">
+          Price:{product?.price}
+        </h3>
+        {/* 
         <div className="text-lg font-bold text-gray-900 mt-4">
           {product.discount > 0 ? (
             <>
@@ -134,7 +127,7 @@ const ProductCard: FC<any> = ({ product }) => {
           ) : (
             product.productPrice
           )}
-        </div>
+        </div> */}
 
         {product.stock > 0 ? (
           <p className="text-green-600 mt-2">In Stock</p>
