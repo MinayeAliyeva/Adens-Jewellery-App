@@ -1,12 +1,5 @@
-import React from "react";
-import { FaFacebook, FaTwitter } from "react-icons/fa";
-import { IoLogoInstagram } from "react-icons/io5";
-import { Card, Form, Input, Button, Typography, Row, Col, Divider } from "antd";
-import {
-  MailOutlined,
-  PhoneOutlined,
-  EnvironmentOutlined,
-} from "@ant-design/icons";
+import { Card, Form, Input, Button, Typography, Row, Col } from "antd";
+import { Content } from "antd/es/layout/layout";
 
 const { Title, Paragraph } = Typography;
 
@@ -16,8 +9,10 @@ const Contact = () => {
   };
 
   return (
-    <div style={{ padding: "50px", backgroundColor: "#f0f2f5", height: '100vh' }}>
-      <Row gutter={16} justify="center" >
+    <Content
+      style={{ padding: "50px", backgroundColor: "#f0f2f5", height: "100vh" }}
+    >
+      <Row gutter={16} justify="center">
         <Col xs={24} sm={16} md={12}>
           <Card
             style={{
@@ -27,9 +22,12 @@ const Contact = () => {
               marginBottom: "30px",
             }}
           >
-            <Title level={2} style={{ textAlign: 'center' }}>Contact Us</Title>
-            <Paragraph style={{ textAlign: 'center' }}>
-              If you have any questions, feel free to reach out to us by filling out the form below.
+            <Title level={2} style={{ textAlign: "center" }}>
+              Contact Us
+            </Title>
+            <Paragraph style={{ textAlign: "center" }}>
+              If you have any questions, feel free to reach out to us by filling
+              out the form below.
             </Paragraph>
 
             <Form layout="vertical" onFinish={onFinish}>
@@ -103,7 +101,7 @@ const Contact = () => {
                 <Input.TextArea rows={6} placeholder="Write your message" />
               </Form.Item>
 
-              <Form.Item style={{ textAlign: 'center' }}>
+              <Form.Item style={{ textAlign: "center" }}>
                 <Button
                   type="primary"
                   htmlType="submit"
@@ -120,10 +118,8 @@ const Contact = () => {
             </Form>
           </Card>
         </Col>
-
-
       </Row>
-    </div>
+    </Content>
   );
 };
 

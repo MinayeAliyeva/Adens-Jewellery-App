@@ -16,6 +16,7 @@ import InputComponent from "../../../components/InputComponent";
 import { useRegisterUserMutation } from "../../../store/api/user/user-api";
 import { useNavigate } from "react-router-dom";
 import { registerSchema } from "../../../validation/registerValidation";
+import { ContentStyle, MainContentStyle } from "./style";
 
 const { Title } = Typography;
 
@@ -65,23 +66,10 @@ const Register: FC = () => {
 
   return (
     <Content
-      style={{
-        background: `url("/assets/images/bg.jpg") no-repeat center center/cover`,
-        borderRadius: "10px",
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+      style={MainContentStyle}
     >
       <Content
-        style={{
-          maxWidth: "500px",
-          padding: "40px",
-          background: "rgba(255, 255, 255, 0.9)",
-          borderRadius: "10px",
-          boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 20px",
-        }}
+        style={ContentStyle}
       >
         <Title
           level={2}
@@ -110,8 +98,8 @@ const Register: FC = () => {
 
           <Form.Item
             label="Last Name"
-            validateStatus={errors.lastName ? "error" : ""}
-            help={errors.lastName?.message}
+            validateStatus={errors?.lastName ? "error" : ""}
+            help={errors?.lastName?.message}
           >
             <InputComponent
               name="lastName"
@@ -124,7 +112,7 @@ const Register: FC = () => {
           <Form.Item
             label="Email"
             validateStatus={errors.email ? "error" : ""}
-            help={errors.email?.message}
+            help={errors?.email?.message}
           >
             <InputComponent
               name="email"
@@ -136,8 +124,8 @@ const Register: FC = () => {
 
           <Form.Item
             label="Phone"
-            validateStatus={errors.phone ? "error" : ""}
-            help={errors.phone?.message}
+            validateStatus={errors?.phone ? "error" : ""}
+            help={errors?.phone?.message}
           >
             <InputComponent
               name="phone"
@@ -149,8 +137,8 @@ const Register: FC = () => {
 
           <Form.Item
             label="Password"
-            validateStatus={errors.password ? "error" : ""}
-            help={errors.password?.message}
+            validateStatus={errors?.password ? "error" : ""}
+            help={errors?.password?.message}
           >
             <InputComponent
               name="password"

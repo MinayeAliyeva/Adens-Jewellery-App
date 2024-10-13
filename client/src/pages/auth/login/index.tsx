@@ -1,23 +1,17 @@
-import React from "react";
 import { Form, Button, Typography } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
+
 import InputComponent from "../../../components/InputComponent";
 import { useLoginUserMutation } from "../../../store/api/user/user-api";
 import { useNavigate } from "react-router-dom";
+import { ContentStyle, MainContentStyle } from "./style";
+import { loginSchema } from "../../../validation/loginValidation";
 
 const { Title } = Typography;
 
-const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Invalid email format")
-    .required("Email is required"),
-  password: yup.string().required("Password is required"),
-});
 
 interface ILoginFormValues {
   email: string;
@@ -28,31 +22,27 @@ const Login: React.FC = () => {
   const {
     control,
     handleSubmit,
-    reset,
     formState: { errors },
   } = useForm<ILoginFormValues>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(loginSchema),
   });
 
   const [loginUser] = useLoginUserMutation();
   const navigate = useNavigate();
-  const onSubmit =  (data: ILoginFormValues) => {
+  const onSubmit = (data: ILoginFormValues) => {
     console.log("ONSUBMIT");
-    
+
     try {
-      console.log('try');
-      
-     loginUser({
+      console.log("try");
+
+      loginUser({
         email: data.email,
         password: data.password,
-      }).then(res=>{
-        console.log({res});
-        
-       
+      }).then((res) => {
+        console.log({ res });
+
         localStorage.setItem("token", res.data);
-
       });
-
 
       navigate("/");
     } catch (error) {
@@ -61,24 +51,8 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Content
-      style={{
-        background: `url("/assets/images/bg.jpg") no-repeat center center/cover`,
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <Content
-        style={{
-          maxWidth: "500px",
-          padding: "40px",
-          background: "rgba(255, 255, 255, 0.9)",
-          borderRadius: "10px",
-          boxShadow: "rgba(0, 0, 0, 0.3) 0px 4px 20px",
-        }}
-      >
+    <Content style={MainContentStyle}>
+      <Content style={ContentStyle}>
         <Title
           level={2}
           style={{

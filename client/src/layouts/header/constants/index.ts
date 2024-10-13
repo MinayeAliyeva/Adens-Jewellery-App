@@ -1,3 +1,4 @@
+
 export interface InavLinksData {
   path: string;
   label: string;
@@ -5,8 +6,7 @@ export interface InavLinksData {
 
 export const menuItems = [
   { key: "profil", label: "Profil" },
-  { key: "login", label: "Login" },
-  { key: "register", label: "Register" },
+  { key: "Logout", label: "Logout" },
 ];
 export const navLinksData: InavLinksData[] = [
   { path: "/home", label: "Home" },

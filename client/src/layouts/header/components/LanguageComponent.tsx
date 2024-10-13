@@ -24,17 +24,17 @@ export const LanguageComponent = memo(() => {
       value={i18n.language}
       style={{
         width: 120,
-        border: "1px solid #d9d9d9", 
+        border: "1px solid #d9d9d9",
         borderRadius: "4px",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
       }}
       onChange={changeLanguage}
       dropdownStyle={{
         border: "none",
-        borderRadius: "4px", 
+        borderRadius: "4px",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
       }}
-      dropdownMatchSelectWidth={false} 
+      dropdownMatchSelectWidth={false}
     >
       <Option value="tr">
         <FlagIcon code="TR" style={{ marginRight: "8px" }} /> {t("Türkçe")}

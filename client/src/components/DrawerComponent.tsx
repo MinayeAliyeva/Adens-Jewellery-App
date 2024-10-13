@@ -10,7 +10,7 @@ interface IProduct {
   color: string;
   description: string;
   mainImageUrl: string;
-  quantity: number; // Miktar
+  quantity: number; 
 }
 
 interface IDrawerComponentProps {

@@ -1,22 +1,14 @@
 import { FC } from "react";
-import {
-  Controller,
-  FieldError,
-  FieldErrors,
-  FieldValues,
-  Control,
-} from "react-hook-form";
+import { Controller, FieldErrors, FieldValues, Control } from "react-hook-form";
 import { Input, InputProps } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { unescape } from "querystring";
 
-// IInputProps uses a generic T that extends FieldValues
 interface IInputProps<T extends FieldValues> extends Omit<InputProps, "name"> {
   errorMessage?: string;
   labelText?: string;
-  control: Control<T>; // control should be typed based on generic T
+  control: Control<T>;
   errors?: FieldErrors<T>;
-  name: keyof T; // name should be a key of the generic type
+  name: keyof T;
 }
 
 const InputComponent: FC<IInputProps<FieldValues>> = ({
@@ -28,6 +20,9 @@ const InputComponent: FC<IInputProps<FieldValues>> = ({
   control,
   size,
   defaultValue,
+  style,
+  suffix,
+  prefix,
 }) => {
   return (
     <>
@@ -38,7 +33,14 @@ const InputComponent: FC<IInputProps<FieldValues>> = ({
         defaultValue={defaultValue}
         rules={{ required }}
         render={({ field }) => (
-          <Input placeholder={placeholder} {...field} size={size} />
+          <Input
+            style={style}
+            suffix={suffix}
+            prefix={prefix}
+            placeholder={placeholder}
+            {...field}
+            size={size}
+          />
         )}
       />
       {errorMessage ? (

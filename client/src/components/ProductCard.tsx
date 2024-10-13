@@ -7,135 +7,96 @@ import {
 import { FC, useState } from "react";
 import { Link } from "react-router-dom";
 import { IProduct } from "../store/api/product/modules";
+import { Content } from "antd/es/layout/layout";
+import { Typography } from "antd";
+import { IoIosNotificationsOutline } from "react-icons/io";
 
 interface IProps {
   product: IProduct;
 }
 
 const ProductCard: FC<IProps> = ({ product }) => {
-  console.log("product", product);
-  console.log("id", product._id);
-
-  const [isHovered, setIsHovered] = useState(false);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-
-  // const calculateDiscountedPrice = () => {
-  //   const price = parseFloat(product?.price.replace("$", ""));
-  //   const discountedPrice = price - (price * product.discount) / 100;
-  //   return `$${discountedPrice.toFixed(2)}`;
-  // };
   return (
-    <div
-      className="w-full max-w-md transition-transform hover:scale-105 relative"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+    <Content
+      className="w-full max-w-md transition-transform hover:scale-105 relative group"
       style={{ height: "600px", width: "400px" }}
     >
-      <div className="relative w-full h-2/3 overflow-hidden">
-        {/* {product.discount > 0 && (
-          <span
-            style={{ backgroundColor: "rgb(84 40 40)" }}
-            className="absolute top-2 left-2 text-white px-3 py-1 rounded-full text-xs font-bold z-10"
-          >
-            {product.discount}% OFF
-          </span>
-        )} */}
-
+      <Content className="relative w-full h-2/3 overflow-hidden">
         <img
           alt="product"
           src={product.mainImageUrl}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out ${
-            isHovered ? "opacity-0" : "opacity-100"
-          }`}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:opacity-0"
         />
         <img
           alt="product hover"
           src={product.additionalImages?.[0]}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out ${
-            isHovered ? "opacity-100" : "opacity-0"
-          }`}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100"
         />
-        <div
-          className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex space-x-4 transition-opacity duration-300 ${
-            isHovered ? "opacity-100" : "opacity-0"
-          }`}
-        >
-          <div className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
+
+        <Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex space-x-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
             <Link to={`/cart`}>
               <ShoppingCartOutlined className="text-lg cursor-pointer transition-colors duration-300" />
             </Link>
-          </div>
+          </Content>
 
-          <div className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
+          <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
             <Link to={`/wishlist`}>
               <HeartOutlined className="text-lg cursor-pointer transition-colors duration-300" />
             </Link>
-          </div>
+          </Content>
 
-          <div className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
+          <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
             <Link to={`/product/detail/${product._id}`}>
               <InfoCircleOutlined className="text-lg cursor-pointer transition-colors duration-300" />
             </Link>
-          </div>
+          </Content>
 
-          <div className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
+          <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
             <Link to={`/compare`}>
               <SwapOutlined className="text-lg cursor-pointer transition-colors duration-300" />
             </Link>
-          </div>
-        </div>
+          </Content>
+        </Content>
 
-        {isHovered && (
-          <div className="absolute bottom-4 left-3 right-3 flex flex-col items-center bg-white bg-opacity-80 p-4 z-10">
-            <span className="text-md font-semibold mb-7">Select Options:</span>
-            <div className="flex space-x-6">
-              {product?.size?.map((size: string) => (
-                <button
-                  key={size}
-                  className={`border px-4 py-1 transition duration-300 ${
-                    selectedSize === size ? "bg-white" : "hover:bg-white"
-                  }`}
-                  onClick={() => setSelectedSize(size)}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
+        <Content className="absolute bottom-4 left-3 right-3 flex flex-col items-center bg-white bg-opacity-80 p-4 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <Typography className="text-md font-semibold mb-7">
+            Select Options:
+          </Typography>
+          <Content className="flex space-x-6">
+            {product?.size?.map((size: string) => (
+              <Typography
+                key={size}
+                className="border px-4 py-1 transition duration-300 hover:bg-white"
+              >
+                {size}
+              </Typography>
+            ))}
+          </Content>
+        </Content>
+      </Content>
 
-      <div className="mt-6 h-1/3">
-        <h3 className="text-xl font-semibold text-gray-800">
-          {product.productName}
-        </h3>
-        <h3 className="text-xl font-semibold text-gray-800">
-          Category:{product?.category?.name}
-        </h3>
-        <h3 className="text-xl font-semibold text-gray-800">
-          Price:{product?.price}
-        </h3>
-        {/* 
-        <div className="text-lg font-bold text-gray-900 mt-4">
-          {product.discount > 0 ? (
-            <>
-              <span className="line-through text-gray-500">
-                {product.productPrice}
-              </span>
-              <span className="ml-2">{calculateDiscountedPrice()}</span>
-            </>
-          ) : (
-            product.productPrice
-          )}
-        </div> */}
+      <Content className="mt-6 h-1/3">
+        <Typography className="text-xl font-semibold text-gray-800">
+          {product?.productName}
+        </Typography>
+        <Typography className="text-xl font-semibold text-gray-800">
+          Category: {product?.category?.name}
+        </Typography>
+        <Typography className="text-xl font-semibold text-gray-800">
+          Price: {product?.price}
+        </Typography>
 
-        {product.stock > 0 ? (
-          <p className="text-green-600 mt-2">In Stock</p>
+        {product?.stock > 0 ? (
+          <Typography className="text-green-600 mt-2">In Stock</Typography>
         ) : (
-          <p className="text-red-600 mt-2">Out of Stock</p>
+          <Content className="flex items-center mt-2">
+            <Typography className="text-red-600 mr-2">Out of Stock</Typography>
+            <IoIosNotificationsOutline />
+          </Content>
         )}
-      </div>
-    </div>
+      </Content>
+    </Content>
   );
 };
 

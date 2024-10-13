@@ -3,6 +3,7 @@ import { Dropdown, Menu, MenuProps } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { menuItems } from "../constants";
 
+
 export const ProfileMenuComponent = () => {
   const navigate = useNavigate();
   const authToken = localStorage.getItem("authToken"); 
@@ -12,8 +13,6 @@ export const ProfileMenuComponent = () => {
       navigate("/register");
     } else if (e.key === "profil") {
       navigate("/profile");
-    } else if (e.key === "login") {
-      navigate("/login");
     } else if (e.key === "logout") {
       handleLogout(); 
     }
@@ -24,7 +23,7 @@ export const ProfileMenuComponent = () => {
     navigate("/login"); 
   };
 
-  const filteredMenuItems = menuItems.filter((item) => {
+  const filteredMenuItems = menuItems?.filter((item:any) => {
     if (!authToken) {
       return true;
     }
@@ -38,7 +37,7 @@ export const ProfileMenuComponent = () => {
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      {completeMenuItems.map((item) => (
+      {completeMenuItems?.map((item:any) => (
         <Menu.Item key={item.key}>{item.label}</Menu.Item>
       ))}
     </Menu>

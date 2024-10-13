@@ -1,29 +1,28 @@
 import { useState, useEffect, memo } from "react";
 import { Link } from "react-router-dom";
-import { Layout, Menu, Drawer } from "antd";
+import { Layout, Menu } from "antd";
 import {
-  SearchOutlined,
   HeartOutlined,
   ShoppingCartOutlined,
-  SettingOutlined, // Import the settings icon
+  SettingOutlined,
 } from "@ant-design/icons";
 
 import {
   HeaderMenu,
-  LanguageComponent,
   Logo,
   ProfileMenuComponent,
 } from "./components";
 import DrawerComponent from "../../components/DrawerComponent";
 import SettingsSidebar from "../SettingsSidebar";
+import { Profile } from "../../components/Profile";
 
 const { Header: AntdHeader } = Layout;
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
-  const [isSettingsVisible, setIsSettingsVisible] = useState(false); // State for settings sidebar
-  const [pageColor, setPageColor] = useState("white"); // State for page color
+  const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+  const [pageColor, setPageColor] = useState("white"); 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -55,7 +54,7 @@ const Header = () => {
     setIsSettingsVisible(false);
   };
 
-  const existsUser = localStorage.getItem("authToken");
+  const existsUser = localStorage.getItem("token");
 
   return (
     <>
@@ -87,6 +86,7 @@ const Header = () => {
           }}
         >
           {existsUser && <ProfileMenuComponent />}
+          {/* <Profile/> */}
           <Link to={"/login"}>Login</Link>
           <Link to={"/register"}>Register</Link>
           <Link to="/favorite">

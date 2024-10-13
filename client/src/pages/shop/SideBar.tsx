@@ -29,9 +29,9 @@ export interface IFieldType {
   brand?: string[];
   size?: string[];
   weight?: number;
-  SideBar?: number;
+  dimention?: number;
   duration?: number;
-};
+}
 
 const sizes = [
   { label: "M", value: "M" },
@@ -62,16 +62,18 @@ const raitingOptions = [
   },
 ];
 
-interface ISideBarProps{
-  onFilter?: (values: IFieldType) => void
+interface ISideBarProps {
+  onFilter?: (values: IFieldType) => void;
 }
 
-export const SideBar: FC<ISideBarProps>= ({onFilter}) => {
+export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
   const { data: categoriesData } = useGetCategoriesQuery();
   const { data: brandData } = useGetBrandsQuery();
   const [form] = Form.useForm();
+
   const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {
-    console.log("Success:", values);
+    // console.log("Success:");
+    onFilter?.(values!);
   };
   return (
     <Content
@@ -82,6 +84,7 @@ export const SideBar: FC<ISideBarProps>= ({onFilter}) => {
         backgroundColor: "#f7f7f7",
         borderRight: "1px solid #ddd",
         overflowY: "auto",
+        height:'100vh'
       }}
     >
       <Form
@@ -119,7 +122,7 @@ export const SideBar: FC<ISideBarProps>= ({onFilter}) => {
             options={
               categoriesData?.map((category) => ({
                 label: category.name,
-                value: category.name,
+                value: category?._id,
               }))!
             }
             handleChange={(value) => form.setFieldsValue({ category: value })}
@@ -156,7 +159,7 @@ export const SideBar: FC<ISideBarProps>= ({onFilter}) => {
             placeholder={"Select Brand..."}
             options={brandData?.map((brand) => ({
               label: brand.name,
-              value: brand.name,
+              value: brand?._id,
             }))}
             style={{ width: "100%" }}
             mode="multiple"
@@ -193,9 +196,9 @@ export const SideBar: FC<ISideBarProps>= ({onFilter}) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Typography.Text>SideBars (cm)</Typography.Text>
-            <Form.Item<IFieldType> name="SideBar">
-              <Input name="SideBar" type="number" size="large" />
+            <Typography.Text>Weight (g)</Typography.Text>
+            <Form.Item<IFieldType> name="weight">
+              <Input type="number" name="weight" size="large" />
             </Form.Item>
           </Col>
         </Row>
@@ -210,6 +213,20 @@ export const SideBar: FC<ISideBarProps>= ({onFilter}) => {
                 name="duration"
                 type="number"
                 placeholder="Warranty Duration"
+                size="large"
+              />
+            </Form.Item>
+          </Col>
+
+          <Col span={12}>
+            <Typography.Title level={5} style={{ marginBottom: "12px" }}>
+              Dimentions (cm)
+            </Typography.Title>
+            <Form.Item<IFieldType> name="dimention">
+              <Input
+                placeholder="Dimention..."
+                name="dimention"
+                type="number"
                 size="large"
               />
             </Form.Item>

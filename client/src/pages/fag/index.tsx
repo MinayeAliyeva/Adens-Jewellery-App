@@ -1,8 +1,7 @@
 import { Layout, Typography, Collapse, Row, Col, Button } from "antd";
 import { FC } from "react";
-// import 'antd/dist/antd.css';
 
-const { Header, Content, Footer } = Layout;
+const {  Content } = Layout;
 const { Title } = Typography;
 const { Panel } = Collapse;
 
@@ -11,7 +10,7 @@ const FAQPage: FC = () => {
     <Layout style={{ minHeight: "100vh" }}>
       <Content style={{ padding: "40px", backgroundColor: "#ffffff" }}>
         <Row justify="center">
-          <Col span={20}> {/* Genişlik artırıldı */}
+          <Col span={20}>
             <Title level={2} style={{ textAlign: 'center', marginBottom: '40px' }}>
               Frequently Asked Questions
             </Title>
