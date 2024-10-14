@@ -30,7 +30,7 @@ export interface IProduct {
   mainImageUrl: string;
   additionalImages: string[];
   description: string;
-  stock: number;
+  totalQty: number;
   weight: number;
   dimensions: number;
   warrantyDuration: string;

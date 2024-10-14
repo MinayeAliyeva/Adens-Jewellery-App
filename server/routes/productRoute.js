@@ -44,7 +44,7 @@ router.get("/", async (req, res) => {
       size,
       brand,
       minwWeight,
-      maxwWeight,
+      maxWeight,
       duration,
       dimention,
     } = req.query;
@@ -57,7 +57,7 @@ router.get("/", async (req, res) => {
       !size &&
       !brand &&
       !minwWeight &&
-      !maxwWeight &&
+      !maxWeight &&
       !duration &&
       !dimention
     ) {
@@ -65,6 +65,8 @@ router.get("/", async (req, res) => {
       const allProducts = await Product.find()
         .populate("category")
         .populate("brand");
+        console.log("allProducts", allProducts);
+        
       return res.status(200).send(allProducts);
     }
     console.log("size backend", size);
@@ -84,9 +86,9 @@ router.get("/", async (req, res) => {
       ...(maxPrice && { price: { $lte: Number(maxPrice) } }),
      
       ...(minwWeight && { weight: { $gte: Number(minwWeight) } }),
-      ...(maxwWeight && { weight: { $lte: Number(maxwWeight) } }),
+      ...(maxWeight && { weight: { $lte: Number(maxWeight) } }),
       ...((minPrice && maxPrice) && { price: { $gte: Number(minPrice), $lte: Number(maxPrice) } }),
-      ...((minwWeight && maxwWeight)  && { weight: { $gte: Number(minwWeight), $lte: Number(maxwWeight) } }),
+      ...((minwWeight && maxWeight)  && { weight: { $gte: Number(minwWeight), $lte: Number(maxWeight) } }),
       ...(duration && { warrantyDuration: { $eq: Number(duration) } }),
       ...(dimention && { dimensions: { $eq: Number(dimention) } }),
     };
@@ -142,7 +144,8 @@ router.post(
     const additionalImages = files.additionalImages
       ? files.additionalImages.map((file) => `${basePath}${file.filename}`)
       : [];
-
+    console.log("req.body tttt", req.body.totalQty);
+    
     // Yeni ürün nesnesinin oluşturulması
     const product = new Product({
       id: req.body.id,
@@ -160,14 +163,14 @@ router.post(
       popularity: req.body.popularity,
       description: req.body.description,
       discount: req.body.discount,
-      stock: req.body.stock,
+      totalQty: req.body.totalQty,
       weight: req.body.weight,
       dimensions: req.body.dimensions,
       warrantyDuration: req.body.warrantyDuration,
       certification: req.body.certification,
       returnPolicy: req.body.returnPolicy,
       relatedProducts: req.body.relatedProducts,
-      totalSales: req.body.totalSales,
+      // totalSales: req.body.totalSales,
       creationDate: req.body.creationDate,
       lastUpdated: req.body.lastUpdated,
       reviewsCount: req.body.reviewsCount,
@@ -176,7 +179,8 @@ router.post(
       repairService: req.body.repairService,
       priceHistory: req.body.priceHistory,
     });
-
+  console.log("server product post", product);
+  
     try {
       // Ürün kaydedildiğinde yanıt döndürme
       const result = await product.save();
@@ -249,7 +253,7 @@ router.put(
             popularity: req.body.popularity,
             description: req.body.description,
             discount: req.body.discount,
-            stock: req.body.stock,
+            totalQty: req.body.totalQty,
             weight: req.body.weight,
             dimensions: req.body.dimensions,
             warrantyDuration: req.body.warrantyDuration,

@@ -35,6 +35,16 @@ const productSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  totalQty:{
+    type: Number,
+    // required: true,
+    default: 0,
+  },
+  totalSold: {
+    type: Number, 
+    // required: true,
+    default: 0
+  },
   measure: Number,
   category: {
     type: mongoose.Schema.Types.ObjectId,
@@ -54,18 +64,20 @@ const productSchema = new mongoose.Schema({
   popularity: Number,
   description: String,
   discount: String,
-  stock: Number,
   weight: Number,
   dimensions: Number,
   warrantyDuration: Number,
   certification: String,
   returnPolicy: String,
-  totalSales: Number,
   creationDate: String,
   lastUpdated: Date,
   reviewsCount: Number,
   averageRating: Number,
   color: String,
+  // reviews:[{
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   ref: "Review",
+  // }],
   brand: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Brand",
@@ -84,7 +96,13 @@ const productSchema = new mongoose.Schema({
       price: Number,
     },
   ],
-});
+},{timestamps: true, toJSON:{virtuals: true}});
+
+// productSchema.virtual("stock").get(function () {
+//   const product = this;
+//   return product.totalQty - product.totalSold;
+// });
+
 // const productSchema = new mongoose.Schema({
 //   name: String,
 //   price: String,

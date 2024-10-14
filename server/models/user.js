@@ -22,7 +22,14 @@ const userShema = mongoose.Schema(
       type: String,
       require: true,
     },
-
+    orders:[{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Order",
+    }],
+    wishLists:[{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "WishList",
+    }],
     profile: {
       type: String,
       //   require: true,

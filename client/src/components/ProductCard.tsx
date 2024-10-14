@@ -5,17 +5,52 @@ import {
   SwapOutlined,
 } from "@ant-design/icons";
 import { FC, useState } from "react";
+import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
 import { IProduct } from "../store/api/product/modules";
 import { Content } from "antd/es/layout/layout";
-import { Typography } from "antd";
+import { Button, Layout, Typography } from "antd";
 import { IoIosNotificationsOutline } from "react-icons/io";
+import ButtonComponent from "./ButtonComponent";
+import { useCreateOrderMutation } from "../store/api/order/order-api";
 
 interface IProps {
   product: IProduct;
 }
 
+
+interface IDecodedValue {
+  isAdmin?: boolean;
+  firstName?: string;
+  email?: string;
+  phone?: string;
+}
+
 const ProductCard: FC<IProps> = ({ product }) => {
+  const token = localStorage.getItem("token") ?? ""
+  console.log({token});
+  
+  const decodedUser: IDecodedValue = token ? jwtDecode(token) : {};
+  console.log({decodedUser});
+  const [createOrder, {data, isLoading}] = useCreateOrderMutation();
+  const onCreateOrder=() =>{
+    createOrder({
+      orderItems: [{
+        _id: product._id,
+        totalQualityBuying: 1,
+      }],
+      user:{
+        email: decodedUser.email
+      },
+      shippingAddress: {
+        firstName: decodedUser.firstName,
+        postalAddress: "vvvvvvvvv"
+    }
+    });
+  }
+
+  console.log({data});
+  
   return (
     <Content
       className="w-full max-w-md transition-transform hover:scale-105 relative group"
@@ -34,11 +69,11 @@ const ProductCard: FC<IProps> = ({ product }) => {
         />
 
         <Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex space-x-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
-            <Link to={`/cart`}>
-              <ShoppingCartOutlined className="text-lg cursor-pointer transition-colors duration-300" />
-            </Link>
-          </Content>
+          {/* <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center"> */}
+          <Button onClick={onCreateOrder} style={{border:"none"}} shape="circle" icon={ <ShoppingCartOutlined className="text-lg cursor-pointer transition-colors duration-300" />} />
+             
+           
+          {/* </Content> */}
 
           <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
             <Link to={`/wishlist`}>
@@ -100,7 +135,7 @@ const ProductCard: FC<IProps> = ({ product }) => {
         warrantyDuration: {product?.warrantyDuration}
         </Typography>
 
-        {product?.stock > 0 ? (
+        {product?.totalQty > 0 ? (
           <Typography className="text-green-600 mt-2">In Stock</Typography>
         ) : (
           <Content className="flex items-center mt-2">

@@ -15,10 +15,13 @@ import { useSearchParams } from "react-router-dom";
 
 const Shop = () => {
   const params = new URLSearchParams();
-  const [getPrducts, { data: productsData }] = useLazyGetProductsQuery<{
-    data: IProduct[];
-  }>();
+  const [getPrducts, { data: productsData }] =
+    useLazyGetProductsQuery<{
+      data: IProduct[];
+      // isLoading:boolean
+    }>();
   // const [searchParams, setSearchParams] = useSearchParams();
+  // console.log("isLoadingProduct", isLoading);
 
   const {
     control,
@@ -59,8 +62,8 @@ const Shop = () => {
       raiting,
       brands,
       size,
-      minwWeight,
-      maxwWeight,
+      minWeight,
+      maxWeight,
       dimention,
       duration,
     } = values;
@@ -79,14 +82,11 @@ const Shop = () => {
     if (minPrice) params.append("minPrice", minPrice.toString());
     if (maxPrice) params.append("maxPrice", maxPrice.toString());
 
-    if (minwWeight) params.append("minwWeight", minwWeight.toString());
-    if (maxwWeight) params.append("maxwWeight", maxwWeight.toString());
+    if (minWeight) params.append("minWeight", minWeight.toString());
+    if (maxWeight) params.append("maxWeight", maxWeight.toString());
 
-
-    if (duration)
-      params.append("duration", duration.toString());
-    if (dimention)
-      params.append("dimention", dimention.toString());
+    if (duration) params.append("duration", duration.toString());
+    if (dimention) params.append("dimention", dimention.toString());
 
     getPrducts(params.toString(), true);
     params.delete("category");
@@ -95,8 +95,8 @@ const Shop = () => {
     params.delete("productName");
     params.delete("minPrice");
     params.delete("maxPrice");
-    params.delete("minwWeight");
-    params.delete("maxwWeight");
+    params.delete("minWeight");
+    params.delete("maxWeight");
     params.delete("duration");
     params.delete("dimention");
   };

@@ -2,7 +2,7 @@ import { Button, ButtonProps } from "antd";
 import { FC, ReactNode } from "react";
 
 interface IButtonComponentProps extends ButtonProps {
-  buttonText: string;
+  buttonText?: string;
   icon?: ReactNode;
 }
 
