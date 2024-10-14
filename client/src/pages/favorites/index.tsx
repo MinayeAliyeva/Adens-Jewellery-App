@@ -14,7 +14,7 @@ const Favorite = () => {
       productDiscountedPrice: "$15",
       productDetails: "Material: Cotton",
       productId: 1,
-      stock: 10,
+      totalQty: 10,
       discount: 25,
     },
     {
@@ -25,7 +25,7 @@ const Favorite = () => {
       productDiscountedPrice: "$20",
       productDetails: "Material: Silk",
       productId: 2,
-      stock: 5,
+      totalQty: 5,
       discount: 20,
     },
     {
@@ -36,7 +36,7 @@ const Favorite = () => {
       productDiscountedPrice: "$25",
       productDetails: "Material: Wool",
       productId: 3,
-      stock: 0,
+      totalQty: 0,
       discount: 16,
     },
     {
@@ -47,7 +47,7 @@ const Favorite = () => {
       productDiscountedPrice: "$30",
       productDetails: "Material: Polyester",
       productId: 4,
-      stock: 8,
+      totalQty: 8,
       discount: 14,
     },
     {
@@ -58,7 +58,7 @@ const Favorite = () => {
       productDiscountedPrice: "$32",
       productDetails: "Material: Leather",
       productId: 5,
-      stock: 2,
+      totalQty: 2,
       discount: 20,
     },
     {
@@ -69,7 +69,7 @@ const Favorite = () => {
       productDiscountedPrice: "$40",
       productDetails: "Material: Denim",
       productId: 6,
-      stock: 0,
+      totalQty: 0,
       discount: 11,
     },
   ];

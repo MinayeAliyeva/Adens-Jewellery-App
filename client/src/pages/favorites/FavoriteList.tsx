@@ -12,7 +12,7 @@ interface IFavoriteListProps {
     productDiscountedPrice: string;
     productDetails: string;
     productId: number;
-    stock: number;
+    totalQty: number;
     discount: number;
     favoritedDate?: string;
   };

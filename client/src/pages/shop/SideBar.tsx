@@ -8,6 +8,7 @@ import {
   Form,
   Input,
   Row,
+  Space,
   Typography,
 } from "antd";
 import Title from "antd/es/typography/Title";
@@ -16,7 +17,7 @@ import TypographyComponent from "../../components/TypographyComponent";
 import { useGetCategoriesQuery } from "../../store/api/catagory/catagory-api";
 import SelectBox from "../../components/SelectBox";
 import { useGetBrandsQuery } from "../../store/api/brand/brand-api";
-
+import { ClearOutlined, SendOutlined } from "@ant-design/icons";
 
 export interface IFieldType {
   minPrice?: number;
@@ -27,8 +28,8 @@ export interface IFieldType {
   raiting?: string;
   brands?: string[];
   size?: string[];
-  minwWeight?: number;
-  maxwWeight?: number;
+  minWeight?: number;
+  maxWeight?: number;
   dimention?: number;
   duration?: number;
 }
@@ -42,8 +43,8 @@ const initialValues: IFieldType = {
   raiting: "",
   brands: [],
   size: [],
-  minwWeight: 0,
-  maxwWeight: 0,
+  minWeight: 0,
+  maxWeight: 0,
   dimention: 0,
   duration: 0,
 };
@@ -89,13 +90,13 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
   const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {
     onFilter?.(values!);
   };
- //!TODO: Add CHECKING Min Weight  INPUT MIN MAX 
- //! Button style and side bar style editing  calback take loading and give submit button loading={loading} and disble={loading}
+  //!TODO: Add CHECKING Min Weight  INPUT MIN MAX +++
+  //! Button style and side bar style editing  calback take loading and give submit button loading={loading} and disble={loading}
 
-  const clearFilters = ()=>{
+  const clearFilters = () => {
     form.resetFields();
-  }
-  
+  };
+
   return (
     <Content
       style={{
@@ -126,14 +127,20 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
                 onBlur={(e) => {
                   const maxPrice = form.getFieldValue("maxPrice") || 0;
                   const minPrice = Number(e.target.value);
-                  if(!minPrice || !maxPrice) return;
-                  form.setFieldValue("minPrice", minPrice >= maxPrice ? maxPrice : minPrice);
+                  if (!minPrice || !maxPrice) return;
+                  form.setFieldValue(
+                    "minPrice",
+                    minPrice >= maxPrice ? maxPrice : minPrice
+                  );
                 }}
               />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<IFieldType> name="maxPrice" rules={[{ required: false }]}>
+            <Form.Item<IFieldType>
+              name="maxPrice"
+              rules={[{ required: false }]}
+            >
               <Input
                 type="number"
                 name="maxPrice"
@@ -143,12 +150,15 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
                 onBlur={(e) => {
                   const minPrice = form.getFieldValue("minPrice") || 0;
                   const maxPrice = Number(e.target.value);
-                  if(!maxPrice || !minPrice) return;
+                  if (!maxPrice || !minPrice) return;
                   // if(!maxPrice && minPrice) {
                   //   form.setFieldValue("maxPrice", 0)
                   //   return
                   // };
-                  form.setFieldValue("maxPrice", maxPrice >= minPrice ? maxPrice : minPrice);
+                  form.setFieldValue(
+                    "maxPrice",
+                    maxPrice >= minPrice ? maxPrice : minPrice
+                  );
                 }}
               />
             </Form.Item>
@@ -255,8 +265,23 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
               style={{ marginBottom: "15px" }}
               content="Min Weight (g)"
             />
-            <Form.Item<IFieldType> name="minwWeight">
-              <Input type="number" name="minwWeight" size="large" placeholder="min weight"  min={0}/>
+            <Form.Item<IFieldType> name="minWeight">
+              <Input
+                onBlur={(e) => {
+                  const maxWeight = form.getFieldValue("maxWeight") || 0;
+                  const minWeight = Number(e.target.value);
+                  if (!minWeight || !maxWeight) return;
+                  form.setFieldValue(
+                    "minWeight",
+                    minWeight >= maxWeight ? maxWeight : minWeight
+                  );
+                }}
+                type="number"
+                name="minWeight"
+                size="large"
+                placeholder="min weight"
+                min={0}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -265,13 +290,28 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
               style={{ marginBottom: "15px" }}
               content="Max Weight (g)"
             />
-            <Form.Item<IFieldType> name="maxwWeight">
-              <Input type="number" name="maxwWeight" size="large" placeholder="max weight"  min={0}/>
+            <Form.Item<IFieldType> name="maxWeight">
+              <Input
+                type="number"
+                name="maxWeight"
+                size="large"
+                placeholder="max weight"
+                min={0}
+                onBlur={(e) => {
+                  const minWeight = form.getFieldValue("minWeight") || 0;
+                  const maxWeight = Number(e.target.value);
+                  if (!minWeight || !maxWeight) return;
+                  form.setFieldValue(
+                    "minWeight",
+                    maxWeight >= minWeight ? maxWeight : minWeight
+                  );
+                }}
+              />
             </Form.Item>
           </Col>
         </Row>
         <hr />
-        <Row gutter={24} style={{ marginBottom: "15px" }}>
+        <Row gutter={24} style={{ margin:'15px' }}>
           <Col span={12}>
             <TypographyComponent
               level={5}
@@ -293,7 +333,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
             <TypographyComponent
               level={5}
               style={{ marginBottom: "15px" }}
-              content=" Dimentions (cm)"
+              content=" Dimentions size (cm)"
             />
 
             <Form.Item<IFieldType> name="dimention">
@@ -310,12 +350,33 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
         <hr />
 
         <Form.Item>
-        <Button type="primary" htmlType="button" size="large" onClick={clearFilters}>
-            Clear Filters
-          </Button>
-          <Button type="primary" htmlType="submit"  size="large">
-            Submit
-          </Button>
+          <Space
+            style={{
+              display: "flex",
+              gap: "25px",
+              margin: "8px",
+            }}
+          >
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ backgroundColor: "#70b3bf" }}
+              size="large"
+              icon={<SendOutlined />}
+            >
+              Submit
+            </Button>
+            <Button
+              type="primary"
+              htmlType="button"
+              style={{ backgroundColor: "#bf9b6b", width: "180px" }}
+              size="large"
+              icon={<ClearOutlined />}
+              onClick={clearFilters}
+            >
+              Clear Filters
+            </Button>
+          </Space>
         </Form.Item>
       </Form>
     </Content>

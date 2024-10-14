@@ -16,33 +16,6 @@ router.get("/",  async (req, res) => {
   res.status(200).send(users);
 });
 
-//api/users POST
-// router.post("/register", async (req, res) => {
-
-//   let user = await User.findOne({ email: req.body.email });
-//   if (user) {
-//     return res.status(400).send("This email already exsits!!!");
-//   }
-//   const hashedPassword = await bcrypt.hash(req.body.password, 10);
-//   user = new User({
-//     firstName: req?.body?.firstName,
-//     lastName: req?.body?.lastName,
-//     phone: req?.body?.phone,
-//     email: req?.body?.email,
-//     password: hashedPassword,
-//     // profile
-//     isAdmin: req?.body?.isAdmin ?? false,
-//   });
-//   //
-//   await user.save();
-
-//   const token = user.createAuthToken();
-//   console.log('server token',token);
-
-//   const responseUser = {...user};
-//   delete responseUser.isAdmin;
-//   res.status(201).header("Authorization", token).send(responseUser);
-// });
 router.post("/register", async (req, res) => {
   let user = await User.findOne({ email: req.body.email }); 
   console.log({registerUser: user});
@@ -78,13 +51,13 @@ router.post("/register", async (req, res) => {
 });
 
 router.post("/auth", async (req, res) => {
-  let user = await User.findOne({ email: req.body.email });
+  let user = await User?.findOne({ email: req.body.email });
   console.log("server user", user);
 
   if (!user) {
     return res.status(400).send("Hatali Email ya Parala");
   }
-  const isSucces = await bcrypt.compare(req.body.password, user.password);
+  const isSucces = await bcrypt.compare(req?.body?.password, user?.password);
   if (!isSucces) {
     return res.status(400).send("Hatali Email ya Parala");
   }
@@ -95,23 +68,17 @@ router.post("/auth", async (req, res) => {
 
   res.send(token);
 });
-// router.post("/auth", async (req, res) => {
-//   let user = await User.findOne({ email: req.body.email });
-//   if (!user) {
-//     return res.status(400).send("Hatali Email ya Parola");
-//   }
 
-//   const isSucces = await bcrypt.compare(req.body.password, user.password);
-//   if (!isSucces) {
-//     return res.status(400).send("Hatali Email ya Parola");
-//   }
-
-//   const token = user.createAuthToken();
-//   console.log("server token", token);
+router.get("/profile", async (req, res) => {
+  console.log("profile", req.body);
   
-//   // JSON formatında token'ı geri döndür
-//   res.status(200).json({ token });
-// });
+  const user = await User.findOne({email: req.body.email}).populate("orders").select("-password");;
+  delete user.password;
+  console.log("updated user profile", user);
+
+  res.send(user);
+});
+
 
 
 module.exports = router;

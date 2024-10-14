@@ -32,9 +32,9 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
           <strong>Color:</strong> {product?.color}
         </Paragraph>
       )}
-      {product?.stock && (
+      {product?.totalQty && (
         <Paragraph>
-          <strong>Stock:</strong> {product?.stock}
+          <strong>Stock:</strong> {product?.totalQty}
         </Paragraph>
       )}
       {product?.weight && (

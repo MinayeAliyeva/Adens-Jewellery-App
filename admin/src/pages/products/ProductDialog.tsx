@@ -27,7 +27,8 @@ interface IProductDialog {
 const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
   const [addProduct, { isLoading: isLoadingProduct }] = useAddProductMutation();
   const { data: brandData, isLoading: isLoadingBrand } = useGetBrandsQuery();
-  const [updateProductById, { isLoading: isLoadingUpdatedProduct }] = useUpdateProductByIdMutation();
+  const [updateProductById, { isLoading: isLoadingUpdatedProduct }] =
+    useUpdateProductByIdMutation();
 
   const { control } = useForm();
   const [form] = Form.useForm();
@@ -45,9 +46,8 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
   };
 
   const onFinish = async (values: any) => {
-    console.log({values});
-    
-    
+    console.log({ values });
+
     const formData = new FormData();
     const formattedDate = dayjs(values.creationDate).format("DD.MM.YYYY");
 
@@ -58,7 +58,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
     formData.append("color", values.color || "");
     formData.append("brand", values.brand || "");
     formData.append("description", values.description || "");
-    formData.append("stock", values.stock || 0);
+    formData.append("totalQty", values.totalQty || 0);
     formData.append("weight", values.weight || 0);
     formData.append("dimensions", values.dimensions || 0);
     formData.append("warrantyDuration", values.warrantyDuration || "");
@@ -111,7 +111,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           color: product?.color,
           brand: product?.brand?._id,
           description: product?.description,
-          stock: product?.stock,
+          totalQty: product?.totalQty,
           weight: product?.weight,
           dimensions: product?.dimensions,
           warrantyDuration: product?.warrantyDuration,
@@ -189,13 +189,15 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                 placeholder={"Enter category..."}
                 defaultValue={product?.category?.name! ?? ""}
                 allowClear={true}
-                handleChange={(value) => form.setFieldsValue({ category: value })}
+                handleChange={(value) =>
+                  form.setFieldsValue({ category: value })
+                }
               />
             </Form.Item>
           </Col>
           <Col span={12}>
-          <Form.Item label="Brand" name="brand">
-          <SelectBox
+            <Form.Item label="Brand" name="brand">
+              <SelectBox
                 name="brand"
                 options={
                   brandData?.map((brand) => ({
@@ -205,19 +207,17 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                 }
                 style={{ width: "100%" }}
                 placeholder={"Enter brand..."}
-                
                 defaultValue={product?.category?.name! ?? ""}
                 allowClear={true}
                 handleChange={(value) => form.setFieldsValue({ brand: value })}
               />
             </Form.Item>
-           
           </Col>
         </Row>
 
         <Row gutter={24}>
           <Col span={12}>
-          <Form.Item label="Color" name="color">
+            <Form.Item label="Color" name="color">
               <Input placeholder="Enter color..." />
             </Form.Item>
           </Col>
@@ -230,8 +230,14 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="Stock" name="stock">
-              <Input type="number" placeholder="Enter stock number..." />
+            <Form.Item
+              label="Total count"
+              name="totalQty"
+              rules={[
+                { required: true, message: "Total count is required!" },
+              ]}
+            >
+              <Input type="number" placeholder="Enter totalQty number..."  name="totalQty"/>
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -328,7 +334,9 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           <ButtonComponent
             htmlType="submit"
             buttonText={product ? "Update Product" : "Add Product"}
-            loading={isLoadingProduct || isLoadingUpdatedProduct|| isLoadingBrand}
+            loading={
+              isLoadingProduct || isLoadingUpdatedProduct || isLoadingBrand
+            }
             icon={<FaSave />}
           />
         </Form.Item>

@@ -36,7 +36,7 @@ const UserProfile = () => {
     {
       productName: 'Classic Necklace',
       price: 89,
-      imageUrl: 'http://localhost:8000/public/images/classic_necklace.jpg',
+      imageUrl: 'http://localhost:800/public/images/classic_necklace.jpg',
     },
     {
       productName: 'Stylish Bracelet',

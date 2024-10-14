@@ -59,9 +59,9 @@ export const columns = [
     render: (brand: IBrandsResponse) => <Typography>{brand?.name}</Typography>
   },
   {
-    title: "Stock",
-    dataIndex: "stock",
-    key: "stock",
+    title: "Total product count",
+    dataIndex: "totalQty",
+    key: "totalQty",
   },
   {
     title: "Weight (g)",
