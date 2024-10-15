@@ -6,6 +6,7 @@ const usersRouter = require("../server/routes/usersRoute");
 const catagoryRouter = require("../server/routes/catagoryRoute");
 const brandRouter = require("../server/routes/brandRoute");
 const orderRouter = require("../server/routes/orderRoute");
+const basketRouter = require("../server/routes/basketRoute");
 const path = require("path");
 const cors = require("cors");
 
@@ -32,6 +33,7 @@ app.use("/api/users", usersRouter);
 app.use("/api/catagories", catagoryRouter);
 app.use("/api/brands", brandRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/basket", basketRouter);
 
 app.use("/public", express.static(path.join(__dirname, "public")));
 
