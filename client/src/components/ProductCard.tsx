@@ -13,17 +13,11 @@ import { Button, Layout, Typography } from "antd";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import ButtonComponent from "./ButtonComponent";
 import { useCreateOrderMutation } from "../store/api/order/order-api";
+import { useAddBasketMutation } from "../store/api/basket/basket-api";
+import { IDecodedValue } from "../shared/modules";
 
 interface IProps {
   product: IProduct;
-}
-
-
-interface IDecodedValue {
-  isAdmin?: boolean;
-  firstName?: string;
-  email?: string;
-  phone?: string;
 }
 
 const ProductCard: FC<IProps> = ({ product }) => {
@@ -31,25 +25,43 @@ const ProductCard: FC<IProps> = ({ product }) => {
   console.log({token});
   
   const decodedUser: IDecodedValue = token ? jwtDecode(token) : {};
+  // console.log({decodedUser});
+  // const [createOrder, {data, isLoading}] = useCreateOrderMutation();
+  // const onCreateOrder=() =>{
+  //   createOrder({
+  //     orderItems: [{
+  //       _id: product._id,
+  //       totalQualityBuying: 1,
+  //     }],
+  //     user:{
+  //       email: decodedUser.email
+  //     },
+  //     shippingAddress: {
+  //       firstName: decodedUser.firstName,
+  //       postalAddress: "vvvvvvvvv"
+  //   }
+  //   });
+  // }
+
+  // console.log({data});
+  console.log({product});
   console.log({decodedUser});
-  const [createOrder, {data, isLoading}] = useCreateOrderMutation();
-  const onCreateOrder=() =>{
-    createOrder({
-      orderItems: [{
-        _id: product._id,
-        totalQualityBuying: 1,
-      }],
-      user:{
-        email: decodedUser.email
-      },
-      shippingAddress: {
-        firstName: decodedUser.firstName,
-        postalAddress: "vvvvvvvvv"
-    }
+  
+  
+  const [addBasket, {data, isLoading}] = useAddBasketMutation();
+  console.log({
+    productId: product._id,
+    userId: decodedUser.email,
+    quantity: 1
+  });
+  
+   const onCreateOrder=() =>{
+    addBasket({
+      productId: product._id,
+      userId: decodedUser._id,
+      quantity: 1
     });
   }
-
-  console.log({data});
   
   return (
     <Content
