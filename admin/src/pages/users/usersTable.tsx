@@ -5,8 +5,8 @@ import { Content } from "antd/es/layout/layout";
 import { useGetBasketByUserIdQuery } from "../../store/api/basket/basket-api";
 
 interface DataType {
-  key: React.Key; 
-  _id: string; 
+  key: React.Key;
+  _id: string;
   firstName: string;
   lastName: string;
   phone: string;
@@ -22,23 +22,31 @@ const columns: TableColumnsType<DataType> = [
 
 const UsersTable: FC<{ data: any[] }> = ({ data }) => {
   const [userId, setUserId] = useState<string>("");
-  const{data: userBasketData}= useGetBasketByUserIdQuery({id: userId});
+  const { data: userBasketData } = useGetBasketByUserIdQuery({ id: userId });
+  console.log("USer basket data");
 
   return (
     <Table<DataType>
       columns={columns}
-      
       expandable={{
-        expandedRowRender: (record) =>{
+        expandedRowRender: (record) => {
           setUserId(record._id);
-          return  (
+          return (
             <Content>
-              <Typography style={{ margin: 0 }}>First Name: {record.firstName}</Typography>
-              <Typography style={{ margin: 0 }}>Last Name: {record.lastName}</Typography>
-              <Typography style={{ margin: 0 }}>Phone: {record.phone}</Typography>
-              <Typography style={{ margin: 0 }}>Email: {record.email}</Typography>
+              <Typography style={{ margin: 0 }}>
+                First Name: {record.firstName}
+              </Typography>
+              <Typography style={{ margin: 0 }}>
+                Last Name: {record.lastName}
+              </Typography>
+              <Typography style={{ margin: 0 }}>
+                Phone: {record.phone}
+              </Typography>
+              <Typography style={{ margin: 0 }}>
+                Email: {record.email}
+              </Typography>
             </Content>
-          )
+          );
         },
       }}
       dataSource={data?.map((user) => ({
