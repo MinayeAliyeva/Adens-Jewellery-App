@@ -1,53 +1,33 @@
 import { Form, Input, Typography, Row, Col, Card, Layout } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { Content } from "antd/es/layout/layout";
-import { useLazyGetAdminLoginQuery } from "../../store/api/admin/admin-api";
 import { useNavigate } from "react-router-dom";
-import { ButtonComponent } from "../../components/ButtonComponent";
+import { Content } from "antd/es/layout/layout";
 import { RiLoginCircleLine } from "react-icons/ri";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { useLazyGetAdminLoginQuery } from "../../store/api/admin/admin-api";
+import { ButtonComponent } from "../../utils/components/ButtonComponent";
 import * as yup from "yup";
+import { rule, schema } from "./data";
+import TranslateComponent from "../../utils/components/TranslateComponent";
+import { useTranslation } from "react-i18next";
 const bg = "/assets/images/bg.png";
 const logo = "/assets/images/logo.png";
-const az = "/assets/images/az.svg";
-const en = "/assets/images/en.svg";
 const { Title } = Typography;
 
-const schema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Geçerli bir email adresi giriniz!")
-    .required("Email zorunludur!"),
-  password: yup
-    .string()
-    .min(6, "Parola en az 6 karakter olmalıdır!")
-    .matches(/[A-Z]/, "Parola en az bir büyük harf içermelidir!")
-    .matches(/[a-z]/, "Parola en az bir küçük harf içermelidir!")
-    .matches(/\d/, "Parola en az bir rakam içermelidir!")
-    .matches(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      "Parola en az bir özel karakter içermelidir!"
-    )
-    .required("Parola zorunludur!"),
-});
-
 const Login = () => {
-  const [getAdmin, { data, isLoading }] = useLazyGetAdminLoginQuery();
+  const { t } = useTranslation();
+  const [getAdmin, {isLoading }] = useLazyGetAdminLoginQuery();
   const navigate = useNavigate();
 
   const onFinish = async (values: { email: string; password: string }) => {
+    
     try {
-      // Form validasyonunu kontrol et
       await schema.validate(values);
-
       getAdmin(values).then((res) => {
         if (!res.data) return;
-        console.log("res.data", res.data);
-
         localStorage.setItem("token", res.data);
         navigate("/products");
       });
     } catch (error) {
-      // Validasyon hatası varsa input altında göster
       if (error instanceof yup.ValidationError) {
       }
     }
@@ -98,50 +78,19 @@ const Login = () => {
           <Form name="login" onFinish={onFinish} layout="vertical">
             <Form.Item
               name="email"
-              rules={[
-                {
-                  required: true,
-                  message: "Kullanıcı email girin!",
-                },
-                {
-                  type: "email",
-                  message: "Geçerli bir email adresi giriniz!",
-                },
-              ]}
+              rules={rule.emailRules}
             >
               <Input
                 size="large"
                 prefix={<UserOutlined />}
-                placeholder="Kullanıcı Emaili"
+                placeholder={t("User Name")}
                 className="rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </Form.Item>
 
             <Form.Item
               name="password"
-              rules={[
-                { required: true, message: "Parolanızı girin!" },
-                {
-                  min: 6,
-                  message: "Parola en az 6 karakter olmalıdır!",
-                },
-                {
-                  pattern: /[A-Z]/,
-                  message: "Parola en az bir büyük harf içermelidir!",
-                },
-                {
-                  pattern: /[a-z]/,
-                  message: "Parola en az bir küçük harf içermelidir!",
-                },
-                {
-                  pattern: /\d/,
-                  message: "Parola en az bir rakam içermelidir!",
-                },
-                {
-                  pattern: /[!@#$%^&*(),.?":{}|<>]/,
-                  message: "Parola en az bir özel karakter içermelidir!",
-                },
-              ]}
+              rules={rule.passwordRules}
             >
               <Input.Password
                 size="large"
@@ -162,8 +111,7 @@ const Login = () => {
               <Content
                 style={{ display: "flex", gap: "20px", marginBottom: "10px " }}
               >
-                <img style={{ width: "50px" }} src={az} alt="" />
-                <img style={{ width: "50px" }} src={en} alt="" />
+               <TranslateComponent />
               </Content>
             </Layout>
 

@@ -1,14 +1,20 @@
 import { Button, Input, TableColumnsType, Typography } from "antd";
+import * as yup from "yup";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
-import InputComponent from "../../components/InputComponent";
+import InputComponent from "../../utils/components/InputComponent";
 import { Control, FieldErrors, UseFormHandleSubmit } from "react-hook-form";
 import { IFormField } from ".";
 import { Content } from "antd/es/layout/layout";
+import { TFunction } from "i18next";
+
+export const schema = yup.object().shape({
+  name: yup.string().required("First Name is required"),
+});
 
 export const columns = ({
   control,
@@ -25,6 +31,7 @@ export const columns = ({
   handleSubmit,
   onCancel,
   onDeleteCategoryById,
+  t
 }: {
   handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
   control: Control<IFormField>;
@@ -40,6 +47,7 @@ export const columns = ({
   onFinish: (values: IFormField) => void;
   onCancel: () => void;
   onDeleteCategoryById: (id: string) => void;
+  t: TFunction<"translation", string>
 }): TableColumnsType<ICatagoryResponse> => [
   {
     title: "№",
@@ -50,15 +58,13 @@ export const columns = ({
     render: (text, record, index) => index + 1,
   },
   {
-    title: "Brand Name",
+   title: t("Brand Name"),
     dataIndex: "name",
     key: "name",
-    // align:"center",
     render: (name: string, record: ICatagoryResponse) => {
       if (!record?._id && !record?.name) {
         return (
           <InputComponent
-            // defaultValue={name}
             name="name"
             control={control as any}
             placeholder="Brand Name"

@@ -1,8 +1,7 @@
-import { FC, useEffect, useState } from "react";
+import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
 import { Form, Space, Table } from "antd";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { MdClearAll } from "react-icons/md";
 import type { TableProps } from "antd";
@@ -10,7 +9,7 @@ import {
   columns,
   defaultPaginationData,
   IPaginationData,
-  paginationSizeOptions,
+  schema,
 } from "./data";
 import {
   useCreateCategoryMutation,
@@ -19,7 +18,7 @@ import {
   useUpdateCategoryByIdMutation,
 } from "../../store/api/catagory/catagory-api";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
-import { ButtonComponent } from "../../components/ButtonComponent";
+import { ButtonComponent } from "../../utils/components/ButtonComponent";
 import { useGetBrandsQuery } from "../../store/api/brand/brand-api";
 
 type OnChange = NonNullable<TableProps<ICatagoryResponse>["onChange"]>;
@@ -41,10 +40,6 @@ interface IState {
   tableData: ICatagoryResponse[];
 }
 
-const schema = yup.object().shape({
-  name: yup.string().required("First Name is required"),
-});
-
 const Category: FC = () => {
   const [state, setState] = useState<IState>({
     selectedId: "",
@@ -61,7 +56,6 @@ const Category: FC = () => {
     formState: { errors },
     setError,
     clearErrors,
-    getValues,
   } = useForm<IFormField>({
     resolver: state.createCategory ? yupResolver(schema) : undefined,
   });
@@ -78,7 +72,7 @@ const Category: FC = () => {
     useUpdateCategoryByIdMutation();
 
   const isLoading =
-  isLoadingCategory ||
+    isLoadingCategory ||
     isLoadingBrand ||
     isLoadingCreatedCategory ||
     isLoadingDeleteCategoryById ||
@@ -86,7 +80,7 @@ const Category: FC = () => {
 
   useEffect(() => {
     if (categoryData?.length) {
-      setState(prev =>({ ...prev, tableData: categoryData! }));
+      setState((prev) => ({ ...prev, tableData: categoryData! }));
     }
   }, [categoryData]);
 
@@ -113,11 +107,11 @@ const Category: FC = () => {
       columnKey: "age",
     });
   };
-  const onCreateCategory = () => {
+  const onCreateCategory = useCallback(() => {
     state.paginationData = defaultPaginationData;
     reset();
     clearErrors("name");
-    setState(prev =>({
+    setState((prev) => ({
       ...(prev ?? {}),
       selectedId: "",
       createCategory: true,
@@ -125,65 +119,72 @@ const Category: FC = () => {
     }));
 
     const findedId = state.tableData?.find((data) => data?._id === "");
-  console.log({findedId});
-  
+
     if (findedId) return;
     setState((prev) => ({
       ...(prev ?? {}),
-      tableData: [ { name: "", _id: "" } , ...prev.tableData],
+      tableData: [{ name: "", _id: "" }, ...prev.tableData],
     }));
-  };
+  }, []);
 
-  const onFinish = (category: IFormField) => {
-    if (state.selectedId === category.id && state.updateCategory) {
-      updateCategoryById({
-        name: category?.name,
-        id: category?.id!,
-        brand: category.brand!,
-      }).then((res: any) => {
-        setState({
-          ...state,
+  const onFinish = useCallback(
+    (category: IFormField) => {
+      const findedCategory = categoryData?.find(
+        (data) => data.brand === category.brand
+      );
+
+      if (state.selectedId === category.id && state.updateCategory) {
+        if (!findedCategory)
+          updateCategoryById({
+            name: category?.name,
+            id: category?.id!,
+            brand: category.brand!,
+          });
+        setState((prev) => ({
+          ...prev,
           selectedId: "",
           createCategory: false,
           updateCategory: false,
-        });
-      });
-    } else {
-      craeteCategory({ name: category?.name, brand: category.brand! })
-        .then((res: any) => {
-          if (res?.error?.data)
-            setError("name", { type: "required", message: res?.error?.data });
-          else {
-            setState(prev=>({
-              ...prev,
-              paginationData: defaultPaginationData,
-              selectedId: "",
-              createCategory: false,
-              updateCategory: false,
-            }));
-          }
-        })
-        .catch((err) => {
-          console.log("err", err);
-        });
-    }
-  };
+        }));
+      } else {
+        craeteCategory({ name: category?.name, brand: category.brand! })
+          .then((res: any) => {
+            if (res?.error?.data)
+              setError("name", { type: "required", message: res?.error?.data });
+            else {
+              setState((prev) => ({
+                ...prev,
+                paginationData: defaultPaginationData,
+                selectedId: "",
+                createCategory: false,
+                updateCategory: false,
+              }));
+            }
+          })
+          .catch((err) => {
+            console.error("err", err);
+          });
+      }
+    },
+    [categoryData, state.selectedId, state.updateCategory]
+  );
 
   const editCategory = (id?: string | null) => {
     reset();
     clearErrors("name");
-    setState({
-      ...state,
+    setState((prev) => ({
+      ...prev,
       selectedId: id!,
       createCategory: false,
       updateCategory: true,
-    });
+    }));
   };
+
 
   const onCancel = () => {
     reset();
     clearErrors("name");
-    setState(prev=>({
+    setState((prev) => ({
       ...prev,
       selectedId: "",
       createCategory: false,
@@ -195,6 +196,33 @@ const Category: FC = () => {
     deleteCategoryById(id);
   };
 
+  const memorizedColumns = useMemo(
+    () =>
+      columns({
+        handleSubmit,
+        onFinish,
+        errors,
+        control,
+        filteredInfo,
+        setAgeSort,
+        sortedInfo,
+        editCategory,
+        selectedId: state.selectedId,
+        createCategory: state.createCategory,
+        updateCategory: state.updateCategory,
+        onCancel,
+        onDeleteCategoryById,
+        brandData: brandData,
+      }),
+    [
+      errors,
+      filteredInfo,
+      sortedInfo,
+      state.createCategory,
+      state.selectedId,
+      state.updateCategory,
+    ]
+  );
   return (
     <>
       <Space style={{ marginBottom: 16 }}>
@@ -220,23 +248,7 @@ const Category: FC = () => {
       </Space>
       <Form>
         <Table<ICatagoryResponse>
-          columns={columns({
-            handleSubmit,
-            onFinish,
-            errors,
-            control,
-            filteredInfo,
-            setAgeSort,
-            sortedInfo,
-            editCategory,
-            selectedId: state.selectedId,
-            createCategory: state.createCategory,
-            updateCategory: state.updateCategory,
-            onCancel,
-            onDeleteCategoryById,
-            brandData: brandData,
-            getValues,
-          })}
+          columns={memorizedColumns}
           loading={isLoadingCategory || isLoading}
           dataSource={state.tableData}
           onChange={handleChange}
@@ -248,7 +260,6 @@ const Category: FC = () => {
                 ...state,
                 paginationData: { ...state.paginationData, pageSize },
               });
-              // state.paginationData?.pageSize = size
             },
             onChange(page, pageSize) {
               setState({
@@ -267,4 +278,4 @@ const Category: FC = () => {
   );
 };
 
-export default Category;
+export default memo(Category);

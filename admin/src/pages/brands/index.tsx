@@ -1,21 +1,22 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { Form, Space, Table } from "antd";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import * as yup from "yup";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { MdClearAll } from "react-icons/md";
 import type { TableProps } from "antd";
-import { columns } from "./data";
+import { columns, schema } from "./data";
 
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
-import { ButtonComponent } from "../../components/ButtonComponent";
+import { ButtonComponent } from "../../utils/components/ButtonComponent";
 import {
   useCreateBrandMutation,
   useDeleteBrandByIdMutation,
   useLazyGetBrandsQuery,
   useUpdateBrandByIdMutation,
 } from "../../store/api/brand/brand-api";
+import { useTranslation } from "react-i18next";
+
 
 type OnChange = NonNullable<TableProps<ICatagoryResponse>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -26,11 +27,9 @@ export interface IFormField {
   name: string;
   id?: string;
 }
-const schema = yup.object().shape({
-  name: yup.string().required("First Name is required"),
-});
 
 const Brand: FC = () => {
+  const { t } = useTranslation();
   const [getBrands, { data: brandData, isLoading: isLoadingBrand }] =
     useLazyGetBrandsQuery();
 
@@ -44,14 +43,15 @@ const Brand: FC = () => {
     useUpdateBrandByIdMutation();
 
   const [tableData, setTableData] = useState<ICatagoryResponse[]>([]);
+
   const isLoading =
     isLoadingCreatedBrand ||
     isLoadingDeleteBrandById ||
     isLoadingUpdateBrandById;
+
   useEffect(() => {
     if (!isLoading) {
-      console.log("RERENDER EFFECT");
-      getBrands(undefined, true).then((res) => setTableData(res?.data!));
+      getBrands().then((res) => setTableData(res?.data!));
     }
   }, [isLoading]);
 
@@ -64,7 +64,7 @@ const Brand: FC = () => {
     setFilteredInfo(filters);
     setSortedInfo(sorter as Sorts);
   };
-
+ 
   const clearFilters = () => {
     setFilteredInfo({});
   };
@@ -100,8 +100,6 @@ const Brand: FC = () => {
     reset();
   };
 
-  console.log("RERENDER");
-
   const editCategory = (id?: string | null) => {
     reset();
     setSelectedId(id!);
@@ -121,20 +119,44 @@ const Brand: FC = () => {
     deleteBrandById(id);
   };
 
+  const memorizedColumns = useMemo(
+    () =>columns({
+      handleSubmit,
+      onFinish,
+      errors,
+      control,
+      filteredInfo,
+      setAgeSort,
+      sortedInfo,
+      editCategory,
+      selectedId,
+      onCancel,
+      onDeleteCategoryById,
+      t
+    }),
+    [
+      errors,
+      control,
+      filteredInfo,
+      setAgeSort,
+      sortedInfo,
+      editCategory,
+      selectedId,
+      onCancel,
+      onDeleteCategoryById,
+      t
+    ]
+  )
+
   return (
     <>
       <Space style={{ marginBottom: 16 }}>
-        {/* <Button color="primary" variant="outlined">
-           jjjj
-          </Button> */}
-        {/* <Button onClick={clearFilters}>Clear filters</Button> */}
         <ButtonComponent
           variant="outlined"
           icon={<MdClearAll />}
           onClick={clearFilters}
           buttonText="Clear filters"
         />
-        {/* <Button onClick={clearAll}>Clear filters and sorters</Button> */}
         <ButtonComponent
           variant="outlined"
           icon={<MdClearAll />}
@@ -146,24 +168,11 @@ const Brand: FC = () => {
           variant="outlined"
           buttonText="Create New Brand"
           onClick={onCreateCategory}
-          //border="2px solid red"
         />
       </Space>
       <Form>
         <Table<ICatagoryResponse>
-          columns={columns({
-            handleSubmit,
-            onFinish,
-            errors,
-            control,
-            filteredInfo,
-            setAgeSort,
-            sortedInfo,
-            editCategory,
-            selectedId,
-            onCancel,
-            onDeleteCategoryById,
-          })}
+          columns={memorizedColumns}
           bordered={true}
           loading={isLoadingBrand || isLoading}
           dataSource={tableData}

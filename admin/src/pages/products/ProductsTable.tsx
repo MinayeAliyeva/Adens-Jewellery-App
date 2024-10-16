@@ -1,4 +1,4 @@
-import { FC, useRef } from "react";
+import { FC, memo, useMemo, useRef } from "react";
 import { SearchOutlined } from "@ant-design/icons";
 import type { InputRef, TableColumnsType, TableColumnType } from "antd";
 import { Button, Input, Space, Table } from "antd";
@@ -109,7 +109,7 @@ const ProductsTable: FC<{
     },
   });
 
-  const tableColumns = map(columns, (column) => {
+  const tableColumns =useMemo(()=> map(columns, (column) => {
     if (column.key === "mainImageUrl" || column.key === "actions") {
       return column;
     }
@@ -117,9 +117,9 @@ const ProductsTable: FC<{
       ...column,
       ...getColumnSearchProps(column?.key as any),
     };
-  });
+  }),[columns]);
 
   return <Table loading={loading} columns={tableColumns} dataSource={data} />;
 };
 
-export default ProductsTable;
+export default memo(ProductsTable);

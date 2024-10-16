@@ -1,4 +1,3 @@
-import { Content } from "antd/es/layout/layout";
 import { IUser } from "./modules";
 
 export const columns = [
@@ -6,7 +5,7 @@ export const columns = [
     title: "Image",
     dataIndex: "mainImageUrl",
     key: "mainImageUrl",
-    render: (text: any, record: IUser) => {
+    render: (_: string, record: IUser) => {
       return (
         <img
           src={record?.mainImageUrl}
@@ -25,7 +24,7 @@ export const columns = [
     title: "Last Name",
     dataIndex: "lastName",
     key: "lastName",
-    render: (item: string[], record: IUser) => {
+    render: (item: string[]) => {
       return item;
     },
   },
@@ -48,19 +47,5 @@ export const columns = [
     title: "UserId",
     dataIndex: "userId",
     key: "userId",
-  },
-  {
-    title: "",
-    key: "actions",
-    render: (text: any, record: IUser) => {
-      console.log("record", record);
-
-      return (
-        <Content style={{ display: "flex", gap: "20px" }}>
-          {/* <OpenEditDialogButton product={record} />
-            <OpenDeleteDialogButton product={record} /> */}
-        </Content>
-      );
-    },
   },
 ];

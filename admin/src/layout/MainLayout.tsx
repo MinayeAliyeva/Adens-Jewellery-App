@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Divider, Layout, theme } from "antd";
+import { Col, Divider, Layout, Row, theme } from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { menu } from "./data";
-import { ButtonComponent } from "../components/ButtonComponent";
+import { ButtonComponent } from "../utils/components/ButtonComponent";
 import { BiLogOutCircle } from "react-icons/bi";
+import { useTranslation } from "react-i18next";
+import TranslateComponent from "../utils/components/TranslateComponent";
 const logo = "/assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
+const bg = "/assets/images/bg.png";
+
 
 const MainLayout: React.FC = () => {
+  const { t } = useTranslation();
+
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -17,6 +23,10 @@ const MainLayout: React.FC = () => {
   const handleLogOut = () => {
     localStorage.clear();
     navigate("/login");
+  };
+
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed);
   };
 
   return (
@@ -76,7 +86,7 @@ const MainLayout: React.FC = () => {
                 {item.icon}
                 {!collapsed && (
                   <span style={{ color: "#000", marginLeft: "10px" }}>
-                    {item.title}
+                    {t(`${item.title}`)}
                   </span>
                 )}
               </Link>
@@ -94,25 +104,53 @@ const MainLayout: React.FC = () => {
             position: "absolute",
             bottom: "10px",
             width: collapsed ? "80px" : "100%",
-            textAlign: collapsed ? "center" : "left", 
+            textAlign: collapsed ? "center" : "left",
             marginLeft: collapsed ? "0" : "30px",
             maxWidth: "250px",
           }}
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }}>
-          <ButtonComponent
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
+        <Header
+          style={{
+            backgroundImage: `url(${bg})`,
+            padding: 0,
+            backgroundColor: colorBgContainer,
+          }}
+        >
+          <Row
             style={{
-              fontSize: "16px",
-              width: 44,
-              height: 44,
-              marginLeft: "20px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
-          />
+          >
+            <Col span={12}>
+              <ButtonComponent
+                type="text"
+                icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                onClick={toggleCollapsed}
+                style={{
+                  fontSize: "16px",
+                  width: 44,
+                  height: 44,
+                  marginLeft: "20px",
+                }}
+              />
+            </Col>
+            <Col
+              span={12}
+              style={{
+                display: "flex",
+                gap: "20px",
+                marginBottom: "10px ",
+                paddingRight: "25px",
+                justifyContent: "flex-end",
+              }}
+            >
+              <TranslateComponent />
+            </Col>
+          </Row>
         </Header>
         <Content
           style={{
@@ -129,5 +167,4 @@ const MainLayout: React.FC = () => {
     </Layout>
   );
 };
-
 export default MainLayout;

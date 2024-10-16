@@ -14,7 +14,10 @@ export const brandApi = createApi({
   endpoints: (builder) => ({
     getBrands: builder.query<IBrandsResponse[], void>({
       query: () => `/api/brands`,
-      providesTags: ["Brand"],
+      providesTags: (result) => 
+        result 
+          ? result.map(({ _id }) => ({ type: "Brand", _id })) 
+          : ["Brand"],
     }),
     createBrand: builder.mutation<IBrandsResponse[], { name: string }>({
       query: (body) => ({
@@ -29,18 +32,15 @@ export const brandApi = createApi({
         url: `/api/brands/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Brand"],
+      invalidatesTags: (result, error, id) => [{ type: "Brand", id }],
     }),
-    updateBrandById: builder.mutation<
-      IBrandsResponse,
-      { name: string; id: string }
-    >({
+    updateBrandById: builder.mutation<IBrandsResponse, { name: string; id: string }>({
       query: (body) => ({
         url: `/api/brands/${body?.id}`,
         method: "PUT",
         body,
       }),
-      invalidatesTags: ["Brand"],
+      invalidatesTags: (result, error, { id }) => [{ type: "Brand", id }],
     }),
   }),
 });

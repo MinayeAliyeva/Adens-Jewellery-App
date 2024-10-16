@@ -1,7 +1,7 @@
 import { Navigate, useLocation } from "react-router-dom";
 // import { useAuthStateContext } from "../context-api/AuthContext";
 import { jwtDecode } from "jwt-decode";
-import { LocationState, Location } from "../models";
+import { LocationState, Location } from "../utils/models";
 import { FC } from "react";
 
 interface IPrivateRouting {

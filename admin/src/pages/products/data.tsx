@@ -1,10 +1,11 @@
 import { Content } from "antd/es/layout/layout";
-import OpenEditDialogButton from "./OpenEditDialog";
+import CreateEditDialogButton from "./product-dialog/OpenEditDialog";
 import { IProduct } from "../../store/api/product/modules";
-import OpenDeleteDialogButton from "./OpenDeleteDialog";
+import OpenDeleteDialogButton from "./product-dialog/OpenDeleteDialog";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import Typography from "antd/es/typography/Typography";
 import { IBrandsResponse } from "../../store/api/brand/modules";
+import { FaRegEdit } from "react-icons/fa";
 
 export const sizeOptions = [
   { label: "Small", value: "S" },
@@ -17,7 +18,7 @@ export const columns = [
     title: "Image",
     dataIndex: "mainImageUrl",
     key: "mainImageUrl",
-    render: (text: any, record: IProduct) => {
+    render: (_: string, record: IProduct) => {
       return (
         <img
           src={record?.mainImageUrl}
@@ -36,10 +37,7 @@ export const columns = [
     title: "Size",
     dataIndex: "size",
     key: "size",
-    render: (item: string[], record: IProduct) => {
-      console.log("item", item);
-      return item?.join(", ");
-    },
+    render: (item: string[]) => item?.join(", "),
   },
   {
     title: "Price",
@@ -72,9 +70,6 @@ export const columns = [
     title: "CreationDate",
     dataIndex: "creationDate",
     key: "creationDate",
-    render: (item: string, record: IProduct) => {
-      return item;
-    },
   },
   {
     title: "Dimensions",
@@ -89,10 +84,10 @@ export const columns = [
   {
     title: "",
     key: "actions",
-    render: (_: any, record: IProduct) => {
+    render: (_: string, record: IProduct) => {
       return (
         <Content style={{ display: "flex", gap: "20px" }}>
-          <OpenEditDialogButton product={record} />
+          <CreateEditDialogButton product={record} icon={<FaRegEdit/>}  buttonText="Edit" variant="dashed"/>
           <OpenDeleteDialogButton product={record} />
         </Content>
       );
