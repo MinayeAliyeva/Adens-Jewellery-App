@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
-import { ButtonComponent } from "../../components/ButtonComponent";
-import { IProduct } from "../../store/api/product/modules";
-import DeleteDialog from "./product-dialog/DeleteDialog";
+import { ButtonComponent } from "../../../utils/components/ButtonComponent";
+import { IProduct } from "../../../store/api/product/modules";
+import DeleteDialog from "./DeleteDialog";
 
 interface OpenDeleteDialogButtonProps {
   product?: IProduct;

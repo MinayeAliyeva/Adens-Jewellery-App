@@ -75,11 +75,12 @@ router.get("/", auth, async (req, res) => {
 
 
 router.get("/:userId", auth, async (req, res) => {
+  console.log("req.params.userId", req.params.userId);
+  
   try {
     const basket = await Basket.findOne({ user: req.params.userId }).populate(
       "products.productId"
     );
-    console.log("xxxxxx", { basket });
 
     res.status(200).json(basket);
   } catch (error) {

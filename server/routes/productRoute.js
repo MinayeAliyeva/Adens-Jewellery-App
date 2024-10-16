@@ -144,7 +144,6 @@ router.post(
     const additionalImages = files.additionalImages
       ? files.additionalImages.map((file) => `${basePath}${file.filename}`)
       : [];
-    console.log("req.body tttt", req.body.totalQty);
     
     // Yeni ürün nesnesinin oluşturulması
     const product = new Product({

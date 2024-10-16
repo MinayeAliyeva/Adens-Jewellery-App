@@ -2,19 +2,19 @@ import { Button, Input, TableColumnsType, Typography } from "antd";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
+import * as yup from "yup";
 import { FaSave } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
-import InputComponent from "../../components/InputComponent";
+import InputComponent from "../../utils/components/InputComponent";
 import {
   Control,
   FieldErrors,
-  UseFormGetValues,
   UseFormHandleSubmit,
 } from "react-hook-form";
 import { IFormField } from ".";
 import { IBrandsResponse } from "../../store/api/brand/modules";
-import SelectBoxComponent from "../../components/SelectBoxComponent";
+import SelectBoxComponent from "../../utils/components/SelectBoxComponent";
 import { Content } from "antd/es/layout/layout";
 
 
@@ -29,6 +29,10 @@ export const defaultPaginationData: IPaginationData= {
 };
 
 export const paginationSizeOptions: string[] = ["10, 20, 30"];
+
+export const schema = yup.object().shape({
+  name: yup.string().required("First Name is required"),
+});
 
 
 const brandOptions = (brands?: IBrandsResponse[]) =>
@@ -50,7 +54,6 @@ export const columns = ({
   selectedId,
   createCategory,
   updateCategory,
-  getValues,
   errors,
   onFinish,
   handleSubmit,
@@ -74,7 +77,6 @@ export const columns = ({
   onDeleteCategoryById: (id: string) => void;
   brandData?: IBrandsResponse[];
   createCategory: boolean;
-  getValues: UseFormGetValues<IFormField>;
 }): TableColumnsType<ICatagoryResponse> => [
   {
     title: "№",
@@ -82,7 +84,7 @@ export const columns = ({
     key: "_id",
     width: 320,
 
-    render: (text, record, index) => index + 1,
+    render: (_, __, index) => index + 1,
   },
   {
     title: "Category name",
@@ -92,7 +94,9 @@ export const columns = ({
     render: (name: string, record: ICatagoryResponse) => {
       return (
         <>
-          {!record?._id ? (
+          {record?._id ? (
+            <Typography>{name}</Typography>
+          ) : (
             <InputComponent
               defaultValue={name}
               name="name"
@@ -100,8 +104,6 @@ export const columns = ({
               placeholder="Category Name"
               errorMessage={errors?.name?.message}
             />
-          ) : (
-            <Typography>{name}</Typography>
           )}
         </>
       );
@@ -218,13 +220,11 @@ export const columns = ({
     title: "",
     dataIndex: "actions",
     key: "actions",
-    // width: 820,
     render: (_, record: ICatagoryResponse) => {
       const isEdit =
         (record?._id !== selectedId && !createCategory && !updateCategory) ||
         (createCategory && record?._id !== selectedId && !updateCategory) ||
         (updateCategory && record?._id !== selectedId);
-      // ||  (updateCategory && record?._id !== selectedId && errors?.name?.message);
 
       return (
         <div>
@@ -234,7 +234,6 @@ export const columns = ({
                 htmlType="button"
                 disabled={createCategory || updateCategory}
                 color="primary"
-                // style={{ color: "blue" }}
                 icon={<CiEdit />}
                 onClick={() => editCategory?.(record._id)}
                 variant="dashed"

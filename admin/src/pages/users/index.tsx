@@ -1,11 +1,9 @@
-import { useEffect } from "react";
 import { useGetUsersQuery } from "../../store/api/users/users-api";
 
-import UsersTable from "./usersTable";
+import UsersTable from "./UsersTable";
 
 const Users = () => {
   const { data } = useGetUsersQuery<any>();
-  console.log("usersData", data);
 
   return (
     <>

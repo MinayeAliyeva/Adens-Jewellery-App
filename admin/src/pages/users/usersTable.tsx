@@ -1,7 +1,8 @@
-import React, { FC } from "react";
-import { Table, Popconfirm, Typography } from "antd";
+import React, { FC, useState } from "react";
+import { Table, Typography } from "antd";
 import type { TableColumnsType } from "antd";
 import { Content } from "antd/es/layout/layout";
+import { useGetBasketByUserIdQuery } from "../../store/api/basket/basket-api";
 
 interface DataType {
   key: React.Key; 
@@ -17,40 +18,28 @@ const columns: TableColumnsType<DataType> = [
   { title: "Last Name", dataIndex: "lastName", key: "lastName" },
   { title: "Phone", dataIndex: "phone", key: "phone" },
   { title: "Email", dataIndex: "email", key: "email" },
-  {
-    title: "Action",
-    dataIndex: "",
-    key: "action",
-    render: (_, record) => (
-      <Popconfirm
-        title="Are you sure to delete this user?"
-        onConfirm={() => handleDelete(record._id)} 
-        okText="Yes"
-        cancelText="No"
-      >
-        <a>Delete</a>
-      </Popconfirm>
-    ),
-  },
 ];
 
-const handleDelete = (id: string) => {
-  console.log("User with id", id, "deleted");
-};
-
 const UsersTable: FC<{ data: any[] }> = ({ data }) => {
+  const [userId, setUserId] = useState<string>("");
+  const{data: userBasketData}= useGetBasketByUserIdQuery({id: userId});
+
   return (
     <Table<DataType>
       columns={columns}
+      
       expandable={{
-        expandedRowRender: (record) => (
-          <Content>
-            <Typography style={{ margin: 0 }}>First Name: {record.firstName}</Typography>
-            <Typography style={{ margin: 0 }}>Last Name: {record.lastName}</Typography>
-            <Typography style={{ margin: 0 }}>Phone: {record.phone}</Typography>
-            <Typography style={{ margin: 0 }}>Email: {record.email}</Typography>
-          </Content>
-        ),
+        expandedRowRender: (record) =>{
+          setUserId(record._id);
+          return  (
+            <Content>
+              <Typography style={{ margin: 0 }}>First Name: {record.firstName}</Typography>
+              <Typography style={{ margin: 0 }}>Last Name: {record.lastName}</Typography>
+              <Typography style={{ margin: 0 }}>Phone: {record.phone}</Typography>
+              <Typography style={{ margin: 0 }}>Email: {record.email}</Typography>
+            </Content>
+          )
+        },
       }}
       dataSource={data?.map((user) => ({
         key: user._id,

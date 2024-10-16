@@ -1,23 +1,35 @@
-import { FC } from "react";
+import { FC, memo, useCallback, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FaSave } from "react-icons/fa";
-import { Button, Form, Input, Modal, Row, Col, Upload, Select } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
+import { Button, Form, Input, Modal, Row, Col, Upload, DatePicker } from "antd";
+import dayjs from "dayjs";
+import { isEqual } from "lodash";
 import {
   useAddProductMutation,
   useUpdateProductByIdMutation,
-} from "../../store/api/product/product-api";
-import SelectBox from "../../components/SelectBox";
-import { sizeOptions } from "./data";
-import dayjs from "dayjs";
-import { DatePickerControlled } from "../../components/DatePickerControlled";
-import { useForm } from "react-hook-form";
+} from "../../../store/api/product/product-api";
+import SelectBox from "../../../utils/components/SelectBox";
+import { sizeOptions } from "../data";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
-import { ButtonComponent } from "../../components/ButtonComponent";
-import { IProduct } from "../../store/api/product/modules";
-import { useGetCategoriesQuery } from "../../store/api/catagory/catagory-api";
-import { useGetBrandsQuery } from "../../store/api/brand/brand-api";
+import { ButtonComponent } from "../../../utils/components/ButtonComponent";
+import { IProduct } from "../../../store/api/product/modules";
+import { useGetCategoriesQuery } from "../../../store/api/catagory/catagory-api";
+import { useGetBrandsQuery } from "../../../store/api/brand/brand-api";
 
+import { DatePickerProps } from "antd/es/date-picker";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(customParseFormat);
+
+const disabledDate: DatePickerProps["disabledDate"] = (current) => {
+  
+  return current && current < dayjs().startOf("day");
+};
+
+const dateFormat = "DD.MM.YYYY";
+const customFormat: DatePickerProps["format"] = (value) =>
+  value ? value.format(dateFormat) : "";
 interface IProductDialog {
   open: boolean;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,32 +37,52 @@ interface IProductDialog {
 }
 
 const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
+
+  const transformedData = useMemo(()=>({
+    productName: product?.productName,
+    size: product?.size,
+    price: product?.price,
+    dimensions: product?.dimensions,
+    category: product?.category._id,
+    brand: product?.brand._id,
+    color: product?.color,
+    description: product?.description,
+    totalQty: product?.totalQty,
+    weight: product?.weight,
+    warrantyDuration: product?.warrantyDuration,
+    creationDate: dayjs(product?.creationDate, dateFormat)|| product?.creationDate,
+    mainImage: product?.mainImageUrl,
+    additionalImages: product?.additionalImages,
+  }),[product]);
+
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [mainImage, setMainImage] = useState<UploadFile | null>(null);
+  const { t } = useTranslation();
+  const [form] = Form.useForm();
+
   const [addProduct, { isLoading: isLoadingProduct }] = useAddProductMutation();
   const { data: brandData, isLoading: isLoadingBrand } = useGetBrandsQuery();
   const [updateProductById, { isLoading: isLoadingUpdatedProduct }] =
     useUpdateProductByIdMutation();
-
-  const { control } = useForm();
-  const [form] = Form.useForm();
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const [mainImage, setMainImage] = useState<UploadFile | null>(null); // Track main image state
-
   const { data: categoriesData } = useGetCategoriesQuery();
 
   const handleChangeMainImage = (info: UploadChangeParam<UploadFile<File>>) => {
-    setMainImage(info.file); // Set the main image
+    setMainImage(info.file);
   };
 
   const handleChangeAdditions = (info: UploadChangeParam<UploadFile<File>>) => {
-    setFileList(info.fileList); // Update additional images
+    setFileList(info.fileList);
   };
 
-  const onFinish = async (values: any) => {
-    console.log({ values });
+  const onFinish = useCallback(async (values: any) => {
 
+    const isUpdateProduct = isEqual(transformedData, values);
     const formData = new FormData();
-    const formattedDate = dayjs(values.creationDate).format("DD.MM.YYYY");
 
+    //const date
+    const formattedDate = dayjs(
+      values.creationDate ?? product?.creationDate
+    ).format(dateFormat);
     formData.append("productName", values.productName);
     formData.append("size", values.size);
     formData.append("price", values.price);
@@ -64,37 +96,44 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
     formData.append("warrantyDuration", values.warrantyDuration || "");
     formData.append("creationDate", formattedDate);
 
-    // Append the main image if available
-
     if (mainImage) {
       formData.append("mainImageUrl", mainImage as any);
     }
 
-    // Append additional images
     fileList.forEach((file: any) => {
       formData.append("additionalImages", file.originFileObj ?? file);
     });
 
     try {
-      if (product?._id) {
+      if (product?._id && !isUpdateProduct) {
         await updateProductById({ id: product._id, body: formData });
-      } else {
-        await addProduct(formData);
+      } 
+      else if(!product?._id){
+        await addProduct(formData).then((res) => {
+          form.resetFields();
+        });
       }
       setOpen?.(false);
     } catch (error) {
       console.error("Error:", error);
     }
+  },[fileList, mainImage, product?._id, product?.creationDate, transformedData]);
+
+  const onCancel = () => {
+    setOpen?.(false);
+    form.resetFields();
   };
-  console.log({ product });
+
+  //! SHOW ERRORS
+  // throw Error("")
 
   return (
     <Modal
-      title={product ? "Edit Product" : "Add Product"}
+      title={product ? t("Edit Product") : "Add Product"}
       centered
       open={open}
-      onOk={() => setOpen?.(false)}
-      onCancel={() => setOpen?.(false)}
+      onOk={onCancel}
+      onCancel={onCancel}
       width={1000}
       footer={null}
     >
@@ -115,8 +154,8 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           weight: product?.weight,
           dimensions: product?.dimensions,
           warrantyDuration: product?.warrantyDuration,
-          creationDate: product?.creationDate
-            ? dayjs(product.creationDate)
+          creationDate: product?.creationDate 
+            ? dayjs(product?.creationDate, dateFormat)
             : null,
           mainImage: product?.mainImageUrl,
           additionalImages: product?.additionalImages,
@@ -233,11 +272,13 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             <Form.Item
               label="Total count"
               name="totalQty"
-              rules={[
-                { required: true, message: "Total count is required!" },
-              ]}
+              rules={[{ required: true, message: "Total count is required!" }]}
             >
-              <Input type="number" placeholder="Enter totalQty number..."  name="totalQty"/>
+              <Input
+                type="number"
+                placeholder="Enter totalQty number..."
+                name="totalQty"
+              />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -255,9 +296,11 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           </Col>
           <Col span={12}>
             <Form.Item label="Creation Date" name="creationDate">
-              <DatePickerControlled
+              <DatePicker
+                name="creationDate"
+                disabledDate={disabledDate}
                 style={{ width: "100%" }}
-                control={control}
+                format={customFormat}
               />
             </Form.Item>
           </Col>
@@ -290,7 +333,9 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                     : undefined
                 }
               >
-                <Button icon={<UploadOutlined />}>Upload Main Image</Button>
+                <Button icon={<UploadOutlined />}>
+                  {t("Upload Main Image")}
+                </Button>
               </Upload>
             </Form.Item>
           </Col>
@@ -345,4 +390,4 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
   );
 };
 
-export default ProductDialog;
+export default memo(ProductDialog);
