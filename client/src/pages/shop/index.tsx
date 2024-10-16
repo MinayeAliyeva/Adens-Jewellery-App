@@ -1,28 +1,31 @@
-import CatagoriesSlider from "./CatagoriesSlider";
-import { IFieldType, SideBar } from "./SideBar";
-import { Content } from "antd/es/layout/layout";
-import { Col, Row, Typography } from "antd";
-import { useLazyGetProductsQuery } from "../../store/api/product/product-api";
-import { IProduct } from "../../store/api/product/modules";
-import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { useDebounce } from "../../hooks/useDebounce";
-import ProductCard from "../../components/ProductCard";
-import InputComponent from "../../shared/components/form-components/InputComponent";
-import { SearchOutlined } from "@ant-design/icons";
 import "./index.css";
+import CatagoriesSlider from "./CatagoriesSlider";
+import DrawerComponent from "../../components/DrawerComponent";
+import InputComponent from "../../shared/components/form-components/InputComponent";
+import ProductCard from "../../components/ProductCard";
+import RangeDrawerComponent from "../../components/Drawer";
+import { SearchOutlined } from "@ant-design/icons";
+import { Col, Row, Typography } from "antd";
+import { Content } from "antd/es/layout/layout";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { TbArrowsDownUp } from "react-icons/tb";
 import { useSearchParams } from "react-router-dom";
+import { useDebounce } from "../../hooks/useDebounce";
+import { IProduct } from "../../store/api/product/modules";
+import { useLazyGetProductsQuery } from "../../store/api/product/product-api";
+import { IFieldType, SideBar } from "./SideBar";
 
 const Shop = () => {
   const params = new URLSearchParams();
-  const [getPrducts, { data: productsData }] =
-    useLazyGetProductsQuery<{
-      data: IProduct[];
-      // isLoading:boolean
-    }>();
+  const [getPrducts, { data: productsData }] = useLazyGetProductsQuery<{
+    data: IProduct[];
+    // isLoading:boolean
+  }>();
   // const [searchParams, setSearchParams] = useSearchParams();
   // console.log("isLoadingProduct", isLoading);
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const {
     control,
     formState: { errors },
@@ -132,20 +135,42 @@ const Shop = () => {
                 marginBottom: "40px",
               }}
             >
-              <div style={{ width: "450px" }}>
-                <InputComponent
-                  style={{ padding: "7px 10px" }}
-                  size="large"
-                  name="productName"
-                  suffix={<SearchOutlined style={{ fontSize: "30px" }} />}
-                  control={control as any}
-                  placeholder="Search product by name..."
+              <div style={{ display: "flex", gap: "10px" }}>
+                <div style={{ width: "450px" }}>
+                  <InputComponent
+                    style={{ padding: "7px 10px" }}
+                    size="large"
+                    name="productName"
+                    suffix={<SearchOutlined style={{ fontSize: "30px" }} />}
+                    control={control as any}
+                    placeholder="Search product by name..."
+                  />
+                  {errors?.productName?.message && (
+                    <Typography.Text style={{ color: "red", marginTop: "5px" }}>
+                      {errors?.productName?.message}
+                    </Typography.Text>
+                  )}
+                </div>
+                //!Add
+                <div style={{ width: "450px" }}>
+                  <InputComponent
+                    style={{ padding: "7px 10px" }}
+                    size="large"
+                    name="productName"
+                    suffix={<SearchOutlined style={{ fontSize: "30px" }} />}
+                    control={control as any}
+                    placeholder="Search product by category name..."
+                  />
+                  {errors?.productName?.message && (
+                    <Typography.Text style={{ color: "red", marginTop: "5px" }}>
+                      {errors?.productName?.message}
+                    </Typography.Text>
+                  )}
+                </div>
+                <TbArrowsDownUp
+                  style={{ fontSize: "30px" }}
+                  onClick={() => setDrawerOpen(true)}
                 />
-                {errors?.productName?.message && (
-                  <Typography.Text style={{ color: "red", marginTop: "5px" }}>
-                    {errors?.productName?.message}
-                  </Typography.Text>
-                )}
               </div>
             </Content>
             <Content
@@ -161,6 +186,11 @@ const Shop = () => {
                 <ProductCard product={product} />
               ))}
             </Content>
+            <RangeDrawerComponent 
+              placement="bottom"
+              open={drawerOpen}
+              setOpen={setDrawerOpen}
+            />
           </Col>
         </Row>
       </Content>

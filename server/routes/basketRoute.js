@@ -73,6 +73,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+
 router.get("/:userId", auth, async (req, res) => {
   try {
     const basket = await Basket.findOne({ user: req.params.userId }).populate(

@@ -1,20 +1,21 @@
+import ButtonComponent from "./ButtonComponent";
+import { Button, Layout, Typography } from "antd";
+import { Content } from "antd/es/layout/layout";
+import { jwtDecode } from "jwt-decode";
+import { FC, useState } from "react";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { Link } from "react-router-dom";
+import { IDecodedValue } from "../shared/modules";
+import { useAddBasketMutation } from "../store/api/basket/basket-api";
+import { useCreateOrderMutation } from "../store/api/order/order-api";
+import { IProduct } from "../store/api/product/modules";
+
 import {
   HeartOutlined,
   InfoCircleOutlined,
   ShoppingCartOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
-import { FC, useState } from "react";
-import { jwtDecode } from "jwt-decode";
-import { Link } from "react-router-dom";
-import { IProduct } from "../store/api/product/modules";
-import { Content } from "antd/es/layout/layout";
-import { Button, Layout, Typography } from "antd";
-import { IoIosNotificationsOutline } from "react-icons/io";
-import ButtonComponent from "./ButtonComponent";
-import { useCreateOrderMutation } from "../store/api/order/order-api";
-import { useAddBasketMutation } from "../store/api/basket/basket-api";
-import { IDecodedValue } from "../shared/modules";
 
 interface IProps {
   product: IProduct;
@@ -100,7 +101,7 @@ const ProductCard: FC<IProps> = ({ product }) => {
           </Content>
 
           <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
-            <Link to={`/compare`}>
+            <Link to={`/products`}>
               <SwapOutlined className="text-lg cursor-pointer transition-colors duration-300" />
             </Link>
           </Content>
