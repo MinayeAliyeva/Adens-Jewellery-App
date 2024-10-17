@@ -1,7 +1,7 @@
 import { Navigate, useRoutes } from "react-router-dom";
 import AuthLayout from "../layout/AuthLayout";
 import { TypeRouteObject } from "../utils/models";
-import Login from "../pages/auth/Login";
+import Login from "../pages/auth";
 import Products from "../pages/products";
 import PrivateRouting from "./PrivateRouting";
 import MainLayout from "../layout/MainLayout";

@@ -3,7 +3,7 @@ import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
 import { EyeOutlined, DollarCircleOutlined } from "@ant-design/icons";
 import { FC, memo } from "react";
-import { IProduct } from "../../../store/api/product/modules";
+import { IProduct } from "../../../redux/api/product/modules";
 
 interface IProductInfoProps {
   product: IProduct;

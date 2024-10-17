@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
+import { saveToLocalStorage } from "../../../shared/helpers/localStorageUtil";
+import { useDispatch } from "react-redux";
 
 export const userApi = createApi({
   reducerPath: "userApi",
@@ -23,23 +25,18 @@ export const userApi = createApi({
         body: userData,
       }),
       extraOptions: {
-        // Bu kısmı ekleyerek isteğin yanıtından metadata alabiliyoruz
         meta: true,
       },
       async onQueryStarted(arg, { queryFulfilled }) {
         try {
-          console.log("ENTER", arg);
-          
           const { meta } = await queryFulfilled;
-          console.log(meta);
-          
-          let token = meta?.response?.headers.get('Authorization');  // Header'dan token'ı alıyoruz
+          let token = meta?.response?.headers.get('Authorization');
+            
           if (token) {
             if (token.startsWith("Bearer ")) {
-              token = token.slice(7, token.length).trimLeft();
+              token = token.slice(7, token.length).trim();
             }
-            localStorage.setItem('token', token);  // Token'ı localStorage'a kaydediyoruz
-            console.log('Token:', token);  // Kontrol için token'ı yazdırıyoruz
+            saveToLocalStorage('token', token);
           }
         } catch (err) {
           console.error('Error fetching token:', err);

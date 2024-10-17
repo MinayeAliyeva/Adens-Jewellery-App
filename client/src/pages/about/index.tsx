@@ -1,6 +1,6 @@
 import { Col, Layout, Row, Typography } from "antd";
 import { ButtonStyle, ColStyle, TypographyStyle } from "./style";
-import ButtonComponent from "../../components/ButtonComponent";
+import ButtonComponent from "../../components/form-components/ButtonComponent";
 const infoImg = "./assets/images/aboutbg.jpg";
 const infoImg2 = "./assets/images/aboutbg2.jpg";
 

@@ -4,8 +4,8 @@ import { Content } from "antd/es/layout/layout";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import InputComponent from "../../../components/InputComponent";
-import { useLoginUserMutation } from "../../../store/api/user/user-api";
+import InputComponent from "../../../components/form-components/InputComponent";
+import { useLoginUserMutation } from "../../../redux/api/user/user-api";
 import { useNavigate } from "react-router-dom";
 import { ContentStyle, MainContentStyle } from "./style";
 import { loginSchema } from "../../../validation/loginValidation";

@@ -1,7 +1,6 @@
-import ButtonComponent from "./ButtonComponent";
-import CheckboxComponent from "./CheckboxComponent";
+import CheckboxComponent from "./form-components/CheckboxComponent";
 import type { DrawerProps } from "antd";
-import { Button, Checkbox, Divider, Drawer, Space, Typography } from "antd";
+import { Checkbox, Divider, Drawer, Space, Typography } from "antd";
 import { FC } from "react";
 
 interface IDrawerComponentProps {
@@ -9,8 +8,6 @@ interface IDrawerComponentProps {
   placement?: DrawerProps["placement"];
   setOpen: (arg: boolean) => void;
 }
-
-const { Title } = Typography;
 
 const RangeDrawerComponent: FC<IDrawerComponentProps> = ({
   open,

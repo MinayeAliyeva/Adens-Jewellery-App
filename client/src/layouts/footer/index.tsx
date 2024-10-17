@@ -14,6 +14,8 @@ const FooterStyle: IFooterStyle = {
 };
 
 const CustomFooter = () => {
+  console.log("FOOTER RERENDER");
+  
   return (
     <Footer style={FooterStyle}>
       <Row justify="center" gutter={[16, 24]} style={{ width: "100%" }}>

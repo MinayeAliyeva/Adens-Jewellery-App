@@ -62,6 +62,7 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash": "^4.17.10",
     "@types/react-slick": "^0.23.13",
     "tailwindcss": "^3.4.13"
   }

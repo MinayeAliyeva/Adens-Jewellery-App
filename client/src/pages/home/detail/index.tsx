@@ -2,9 +2,9 @@ import { useForm } from "react-hook-form";
 import AddComment from "./AddComment";
 import CommentList from "./CommentList";
 import { useParams } from "react-router-dom";
-import { useGetProducDetailByIdQuery } from "../../../store/api/product/product-api";
+import { useGetProducDetailByIdQuery } from "../../../redux/api/product/product-api";
 import ProductDetail from "./ProductDetail";
-import { IProduct } from "../../../store/api/product/modules";
+import { IProduct } from "../../../redux/api/product/modules";
 
 const Detail = () => {
   const {id} = useParams();

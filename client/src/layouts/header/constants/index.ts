@@ -16,3 +16,5 @@ export const navLinksData: InavLinksData[] = [
   { path: "/contact", label: "Contact Us" },
   { path: "/fag", label: "FAG" },
 ];
+
+export  const iconStyle = { color: "#707070", fontSize: "20px" };

@@ -1,6 +1,6 @@
 import "./index.css";
 import CatagoriesSlider from "./CatagoriesSlider";
-import DrawerComponent from "../../components/DrawerComponent";
+import DrawerComponent from "../../layouts/header/basket-panel/ShoppingPanel";
 import InputComponent from "../../shared/components/form-components/InputComponent";
 import ProductCard from "../../components/ProductCard";
 import RangeDrawerComponent from "../../components/Drawer";
@@ -12,8 +12,8 @@ import { useForm } from "react-hook-form";
 import { TbArrowsDownUp } from "react-icons/tb";
 import { useSearchParams } from "react-router-dom";
 import { useDebounce } from "../../hooks/useDebounce";
-import { IProduct } from "../../store/api/product/modules";
-import { useLazyGetProductsQuery } from "../../store/api/product/product-api";
+import { IProduct } from "../../redux/api/product/modules";
+import { useLazyGetProductsQuery } from "../../redux/api/product/product-api";
 import { IFieldType, SideBar } from "./SideBar";
 
 const Shop = () => {
