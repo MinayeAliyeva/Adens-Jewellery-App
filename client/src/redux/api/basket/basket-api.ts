@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
-// import { IOrderRequest, IOrderResponse } from "./modules";
 
 export const basketApi = createApi({
   reducerPath: "basketApi",
@@ -24,29 +23,20 @@ export const basketApi = createApi({
       }),
       invalidatesTags: ["Basket"],
     }),
-    // deleteOrderById: builder.mutation<IOrderResponse, string>({
-    //   query: (id) => ({
-    //     url: `/api/orders/${id}`,
-    //     method: "DELETE",
-    //   }),
-    //   invalidatesTags: ["Order"],
-    // }),
-    // updateOrderById: builder.mutation<
-    //   IOrderResponse,
-    //   { name: string; id: string }
-    // >({
-    //   query: (body) => ({
-    //     url: `/api/orders/${body?.id}`,
-    //     method: "PUT",
-    //     body,
-    //   }),
-    //   invalidatesTags: ["Order"],
-    // }),
+
+    getBasketByUserId: builder.query<any[], {id:string}>({
+      query: (user) => ({
+        url: `/api/basket/${user.id}`,
+        method: "GET",
+      })
+    }),
   }),
 });
 
 export const {
  useAddBasketMutation,
  useLazyGetBasketQuery,
- useGetBasketQuery
+ useGetBasketQuery,
+ useGetBasketByUserIdQuery,
+ useLazyGetBasketByUserIdQuery
 } = basketApi;

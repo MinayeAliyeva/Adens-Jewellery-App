@@ -1,6 +1,6 @@
 import React, { FC, useEffect } from "react";
 import { Card, Image, Table, Typography } from "antd";
-import { useLazyGetProductsQuery } from "../../store/api/product/product-api";
+import { useLazyGetProductsQuery } from "../../redux/api/product/product-api";
 
 const { Title } = Typography;
 

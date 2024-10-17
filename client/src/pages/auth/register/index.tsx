@@ -12,11 +12,14 @@ import { Content } from "antd/es/layout/layout";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import InputComponent from "../../../components/InputComponent";
-import { useRegisterUserMutation } from "../../../store/api/user/user-api";
+import InputComponent from "../../../components/form-components/InputComponent";
+import { useRegisterUserMutation } from "../../../redux/api/user/user-api";
 import { useNavigate } from "react-router-dom";
 import { registerSchema } from "../../../validation/registerValidation";
 import { ContentStyle, MainContentStyle } from "./style";
+import { isEmpty } from "lodash";
+import { useDispatch } from "react-redux";
+import { setRegister } from "../../../redux/features/authSlice";
 
 const { Title } = Typography;
 
@@ -35,7 +38,7 @@ const Register: FC = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+  const dispatch = useDispatch();
   const {
     handleSubmit,
     reset,
@@ -57,20 +60,21 @@ const Register: FC = () => {
     try {
       const res = await registerUser(data);
       console.log({ res });
-      if (res?.data?.user) reset();
-      navigate("/home");
+      if (!isEmpty(res?.data)) {
+        console.log("ONSUBMET");
+        
+        reset();
+        dispatch(setRegister())
+        navigate("/home");
+      }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   };
 
   return (
-    <Content
-      style={MainContentStyle}
-    >
-      <Content
-        style={ContentStyle}
-      >
+    <Content style={MainContentStyle}>
+      <Content style={ContentStyle}>
         <Title
           level={2}
           style={{

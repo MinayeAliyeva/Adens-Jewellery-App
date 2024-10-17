@@ -6,7 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
 import { Provider } from "react-redux";
-import { store } from "./store";
+import { store } from "./redux/store";
 
 i18n.use(initReactI18next).init({
   resources: {

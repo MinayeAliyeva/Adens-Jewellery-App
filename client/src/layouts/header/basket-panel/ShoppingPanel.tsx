@@ -10,9 +10,10 @@ import {
   Space,
   Popconfirm,
 } from "antd";
-import { FC, memo, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { IoIosSend, IoMdEye } from "react-icons/io";
-import ProductModal from "./ProductModal";
+import { getUserFromToken } from "../../../shared/helpers/authStorage";
+import { useLazyGetBasketByUserIdQuery } from "../../../redux/api/basket/basket-api";
 
 interface IProduct {
   _id: string;
@@ -50,14 +51,24 @@ const productsData = [
   },
 ];
 
-const DrawerComponent: FC<IDrawerComponentProps> = ({
+const userData = getUserFromToken();
+const ShoppingPanel: FC<IDrawerComponentProps> = ({
   onClose,
   isDrawerVisible,
 }) => {
+  console.log("userData", userData);
+  
+  console.log(userData);
+  const [getBasket, {data: basketData, isLoading: isLoadingBasket}] = useLazyGetBasketByUserIdQuery();
+  useEffect(() => {
+    getBasket({id: userData?._id ?? ""});
+  },[])
+  
   const [products, setProducts] = useState<IProduct[]>(productsData);
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  console.log({basketData});
+  
   // const increaseQuantity = (id: string) => {
   //   setProducts((prev) =>
   //     prev.map((product) =>
@@ -265,4 +276,4 @@ const DrawerComponent: FC<IDrawerComponentProps> = ({
   );
 };
 
-export default memo(DrawerComponent);
+export default memo(ShoppingPanel);

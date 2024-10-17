@@ -1,8 +1,23 @@
 import React, { FC, useState } from "react";
-import { Table, Typography } from "antd";
+import { List, Table, Typography } from "antd";
 import type { TableColumnsType } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useGetBasketByUserIdQuery } from "../../store/api/basket/basket-api";
+
+interface IProduct {
+  productId: any;
+  quantity: number;
+  price: number;
+  _id: string;
+}
+
+interface IBasket {
+  _id: string;
+  user: string;
+  products: IProduct[];
+  totalPrice: number;
+  __v: number;
+}
 
 interface DataType {
   key: React.Key;
@@ -22,8 +37,10 @@ const columns: TableColumnsType<DataType> = [
 
 const UsersTable: FC<{ data: any[] }> = ({ data }) => {
   const [userId, setUserId] = useState<string>("");
-  const { data: userBasketData } = useGetBasketByUserIdQuery({ id: userId });
-  console.log("USer basket data");
+  const { data: userBasketData } = useGetBasketByUserIdQuery<{ data: IBasket }>(
+    { id: userId }
+  );
+  console.log("userBasketData", userBasketData?.products);
 
   return (
     <Table<DataType>
@@ -31,19 +48,20 @@ const UsersTable: FC<{ data: any[] }> = ({ data }) => {
       expandable={{
         expandedRowRender: (record) => {
           setUserId(record._id);
+
           return (
             <Content>
-              <Typography style={{ margin: 0 }}>
-                First Name: {record.firstName}
+              <Typography style={{ margin: "10px 0" }}>
+                <strong>First Name:</strong> {record.firstName}
               </Typography>
-              <Typography style={{ margin: 0 }}>
-                Last Name: {record.lastName}
+              <Typography style={{ margin: "10px 0" }}>
+                <strong>Last Name:</strong> {record.lastName}
               </Typography>
-              <Typography style={{ margin: 0 }}>
-                Phone: {record.phone}
+              <Typography style={{ margin: "10px 0" }}>
+                <strong>Phone:</strong> {record.phone}
               </Typography>
-              <Typography style={{ margin: 0 }}>
-                Email: {record.email}
+              <Typography style={{ margin: "10px 0" }}>
+                <strong>Email:</strong> {record.email}
               </Typography>
             </Content>
           );

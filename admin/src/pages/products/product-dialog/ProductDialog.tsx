@@ -1,29 +1,28 @@
+import SelectBox from "../../../utils/components/SelectBox";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import dayjs from "dayjs";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Upload } from "antd";
+import { DatePickerProps } from "antd/es/date-picker";
+import { UploadChangeParam, UploadFile } from "antd/es/upload";
+import { isEqual } from "lodash";
 import { FC, memo, useCallback, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FaSave } from "react-icons/fa";
-import { UploadOutlined } from "@ant-design/icons";
-import { Button, Form, Input, Modal, Row, Col, Upload, DatePicker } from "antd";
-import dayjs from "dayjs";
-import { isEqual } from "lodash";
+import { useGetBrandsQuery } from "../../../store/api/brand/brand-api";
+import { useGetCategoriesQuery } from "../../../store/api/catagory/catagory-api";
+import { IProduct } from "../../../store/api/product/modules";
+import { ButtonComponent } from "../../../utils/components/ButtonComponent";
+import { sizeOptions } from "../data";
+
 import {
   useAddProductMutation,
   useUpdateProductByIdMutation,
 } from "../../../store/api/product/product-api";
-import SelectBox from "../../../utils/components/SelectBox";
-import { sizeOptions } from "../data";
-import { UploadChangeParam, UploadFile } from "antd/es/upload";
-import { ButtonComponent } from "../../../utils/components/ButtonComponent";
-import { IProduct } from "../../../store/api/product/modules";
-import { useGetCategoriesQuery } from "../../../store/api/catagory/catagory-api";
-import { useGetBrandsQuery } from "../../../store/api/brand/brand-api";
-
-import { DatePickerProps } from "antd/es/date-picker";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 
 dayjs.extend(customParseFormat);
 
 const disabledDate: DatePickerProps["disabledDate"] = (current) => {
-  
   return current && current < dayjs().startOf("day");
 };
 
@@ -37,23 +36,26 @@ interface IProductDialog {
 }
 
 const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
-
-  const transformedData = useMemo(()=>({
-    productName: product?.productName,
-    size: product?.size,
-    price: product?.price,
-    dimensions: product?.dimensions,
-    category: product?.category._id,
-    brand: product?.brand._id,
-    color: product?.color,
-    description: product?.description,
-    totalQty: product?.totalQty,
-    weight: product?.weight,
-    warrantyDuration: product?.warrantyDuration,
-    creationDate: dayjs(product?.creationDate, dateFormat)|| product?.creationDate,
-    mainImage: product?.mainImageUrl,
-    additionalImages: product?.additionalImages,
-  }),[product]);
+  const transformedData = useMemo(
+    () => ({
+      productName: product?.productName,
+      size: product?.size,
+      price: product?.price,
+      dimensions: product?.dimensions,
+      category: product?.category?._id,
+      brand: product?.brand?._id,
+      color: product?.color,
+      description: product?.description,
+      totalQty: product?.totalQty,
+      weight: product?.weight,
+      warrantyDuration: product?.warrantyDuration,
+      creationDate:
+        dayjs(product?.creationDate, dateFormat) || product?.creationDate,
+      mainImage: product?.mainImageUrl,
+      additionalImages: product?.additionalImages,
+    }),
+    [product]
+  );
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [mainImage, setMainImage] = useState<UploadFile | null>(null);
@@ -74,50 +76,51 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
     setFileList(info.fileList);
   };
 
-  const onFinish = useCallback(async (values: any) => {
+  const onFinish = useCallback(
+    async (values: any) => {
+      const isUpdateProduct = isEqual(transformedData, values);
+      const formData = new FormData();
 
-    const isUpdateProduct = isEqual(transformedData, values);
-    const formData = new FormData();
+      //const date
+      const formattedDate = dayjs(
+        values.creationDate ?? product?.creationDate
+      ).format(dateFormat);
+      formData.append("productName", values.productName);
+      formData.append("size", values.size);
+      formData.append("price", values.price);
+      formData.append("category", values.category);
+      formData.append("color", values.color || "");
+      formData.append("brand", values.brand || "");
+      formData.append("description", values.description || "");
+      formData.append("totalQty", values.totalQty || 0);
+      formData.append("weight", values.weight || 0);
+      formData.append("dimensions", values.dimensions || 0);
+      formData.append("warrantyDuration", values.warrantyDuration || "");
+      formData.append("creationDate", formattedDate);
 
-    //const date
-    const formattedDate = dayjs(
-      values.creationDate ?? product?.creationDate
-    ).format(dateFormat);
-    formData.append("productName", values.productName);
-    formData.append("size", values.size);
-    formData.append("price", values.price);
-    formData.append("category", values.category);
-    formData.append("color", values.color || "");
-    formData.append("brand", values.brand || "");
-    formData.append("description", values.description || "");
-    formData.append("totalQty", values.totalQty || 0);
-    formData.append("weight", values.weight || 0);
-    formData.append("dimensions", values.dimensions || 0);
-    formData.append("warrantyDuration", values.warrantyDuration || "");
-    formData.append("creationDate", formattedDate);
-
-    if (mainImage) {
-      formData.append("mainImageUrl", mainImage as any);
-    }
-
-    fileList.forEach((file: any) => {
-      formData.append("additionalImages", file.originFileObj ?? file);
-    });
-
-    try {
-      if (product?._id && !isUpdateProduct) {
-        await updateProductById({ id: product._id, body: formData });
-      } 
-      else if(!product?._id){
-        await addProduct(formData).then((res) => {
-          form.resetFields();
-        });
+      if (mainImage) {
+        formData.append("mainImageUrl", mainImage as any);
       }
-      setOpen?.(false);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  },[fileList, mainImage, product?._id, product?.creationDate, transformedData]);
+
+      fileList.forEach((file: any) => {
+        formData.append("additionalImages", file.originFileObj ?? file);
+      });
+
+      try {
+        if (product?._id && !isUpdateProduct) {
+          await updateProductById({ id: product._id, body: formData });
+        } else if (!product?._id) {
+          await addProduct(formData).then((res) => {
+            form.resetFields();
+          });
+        }
+        setOpen?.(false);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    },
+    [fileList, mainImage, product?._id, product?.creationDate, transformedData]
+  );
 
   const onCancel = () => {
     setOpen?.(false);
@@ -129,7 +132,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
 
   return (
     <Modal
-      title={product ? t("Edit Product") : "Add Product"}
+      title={product ? t("Edit Product") : t("Add Product")}
       centered
       open={open}
       onOk={onCancel}
@@ -154,7 +157,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           weight: product?.weight,
           dimensions: product?.dimensions,
           warrantyDuration: product?.warrantyDuration,
-          creationDate: product?.creationDate 
+          creationDate: product?.creationDate
             ? dayjs(product?.creationDate, dateFormat)
             : null,
           mainImage: product?.mainImageUrl,
@@ -164,16 +167,16 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
-              label="Product Name"
+              label={t("Product Name")}
               name="productName"
               rules={[{ required: true, message: "Product name is required!" }]}
             >
-              <Input placeholder="Enter product name" />
+              <Input placeholder={t("Enter product name")} />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item
-              label="Size Options"
+              label={t("Size Options")}
               name="size"
               rules={[{ required: true, message: "Size is required!" }]}
             >
@@ -181,7 +184,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                 name="size"
                 options={sizeOptions}
                 style={{ width: "100%" }}
-                placeholder={"Enter size..."}
+                placeholder={t("Enter size...")}
                 mode="multiple"
                 allowClear={true}
                 handleChange={(value) => form.setFieldsValue({ size: value })}
@@ -193,16 +196,17 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
-              label="Price"
+              label={t("Price")}
               name="price"
               rules={[{ required: true, message: "Price is required!" }]}
             >
-              <Input type="number" placeholder="Enter price" />
+              <Input type="number" placeholder={t("Enter price")} />
             </Form.Item>
           </Col>
+
           <Col span={12}>
             <Form.Item label="Dimensions" name="dimensions">
-              <Input type="number" placeholder="Enter dimension..." />
+              <Input type="number" placeholder={t("Enter dimension...")} />
             </Form.Item>
           </Col>
         </Row>
@@ -210,7 +214,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
-              label="Category Name"
+              label={t("Category Name")}
               name="category"
               rules={[
                 { required: true, message: "Category name is required!" },
@@ -225,8 +229,9 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                   }))!
                 }
                 style={{ width: "100%" }}
-                placeholder={"Enter category..."}
-                defaultValue={product?.category?.name! ?? ""}
+                defaultValue={
+                  product?.category?.name! ?? t("Enter category...")
+                }
                 allowClear={true}
                 handleChange={(value) =>
                   form.setFieldsValue({ category: value })
@@ -235,7 +240,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Brand" name="brand">
+            <Form.Item label={t("Brand")} name="brand">
               <SelectBox
                 name="brand"
                 options={
@@ -245,8 +250,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                   }))!
                 }
                 style={{ width: "100%" }}
-                placeholder={"Enter brand..."}
-                defaultValue={product?.category?.name! ?? ""}
+                defaultValue={product?.category?.name! ?? t("Enter brand...")}
                 allowClear={true}
                 handleChange={(value) => form.setFieldsValue({ brand: value })}
               />
@@ -256,13 +260,13 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="Color" name="color">
-              <Input placeholder="Enter color..." />
+            <Form.Item label={t("Color")} name="color">
+              <Input placeholder={t("Enter color...")} />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Description" name="description">
-              <Input.TextArea placeholder="Enter product description..." />
+            <Form.Item label={t("Description")} name="description">
+              <Input.TextArea placeholder={t("Enter product description...")} />
             </Form.Item>
           </Col>
         </Row>
@@ -270,32 +274,34 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
-              label="Total count"
+              label={t("Total count")}
               name="totalQty"
-              rules={[{ required: true, message: "Total count is required!" }]}
+              rules={[
+                { required: true, message: t("Total count is required!") },
+              ]}
             >
               <Input
                 type="number"
-                placeholder="Enter totalQty number..."
+                placeholder={t("Enter totalQty number...")}
                 name="totalQty"
               />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Weight (mm)" name="weight">
-              <Input type="number" placeholder="Enter weight..." />
+            <Form.Item label={t("Weight (mm)")} name="weight">
+              <Input type="number" placeholder={t("Enter weight...")} />
             </Form.Item>
           </Col>
         </Row>
 
         <Row gutter={24}>
           <Col span={12}>
-            <Form.Item label="Warranty Duration" name="warrantyDuration">
-              <Input type="number" placeholder="Enter warranty duration" />
+            <Form.Item label={t("Warranty Duration")} name="warrantyDuration">
+              <Input type="number" placeholder={t("Enter warranty duration")} />
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label="Creation Date" name="creationDate">
+            <Form.Item label={t("Creation Date")} name="creationDate">
               <DatePicker
                 name="creationDate"
                 disabledDate={disabledDate}
@@ -309,9 +315,11 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item
-              label="Main Image"
+              label={t("Main Image")}
               name="mainImage"
-              rules={[{ required: true, message: "Main image is required!" }]}
+              rules={[
+                { required: true, message: t("Main image is required!") },
+              ]}
             >
               <Upload
                 accept="image/*"
@@ -341,9 +349,11 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
           </Col>
           <Col span={12}>
             <Form.Item
-              label="Additional Images"
+              label={t("Additional Images")}
               name="additionalImages"
-              rules={[{ required: true, message: "Main image is required!" }]}
+              rules={[
+                { required: true, message: t("Main image is required!") },
+              ]}
             >
               <Upload
                 accept="image/*"
@@ -368,7 +378,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                 }
               >
                 <Button icon={<UploadOutlined />}>
-                  Upload Additional Images
+                  {t("Upload Additional Images")}
                 </Button>
               </Upload>
             </Form.Item>
@@ -378,7 +388,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         <Form.Item>
           <ButtonComponent
             htmlType="submit"
-            buttonText={product ? "Update Product" : "Add Product"}
+            buttonText={product ? t("Update Product") : t("Add Product")}
             loading={
               isLoadingProduct || isLoadingUpdatedProduct || isLoadingBrand
             }

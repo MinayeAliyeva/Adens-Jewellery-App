@@ -1,21 +1,22 @@
-import { FC, useEffect, useMemo, useState } from "react";
-import { Form, Space, Table } from "antd";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Form, Space, Table } from "antd";
+import type { TableProps } from "antd";
+import { FC, useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { MdClearAll } from "react-icons/md";
-import type { TableProps } from "antd";
-import { columns, schema } from "./data";
-
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import { ButtonComponent } from "../../utils/components/ButtonComponent";
+import { columns, schema } from "./data";
+
 import {
   useCreateBrandMutation,
   useDeleteBrandByIdMutation,
   useLazyGetBrandsQuery,
   useUpdateBrandByIdMutation,
 } from "../../store/api/brand/brand-api";
-import { useTranslation } from "react-i18next";
+
 
 
 type OnChange = NonNullable<TableProps<ICatagoryResponse>["onChange"]>;

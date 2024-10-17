@@ -1,16 +1,16 @@
-import { useState } from "react";
+import TranslateComponent from "../utils/components/TranslateComponent";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { Col, Divider, Layout, Row, theme } from "antd";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { menu } from "./data";
-import { ButtonComponent } from "../utils/components/ButtonComponent";
-import { BiLogOutCircle } from "react-icons/bi";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import TranslateComponent from "../utils/components/TranslateComponent";
+import { BiLogOutCircle } from "react-icons/bi";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { ButtonComponent } from "../utils/components/ButtonComponent";
+import { menu } from "./data";
+
 const logo = "/assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
 const bg = "/assets/images/bg.png";
-
 
 const MainLayout: React.FC = () => {
   const { t } = useTranslation();
@@ -97,7 +97,7 @@ const MainLayout: React.FC = () => {
 
         <ButtonComponent
           icon={<BiLogOutCircle />}
-          buttonText={collapsed ? "" : "Log Out"}
+          buttonText={collapsed ? "" : t("Log Out")}
           onClick={handleLogOut}
           block
           style={{

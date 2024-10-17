@@ -1,4 +1,4 @@
-import ButtonComponent from "./ButtonComponent";
+import ButtonComponent from "./form-components/ButtonComponent";
 import { Button, Layout, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { jwtDecode } from "jwt-decode";
@@ -6,9 +6,9 @@ import { FC, useState } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { IDecodedValue } from "../shared/modules";
-import { useAddBasketMutation } from "../store/api/basket/basket-api";
-import { useCreateOrderMutation } from "../store/api/order/order-api";
-import { IProduct } from "../store/api/product/modules";
+import { useAddBasketMutation } from "../redux/api/basket/basket-api";
+import { useCreateOrderMutation } from "../redux/api/order/order-api";
+import { IProduct } from "../redux/api/product/modules";
 
 import {
   HeartOutlined,

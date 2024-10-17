@@ -6,7 +6,7 @@ const { Basket } = require("../models/basket");
 const auth = require("../middlware/auth");
 
 // Məhsulu səbətə əlavə et
-router.post("/", auth, async (req, res) => {
+router.post("/",  async (req, res) => {
   const { productId, quantity, userId } = req.body;
 
   try {
@@ -73,14 +73,14 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-
-router.get("/:userId", auth, async (req, res) => {
+router.get("/:userId", /*auth, */ async (req, res) => {
   console.log("req.params.userId", req.params.userId);
-  
+
   try {
     const basket = await Basket.findOne({ user: req.params.userId }).populate(
       "products.productId"
     );
+    console.log("basket", basket);
 
     res.status(200).json(basket);
   } catch (error) {
@@ -138,12 +138,10 @@ router.put("/:userId/:productId", auth, async (req, res) => {
 
       // Əgər cari miqdar 1-dirsə, onu dəyişdirmirik
       if (currentQuantity === 1) {
-        return res
-          .status(200)
-          .json({
-            message: "Product quantity cannot be reduced below 1",
-            quantity: currentQuantity,
-          });
+        return res.status(200).json({
+          message: "Product quantity cannot be reduced below 1",
+          quantity: currentQuantity,
+        });
       } else {
         // `quantity`-ni artırırıq
         const updatedBasket = await Basket.findOneAndUpdate(

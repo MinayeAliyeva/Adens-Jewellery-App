@@ -1,17 +1,23 @@
-import { memo } from "react";
+import CreateEditDialogButton from "./product-dialog/OpenEditDialog";
 import ProductsTable from "./ProductsTable";
+import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import { MdAddCircleOutline } from "react-icons/md";
 import { useGetProductsQuery } from "../../store/api/product/product-api";
 import { columns } from "./data";
-import CreateEditDialogButton from "./product-dialog/OpenEditDialog";
-import { MdAddCircleOutline } from "react-icons/md";
 
 const Products = () => {
-  const { data ,isLoading} = useGetProductsQuery();
-  
+  const { data, isLoading } = useGetProductsQuery();
+  const { t } = useTranslation();
+
   return (
     <>
-      <CreateEditDialogButton icon={<MdAddCircleOutline />} buttonText="Create Product" type="primary"/>
-      <ProductsTable loading={isLoading} data={data!} columns={columns} />
+      <CreateEditDialogButton
+        icon={<MdAddCircleOutline />}
+        buttonText={t("Create Product")}
+        type="primary"
+      />
+      <ProductsTable t={t} loading={isLoading} data={data!} columns={columns} />
     </>
   );
 };

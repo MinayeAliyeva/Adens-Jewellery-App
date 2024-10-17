@@ -1,7 +1,7 @@
-import { useGetProductsQuery } from "../../store/api/product/product-api";
+import { useGetProductsQuery } from "../../redux/api/product/product-api";
 import ProductCard from "../../components/ProductCard";
 import { Layout, Typography } from "antd";
-import { IProduct } from "../../store/api/product/modules";
+import { IProduct } from "../../redux/api/product/modules";
 
 const Products = () => {
   const { data } = useGetProductsQuery<{ data: IProduct[] }>("");

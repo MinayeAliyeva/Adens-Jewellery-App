@@ -1,9 +1,10 @@
-import { FC, memo, useMemo, useRef } from "react";
 import { SearchOutlined } from "@ant-design/icons";
-import type { InputRef, TableColumnsType, TableColumnType } from "antd";
+import type { InputRef, TableColumnType, TableColumnsType } from "antd";
 import { Button, Input, Space, Table } from "antd";
 import type { FilterDropdownProps } from "antd/es/table/interface";
+import { TFunction } from "i18next";
 import { map } from "lodash";
+import { FC, memo, useMemo, useRef } from "react";
 import { IProduct } from "../../store/api/product/modules";
 
 type DataIndex = keyof IProduct;
@@ -12,7 +13,8 @@ const ProductsTable: FC<{
   data: IProduct[];
   columns: TableColumnsType<IProduct>;
   loading: boolean;
-}> = ({ data, columns, loading }) => {
+  t: TFunction<"translation", string>;
+}> = ({ data, columns, loading, t }) => {
   const searchInput = useRef<InputRef>(null);
 
   const handleSearch = (
@@ -60,7 +62,7 @@ const ProductsTable: FC<{
             size="small"
             style={{ width: 90 }}
           >
-            Search
+            {t("Search")}
           </Button>
           <Button
             onClick={() => {
@@ -70,7 +72,7 @@ const ProductsTable: FC<{
             size="small"
             style={{ width: 90 }}
           >
-            Reset
+           {t("Reset")}
           </Button>
           <Button
             type="link"
@@ -79,7 +81,7 @@ const ProductsTable: FC<{
               confirm({ closeDropdown: false });
             }}
           >
-            Filter
+            {t("Filter")}
           </Button>
           <Button
             type="link"
@@ -88,7 +90,7 @@ const ProductsTable: FC<{
               close();
             }}
           >
-            close
+            {t("close")}
           </Button>
         </Space>
       </div>
@@ -109,15 +111,19 @@ const ProductsTable: FC<{
     },
   });
 
-  const tableColumns =useMemo(()=> map(columns, (column) => {
-    if (column.key === "mainImageUrl" || column.key === "actions") {
-      return column;
-    }
-    return {
-      ...column,
-      ...getColumnSearchProps(column?.key as any),
-    };
-  }),[columns]);
+  const tableColumns = useMemo(
+    () =>
+      map(columns, (column) => {
+        if (column.key === "mainImageUrl" || column.key === "actions") {
+          return column;
+        }
+        return {
+          ...column,
+          ...getColumnSearchProps(column?.key as any),
+        };
+      }),
+    [columns]
+  );
 
   return <Table loading={loading} columns={tableColumns} dataSource={data} />;
 };

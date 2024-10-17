@@ -4,19 +4,17 @@ import {
   Button,
   Checkbox,
   Col,
-  Divider,
   Form,
   Input,
   Row,
   Space,
-  Typography,
 } from "antd";
 import Title from "antd/es/typography/Title";
 import { Content } from "antd/es/layout/layout";
 import TypographyComponent from "../../components/TypographyComponent";
-import { useGetCategoriesQuery } from "../../store/api/catagory/catagory-api";
-import SelectBox from "../../components/SelectBox";
-import { useGetBrandsQuery } from "../../store/api/brand/brand-api";
+import { useGetCategoriesQuery } from "../../redux/api/catagory/catagory-api";
+import SelectBox from "../../components/form-components/SelectBox";
+import { useGetBrandsQuery } from "../../redux/api/brand/brand-api";
 import { ClearOutlined, SendOutlined } from "@ant-design/icons";
 
 export interface IFieldType {

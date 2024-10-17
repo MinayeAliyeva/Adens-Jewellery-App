@@ -9,11 +9,17 @@ import Register from "../pages/auth/register";
 import Login from "../pages/auth/login";
 import About from "../pages/about";
 import Favorite from "../pages/favorites";
-import Error from "../pages/error";
+import Error from "../pages/not-fount";
 import FAQPage from "../pages/fag";
 import UserProfile from "../pages/profile";
 import Products from "../pages/products";
+import PrivateRouting from "../layouts/PrivateRouting";
 export type MyRouterObject = RouteObject;
+
+
+
+export type TypeRouteObject = MyRouterObject & { auth?: boolean };
+
 export enum RoutePaths {
   MAIN = "/",
   HOME = "/home",
@@ -30,7 +36,7 @@ export enum RoutePaths {
   ERROR = "*",
 }
 
-export const routes: MyRouterObject[] = [
+export const routes: TypeRouteObject[] = [
   {
     path: RoutePaths.MAIN,
     element: <MainLayout />,
@@ -70,6 +76,7 @@ export const routes: MyRouterObject[] = [
       {
         path: RoutePaths.FAVORITE,
         element: <Favorite />,
+        auth: true,
       },
       {
         path: RoutePaths.PRODUCTS,
@@ -82,6 +89,7 @@ export const routes: MyRouterObject[] = [
       {
         path: RoutePaths.PROFILE,
         element: <UserProfile />,
+        auth: true,
       },
       {
         path: RoutePaths.ERROR,
@@ -89,13 +97,17 @@ export const routes: MyRouterObject[] = [
       },
     ],
   },
-];
-export const usehMap = (routes: MyRouterObject[]) => {
-  return routes.map((route) => {
+] as TypeRouteObject[];
+
+const authMap = (routes: TypeRouteObject[]) => {
+  return routes.map((route: TypeRouteObject) => {
+    if (route.auth)
+      route.element = <PrivateRouting>{route.element}</PrivateRouting>;
+    if (route.children) route.children = authMap(route.children);
     return route;
   });
 };
 
 export const useMapRoutes = () => {
-  return useRoutes(usehMap(routes));
+  return useRoutes(authMap(routes));
 };

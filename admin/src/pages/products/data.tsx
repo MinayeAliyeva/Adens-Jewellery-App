@@ -1,11 +1,11 @@
-import { Content } from "antd/es/layout/layout";
 import CreateEditDialogButton from "./product-dialog/OpenEditDialog";
-import { IProduct } from "../../store/api/product/modules";
 import OpenDeleteDialogButton from "./product-dialog/OpenDeleteDialog";
-import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import Typography from "antd/es/typography/Typography";
-import { IBrandsResponse } from "../../store/api/brand/modules";
+import { Content } from "antd/es/layout/layout";
 import { FaRegEdit } from "react-icons/fa";
+import { IBrandsResponse } from "../../store/api/brand/modules";
+import { ICatagoryResponse } from "../../store/api/catagory/modules";
+import { IProduct } from "../../store/api/product/modules";
 
 export const sizeOptions = [
   { label: "Small", value: "S" },
@@ -85,6 +85,7 @@ export const columns = [
     title: "",
     key: "actions",
     render: (_: string, record: IProduct) => {
+      
       return (
         <Content style={{ display: "flex", gap: "20px" }}>
           <CreateEditDialogButton product={record} icon={<FaRegEdit/>}  buttonText="Edit" variant="dashed"/>
