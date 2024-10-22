@@ -240,7 +240,11 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item label={t("Brand")} name="brand">
+            <Form.Item
+              label={t("Brand")}
+              name="brand"
+              rules={[{ required: true, message: "Brand  is required!" }]}
+            >
               <SelectBox
                 name="brand"
                 options={
