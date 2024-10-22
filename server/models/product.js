@@ -51,6 +51,10 @@ const productSchema = new mongoose.Schema({
     ref: "Category",
   },
   color: String,
+  rating: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Review",
+  },
   comments: [commentSchema], // Yorumlar şema olarak referans edilir
   mainImageUrl: mongoose.Schema.Types.Mixed,
   additionalImages: mongoose.Schema.Types.Mixed,

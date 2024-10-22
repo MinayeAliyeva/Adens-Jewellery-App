@@ -1,29 +1,51 @@
-import { Button, ButtonProps } from "antd";
-import { FC, ReactNode } from "react";
-
-interface IButtonComponentProps extends ButtonProps {
+import { CSSProperties, FC } from "react";
+import { Button } from "antd";
+import { ButtonProps } from "antd";
+interface IButtonProps extends ButtonProps {
+  customColor?: string;
+  border?: CSSProperties["border"];
   buttonText?: string;
-  icon?: ReactNode;
 }
 
-const ButtonComponent: FC<IButtonComponentProps> = ({
+const ButtonComponent: FC<IButtonProps> = ({
+  loading,
+  disabled,
+  icon,
+  danger,
+  htmlType,
+  iconPosition,
+  block,
+  onClick,
   buttonText,
   style,
-  onClick,
-  icon,
-  size = "large",
+  type,
+  customColor,
+  border,
+  color = "primary",
+  variant='solid',
 }) => {
   return (
-    <Button
-      style={{
-        ...style,
-      }}
-      onClick={onClick}
-      icon={icon}
-      size={size}
-    >
-      {buttonText}
-    </Button>
+    <>
+      <Button
+        disabled={disabled}
+        variant={variant}
+        danger={danger}
+        icon={icon}
+        loading={loading}
+        iconPosition={iconPosition}
+        htmlType={htmlType}
+        color={color}
+        onClick={onClick}
+        type={type}
+        block={block}
+        style={{
+          ...style,
+          border: border, 
+        }}
+      >
+        {buttonText}
+      </Button>
+    </>
   );
 };
 

@@ -1,4 +1,3 @@
-import { useForm } from "react-hook-form";
 import AddComment from "./AddComment";
 import CommentList from "./CommentList";
 import { useParams } from "react-router-dom";
@@ -7,13 +6,10 @@ import ProductDetail from "./ProductDetail";
 import { IProduct } from "../../../redux/api/product/modules";
 
 const Detail = () => {
-  const {id} = useParams();
-  console.log("DETAIL id",id);
-  
-  const { data: product } = useGetProducDetailByIdQuery<{data:IProduct}>(id!);
-
-  console.log("DETAIL", {product});
-  const { handleSubmit, control } = useForm();
+  const { id } = useParams();
+  const { data: product } = useGetProducDetailByIdQuery<{ data: IProduct }>(
+    id!
+  );
 
   return (
     <div
@@ -23,11 +19,9 @@ const Detail = () => {
         minHeight: "900px",
       }}
     >
-      <ProductDetail product={product}/>
-      <CommentList />
-      <form onSubmit={handleSubmit((data: any) => {})}>
-        <AddComment control={control} />
-      </form>
+      <ProductDetail product={product} />
+      <CommentList productId={product?._id} />
+      <AddComment productId={product?._id} />
     </div>
   );
 };

@@ -9,7 +9,7 @@ interface IPrivateRouting {
 const PrivateRouting: React.FC<IPrivateRouting> = ({children}) => {
    const userData=getUserFromToken();
 
-  if(!isEmpty(userData)){
+  if(isEmpty(userData)){
     return <Navigate to="/login" />
   }
   return (

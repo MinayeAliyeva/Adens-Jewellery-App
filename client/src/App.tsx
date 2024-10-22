@@ -1,13 +1,9 @@
+import { ToastContainer } from "react-toastify";
 import { useMapRoutes } from "./routes";
 
 function App() {
- 
-  console.log("APPPPP RERENDER");
-  
   const myRoute = useMapRoutes();
-  console.log("myRoute", myRoute);
-  
-  return <>{myRoute}</>;
+  return <>{myRoute} <ToastContainer /></>;
 }
 
 export default App;

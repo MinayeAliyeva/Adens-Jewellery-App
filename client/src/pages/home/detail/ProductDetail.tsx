@@ -13,11 +13,9 @@ const ProductDetail: FC<IProductDetailProps> = memo(({ product }) => {
     additionalImages: [""],
     productName: "",
   };
-  console.log("product,", product);
 
   const { mainImageUrl, additionalImages, productName } =
     product ?? initialProductValue;
-  console.log({ mainImageUrl, additionalImages, productName });
 
   return (
     <Card

@@ -1,44 +1,25 @@
-import { useNavigate } from "react-router-dom";
 import { Dropdown, Menu, MenuProps } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { menuItems } from "../constants";
-
+import { setLogout } from "../../../redux/features/authSlice";
+import { useDispatch } from "react-redux";
 
 export const ProfileMenuComponent = () => {
-  const navigate = useNavigate();
-  const authToken = localStorage.getItem("authToken"); 
+  const dispatch = useDispatch();
+  const handleLogout = () => {
+    dispatch(setLogout());
+  };
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
-    if (e.key === "register") {
-      navigate("/register");
-    } else if (e.key === "profil") {
-      navigate("/profile");
-    } else if (e.key === "logout") {
-      handleLogout(); 
+    if(e.key === "logout"){
+      handleLogout();
     }
   };
-
-  const handleLogout = () => {
-    localStorage.removeItem("authToken"); 
-    navigate("/login"); 
-  };
-
-  const filteredMenuItems = menuItems?.filter((item:any) => {
-    if (!authToken) {
-      return true;
-    }
-    return item.key !== "login" && item.key !== "register";
-  });
-
-  const logoutMenuItem = { key: "logout", label: "Log Out" };
-  const completeMenuItems = authToken
-    ? [...filteredMenuItems, logoutMenuItem] 
-    : filteredMenuItems;
 
   const menu = (
-    <Menu onClick={handleMenuClick}>
-      {completeMenuItems?.map((item:any) => (
-        <Menu.Item key={item.key}>{item.label}</Menu.Item>
+    <Menu onClick={handleMenuClick} style={{width: "170px"}}>
+      {menuItems?.map((item:any) => (
+        <Menu.Item key={item.key} className="cursor-pointer w-17.5">{item.label}</Menu.Item>
       ))}
     </Menu>
   );

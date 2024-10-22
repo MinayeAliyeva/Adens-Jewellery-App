@@ -5,4 +5,5 @@ export const loginSchema = yup.object().shape({
     .email("Invalid email format")
     .required("Email is required"),
   password: yup.string().required("Password is required"),
+  error: yup.string(),
 });

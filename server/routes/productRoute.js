@@ -5,7 +5,6 @@ const path = require("path");
 const auth = require("../middlware/auth");
 const { Product } = require("../models/product");
 const isAdmin = require("../middlware/isAdmin");
-const { log } = require("util");
 
 const FILE_TYPE_MAP = {
   "image/png": "png",
@@ -16,10 +15,10 @@ const FILE_TYPE_MAP = {
 // Multer storage ayarları
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, path.join(__dirname, "../public/images")); // Yükleme klasörü
+    cb(null, path.join(__dirname, "../public/images")); 
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}_${file.originalname}`); // Dosya adı
+    cb(null, `${Date.now()}_${file.originalname}`); 
   },
 });
 
@@ -47,6 +46,13 @@ router.get("/", async (req, res) => {
       maxWeight,
       duration,
       dimention,
+      averageRating,
+      sortRaitingAsc,
+      sortRaitingDesc,
+      sortPriceAsc,
+      sortPriceDesc,
+      sortCreateDateDesc,
+      sortCreateDateAsc,
     } = req.query;
 
     if (
@@ -59,17 +65,22 @@ router.get("/", async (req, res) => {
       !minwWeight &&
       !maxWeight &&
       !duration &&
-      !dimention
+      !dimention &&
+      !averageRating &&
+      !sortRaitingAsc &&
+      !sortRaitingDesc &&
+      !sortPriceAsc &&
+      !sortPriceDesc && 
+      !sortCreateDateDesc &&
+      !sortCreateDateAsc
     ) {
-
       const allProducts = await Product.find()
         .populate("category")
         .populate("brand");
-        console.log("allProducts", allProducts);
-        
+      console.log("allProducts", allProducts);
+
       return res.status(200).send(allProducts);
     }
-    console.log("size backend", size);
 
     const categories = Array.isArray(category)
       ? category
@@ -84,18 +95,41 @@ router.get("/", async (req, res) => {
       ...(productName && { productName: new RegExp(productName, "i") }),
       ...(minPrice && { price: { $gte: Number(minPrice) } }),
       ...(maxPrice && { price: { $lte: Number(maxPrice) } }),
-     
+
       ...(minwWeight && { weight: { $gte: Number(minwWeight) } }),
       ...(maxWeight && { weight: { $lte: Number(maxWeight) } }),
-      ...((minPrice && maxPrice) && { price: { $gte: Number(minPrice), $lte: Number(maxPrice) } }),
-      ...((minwWeight && maxWeight)  && { weight: { $gte: Number(minwWeight), $lte: Number(maxWeight) } }),
+      ...(minPrice &&
+        maxPrice && {
+          price: { $gte: Number(minPrice), $lte: Number(maxPrice) },
+        }),
+      ...(minwWeight &&
+        maxWeight && {
+          weight: { $gte: Number(minwWeight), $lte: Number(maxWeight) },
+        }),
       ...(duration && { warrantyDuration: { $eq: Number(duration) } }),
       ...(dimention && { dimensions: { $eq: Number(dimention) } }),
+      ...(averageRating && { averageRating: { $eq: Number(averageRating) } }),
     };
+
+    let sort = {};
+    if (sortRaitingAsc) {
+      sort = { averageRating: 1 };
+    } else if (sortRaitingDesc) {
+      sort = { averageRating: -1 };
+    } else if (sortPriceAsc) {
+      sort = { price: 1 };
+    } else if (sortPriceDesc) {
+      sort = { price: -1 };
+    }else if (sortCreateDateDesc) {
+      sort = { createdAt: -1 };
+    }else if (sortCreateDateAsc) {
+      sort = { createdAt: 1 };
+    }
 
     const products = await Product.find(query)
       .populate("category")
-      .populate("brand");
+      .populate("brand")
+      .sort(sort);
     if (!products.length) {
       return res.status(200).send([]);
     }
@@ -106,7 +140,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-//Detail
 router.get("/:id", async (req, res) => {
   const product = await Product.findOne({ _id: req.params.id });
 
@@ -117,46 +150,41 @@ router.get("/:id", async (req, res) => {
   res.status(200).send(product);
 });
 
-// Ürün oluşturma ve resim yükleme
 router.post(
   "/",
   [auth, isAdmin],
   upload.fields([
-    { name: "mainImageUrl", maxCount: 1 }, // Tek ana resim
-    { name: "additionalImages", maxCount: 10 }, // Çoklu ek resimler
+    { name: "mainImageUrl", maxCount: 1 },
+    { name: "additionalImages", maxCount: 10 },
   ]),
 
   async (req, res) => {
-    // Dosyaların alınması
     const files = req.files;
 
     if (!files || Object.keys(files).length === 0) {
       return res.status(400).send("No images in the request");
     }
 
-    // Base URL'nin oluşturulması
     const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
 
-    // Resim URL'lerini oluşturma
     const mainImage = files.mainImageUrl
       ? `${basePath}${files.mainImageUrl[0].filename}`
       : null;
     const additionalImages = files.additionalImages
       ? files.additionalImages.map((file) => `${basePath}${file.filename}`)
       : [];
-    
-    // Yeni ürün nesnesinin oluşturulması
+
     const product = new Product({
       id: req.body.id,
       productName: req.body.productName,
-      size: req.body.size ? req.body.size.split(",") : [], // Boyutlar virgülle ayrılmışsa diziye çevir
+      size: req.body.size ? req.body.size.split(",") : [],
       price: req.body.price,
       measure: req.body.measure,
       category: req.body.category,
       color: req.body.color,
       comments: req.body.comments,
-      mainImageUrl: mainImage, // Ana resim URL'si
-      additionalImages: additionalImages, // Ek resim URL'leri
+      mainImageUrl: mainImage,
+      additionalImages: additionalImages,
       brand: req.body.brand,
       material: req.body.material,
       popularity: req.body.popularity,
@@ -178,14 +206,12 @@ router.post(
       repairService: req.body.repairService,
       priceHistory: req.body.priceHistory,
     });
-  console.log("server product post", product);
-  
+    console.log("server product post", product);
+
     try {
-      // Ürün kaydedildiğinde yanıt döndürme
       const result = await product.save();
       res.status(201).send(result);
     } catch (error) {
-      // Hata durumunda yanıt döndürme
       res.status(400).send({ message: "Error creating product", error });
     }
   }
@@ -193,7 +219,7 @@ router.post(
 
 router.delete("/:id", [auth, isAdmin], async (req, res) => {
   const deletedProduct = await Product.findByIdAndDelete(req.params.id);
-  // await Product.findByIdAndRemove(req.params.id)
+
   if (!deletedProduct) {
     return res
       .status(404)
@@ -206,15 +232,14 @@ router.put(
   "/:id",
   [auth, isAdmin],
   upload.fields([
-    { name: "mainImageUrl", maxCount: 1 }, // Tek dosya
-    { name: "additionalImages", maxCount: 10 }, // Çoklu dosya
+    { name: "mainImageUrl", maxCount: 1 },
+    { name: "additionalImages", maxCount: 10 },
   ]),
   async (req, res) => {
     try {
       const { id } = req.params;
       const basePath = `${req.protocol}://${req.get("host")}/public/images/`;
 
-      // Dosyaları ayrıştırıyoruz
       const mainImageUrl = req.files["mainImageUrl"]
         ? `${basePath}${req.files["mainImageUrl"][0].filename}`
         : null;
@@ -224,13 +249,11 @@ router.put(
           )
         : [];
 
-      // Ürünü buluyoruz
       const findedProduct = await Product.findById(id);
       if (!findedProduct) {
         return res.status(404).send("Product not found");
       }
 
-      // Güncelleme işlemi
       const updatedProduct = await Product.findByIdAndUpdate(
         id,
         {
@@ -242,7 +265,7 @@ router.put(
             category: req.body.category,
             color: req.body.color,
             comments: req.body.comments,
-            mainImageUrl: mainImageUrl || findedProduct.mainImageUrl, // Eğer yeni dosya yoksa eski dosyayı kullan
+            mainImageUrl: mainImageUrl || findedProduct.mainImageUrl,
             additionalImages:
               additionalImages.length > 0
                 ? additionalImages
@@ -261,7 +284,7 @@ router.put(
             relatedProducts: req.body.relatedProducts,
             totalSales: req.body.totalSales,
             creationDate: req.body.creationDate,
-            lastUpdated: new Date(), // Son güncellenme tarihi
+            lastUpdated: new Date(),
             reviewsCount: req.body.reviewsCount,
             averageRating: req.body.averageRating,
             productAvailability: req.body.productAvailability,
@@ -282,13 +305,3 @@ router.put(
 );
 
 module.exports = router;
-
-// .then(product =>{
-//   if(product) {
-//       return res.status(200).json({success: true, message: 'the product is deleted!'})
-//   } else {
-//       return res.status(404).json({success: false , message: "product not found!"})
-//   }
-// }).catch(err=>{
-//  return res.status(500).json({success: false, error: err})
-// })

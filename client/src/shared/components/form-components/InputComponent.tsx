@@ -40,6 +40,9 @@ const InputComponent: FC<IInputProps<FieldValues>> = ({
             placeholder={placeholder}
             {...field}
             size={size}
+            onChange={(e) => {
+              field.onChange(e.target.value);
+            }}
           />
         )}
       />

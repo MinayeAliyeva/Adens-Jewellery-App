@@ -1,52 +1,65 @@
-import { Form, Button, Typography } from "antd";
+import { Form, Typography, Alert } from "antd";
+import { isEmpty } from "lodash";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { useDispatch } from "react-redux";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { IoMdLogIn } from "react-icons/io";
 
 import InputComponent from "../../../components/form-components/InputComponent";
 import { useLoginUserMutation } from "../../../redux/api/user/user-api";
-import { useNavigate } from "react-router-dom";
 import { ContentStyle, MainContentStyle } from "./style";
 import { loginSchema } from "../../../validation/loginValidation";
+import { setLogin } from "../../../redux/features/authSlice";
+import { saveToLocalStorage } from "../../../shared/helpers/localStorageUtil";
+import ButtonComponent from "../../../components/form-components/ButtonComponent";
 
 const { Title } = Typography;
-
 
 interface ILoginFormValues {
   email: string;
   password: string;
+  error?: string;
 }
 
 const Login: React.FC = () => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
+    setError,
   } = useForm<ILoginFormValues>({
     resolver: yupResolver(loginSchema),
   });
 
-  const [loginUser] = useLoginUserMutation();
+  const dispatch = useDispatch();
+  const [loginUser, { isLoading: isLoadingLogin }] = useLoginUserMutation();
   const navigate = useNavigate();
+
   const onSubmit = (data: ILoginFormValues) => {
-    console.log("ONSUBMIT");
-
     try {
-      console.log("try");
-
       loginUser({
         email: data.email,
         password: data.password,
-      }).then((res) => {
-        console.log({ res });
-
-        localStorage.setItem("token", res.data);
+      }).then((res: any) => {
+        console.log({ res: res });
+        if (!isEmpty(res?.error)) {
+          setError("error", {
+            type: "server",
+            message: res?.error?.data,
+          });
+          return;
+        }
+        reset();
+        saveToLocalStorage("token", res.data);
+        dispatch(setLogin());
+        navigate("/home");
       });
-
-      navigate("/");
     } catch (error) {
-      console.error("Login error", error);
+      console.log("Login error", error);
     }
   };
 
@@ -63,6 +76,13 @@ const Login: React.FC = () => {
         >
           Login
         </Title>
+        {errors?.error?.message && (
+          <Alert
+            message={errors?.error?.message}
+            type="error"
+            style={{ marginBottom: "20px" }}
+          />
+        )}
 
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Form.Item
@@ -93,9 +113,11 @@ const Login: React.FC = () => {
           </Form.Item>
 
           <Form.Item>
-            <Button
-              type="primary"
+            <ButtonComponent
+              icon={<IoMdLogIn />}
+              buttonText="Login"
               htmlType="submit"
+              loading={isLoadingLogin}
               style={{
                 width: "100%",
                 backgroundColor: "#3e160e",
@@ -103,9 +125,7 @@ const Login: React.FC = () => {
                 borderRadius: "5px",
                 fontWeight: "bold",
               }}
-            >
-              Login
-            </Button>
+            />
           </Form.Item>
         </Form>
       </Content>

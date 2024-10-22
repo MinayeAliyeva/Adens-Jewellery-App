@@ -14,7 +14,6 @@ const FooterStyle: IFooterStyle = {
 };
 
 const CustomFooter = () => {
-  console.log("FOOTER RERENDER");
   
   return (
     <Footer style={FooterStyle}>

@@ -1,69 +1,89 @@
-import ButtonComponent from "./form-components/ButtonComponent";
-import { Button, Layout, Typography } from "antd";
+import { Button, Rate, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { jwtDecode } from "jwt-decode";
-import { FC, useState } from "react";
+import { FC, useEffect } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { IDecodedValue } from "../shared/modules";
 import { useAddBasketMutation } from "../redux/api/basket/basket-api";
-import { useCreateOrderMutation } from "../redux/api/order/order-api";
 import { IProduct } from "../redux/api/product/modules";
 
 import {
+  HeartFilled,
   HeartOutlined,
   InfoCircleOutlined,
   ShoppingCartOutlined,
   SwapOutlined,
 } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { setBasketProductCount } from "../redux/features/basketProductCountSlice";
+import { isEmpty } from "lodash";
+import { showErrorToast, showSuccessToast } from "./NotficationComponent";
+import {
+  useAddProductToFavoriteMutation,
+  useLazyGetFavoriteByUserIdQuery,
+} from "../redux/api/favorite/favorite-api";
+import { setFavoriteProductCount } from "../redux/features/favoriteProductCount";
+import { getUserFromToken } from "../shared/helpers/authStorage";
 
 interface IProps {
   product: IProduct;
 }
 
 const ProductCard: FC<IProps> = ({ product }) => {
-  const token = localStorage.getItem("token") ?? ""
-  console.log({token});
-  
-  const decodedUser: IDecodedValue = token ? jwtDecode(token) : {};
-  // console.log({decodedUser});
-  // const [createOrder, {data, isLoading}] = useCreateOrderMutation();
-  // const onCreateOrder=() =>{
-  //   createOrder({
-  //     orderItems: [{
-  //       _id: product._id,
-  //       totalQualityBuying: 1,
-  //     }],
-  //     user:{
-  //       email: decodedUser.email
-  //     },
-  //     shippingAddress: {
-  //       firstName: decodedUser.firstName,
-  //       postalAddress: "vvvvvvvvv"
-  //   }
-  //   });
-  // }
+  const decodedUser: IDecodedValue = getUserFromToken()!;
 
-  // console.log({data});
-  console.log({product});
-  console.log({decodedUser});
-  
-  
-  const [addBasket, {data, isLoading}] = useAddBasketMutation();
-  console.log({
-    productId: product._id,
-    userId: decodedUser.email,
-    quantity: 1
-  });
-  
-   const onCreateOrder=() =>{
+  const dispatch = useDispatch();
+
+  const [addBasket] = useAddBasketMutation();
+  const [addFavorite, { isLoading: isLoadingUserFavoriteData }] =
+    useAddProductToFavoriteMutation();
+  const [getUserFavoriteData, { data: userFavoriteDate }] =
+    useLazyGetFavoriteByUserIdQuery();
+
+  useEffect(() => {
+    if (decodedUser?._id && !isLoadingUserFavoriteData) {
+      getUserFavoriteData({ userId: decodedUser?._id ?? "" });
+    }
+  }, [decodedUser?._id, isLoadingUserFavoriteData]);
+
+  const isActiveFavorite =
+    userFavoriteDate?.products?.find((p) => p.productId._id === product?._id)
+      ?.isFavorite ?? false;
+
+  const onCreateOrder = () => {
+    if (!decodedUser?._id) {
+      showErrorToast("Bu ishlem ichin Uye olmaniz lazim");
+      return;
+    }
     addBasket({
-      productId: product._id,
-      userId: decodedUser._id,
-      quantity: 1
+      productId: product?._id,
+      userId: decodedUser?._id,
+      quantity: 1,
+    }).then((res) => {
+      if (isEmpty(res?.data)) return;
+      dispatch(setBasketProductCount(res?.data.basket?.products.length));
+
+      if (res?.data.basket?.products.find((p) => p.quantity === 1)) {
+        showSuccessToast("product sebete elave edildi");
+      } else showSuccessToast("sebetedeki mehsulun miqdati  yenilendi");
     });
-  }
-  
+  };
+
+  const onCreateWishList = () => {
+    if (!decodedUser?._id) {
+      showErrorToast("Bu ishlem ichin Uye olmaniz lazim");
+      return;
+    }
+    addFavorite({
+      productId: product?._id,
+      userId: decodedUser?._id,
+    }).then((res) => {
+      console.log({ res });
+      if(isEmpty(res?.data)) return;
+        dispatch(setFavoriteProductCount(res.data?.wishList?.products?.length ?? 0));
+    });
+  };
+
   return (
     <Content
       className="w-full max-w-md transition-transform hover:scale-105 relative group"
@@ -82,17 +102,27 @@ const ProductCard: FC<IProps> = ({ product }) => {
         />
 
         <Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex space-x-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          {/* <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center"> */}
-          <Button onClick={onCreateOrder} style={{border:"none"}} shape="circle" icon={ <ShoppingCartOutlined className="text-lg cursor-pointer transition-colors duration-300" />} />
-             
-           
-          {/* </Content> */}
+          <Button
+            onClick={onCreateOrder}
+            style={{ border: "none" }}
+            shape="circle"
+            icon={
+              <ShoppingCartOutlined className="text-lg cursor-pointer transition-colors duration-300" />
+            }
+          />
 
-          <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
-            <Link to={`/wishlist`}>
-              <HeartOutlined className="text-lg cursor-pointer transition-colors duration-300" />
-            </Link>
-          </Content>
+          <Button
+            onClick={onCreateWishList}
+            style={{ border: "none" }}
+            shape="circle"
+            icon={
+              isActiveFavorite ? (
+                <HeartFilled className="text-lg cursor-pointer transition-colors duration-300" />
+              ) : (
+                <HeartOutlined className="text-lg cursor-pointer transition-colors duration-300" />
+              )
+            }
+          />
 
           <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
             <Link to={`/product/detail/${product._id}`}>
@@ -108,19 +138,17 @@ const ProductCard: FC<IProps> = ({ product }) => {
         </Content>
 
         <Content className="absolute bottom-4 left-3 right-3 flex flex-col items-center bg-white bg-opacity-80 p-4 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <Typography className="text-md font-semibold mb-7">
-            Select Options:
-          </Typography>
           <Content className="flex space-x-6">
             {product?.size?.map((size: string) => (
               <Typography
                 key={size}
                 className="border px-4 py-1 transition duration-300 hover:bg-white"
               >
-                {size}
+                Size: {size}
               </Typography>
             ))}
           </Content>
+          <Rate defaultValue={product?.averageRating} disabled/>
         </Content>
       </Content>
 
@@ -142,10 +170,10 @@ const ProductCard: FC<IProps> = ({ product }) => {
           weight: {product?.weight}
         </Typography>
         <Typography className="text-xl font-semibold text-gray-800">
-        dimensions: {product?.dimensions}
+          dimensions: {product?.dimensions}
         </Typography>
         <Typography className="text-xl font-semibold text-gray-800">
-        warrantyDuration: {product?.warrantyDuration}
+          warrantyDuration: {product?.warrantyDuration}
         </Typography>
 
         {product?.totalQty > 0 ? (

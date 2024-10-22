@@ -5,24 +5,20 @@ const { Product } = require("../models/product");
 const { Basket } = require("../models/basket");
 const auth = require("../middlware/auth");
 
-// Məhsulu səbətə əlavə et
 router.post("/",  async (req, res) => {
   const { productId, quantity, userId } = req.body;
 
   try {
-    // Məhsulu tap
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // İstifadəçini tap
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // İstifadəçinin səbətini tap və ya yarat
     let basket = await Basket.findOne({ user: user._id }).populate(
       "products.productId",
       "productName price"
@@ -32,7 +28,6 @@ router.post("/",  async (req, res) => {
       basket = new Basket({ user: user._id, products: [], totalPrice: 0 });
     }
 
-    // Səbətdə məhsulun olub-olmadığını yoxla
     const existingProduct = basket.products.find((p) =>
       p.productId.equals(productId)
     );
@@ -43,13 +38,11 @@ router.post("/",  async (req, res) => {
       basket.products.push({ productId, quantity, price: product.price });
     }
 
-    // Ümumi məbləği yenilə
     basket.totalPrice = basket.products.reduce(
       (total, item) => total + item.price * item.quantity,
       0
     );
 
-    // Səbəti yaddaşa yaz
     await basket.save();
 
     res.status(200).json({ message: "Product added to basket", basket });
@@ -59,7 +52,6 @@ router.post("/",  async (req, res) => {
   }
 });
 
-// İbasketdeki butun user ve productlari admin terefde istifade edebilirim
 router.get("/", auth, async (req, res) => {
   try {
     const basket = await Basket.find({})
@@ -89,7 +81,7 @@ router.get("/:userId", /*auth, */ async (req, res) => {
   }
 });
 
-router.delete("/:userId/:productId", auth, async (req, res) => {
+router.delete("/:userId/:productId", async (req, res) => {
   const { userId, productId } = req.params;
 
   try {
@@ -112,10 +104,11 @@ router.delete("/:userId/:productId", auth, async (req, res) => {
   }
 });
 
-router.put("/:userId/:productId", auth, async (req, res) => {
+router.put("/:userId/:productId",  async (req, res) => {
   const { userId, productId } = req.params;
   const { quantity } = req.body; // `body`-dən quantity dəyərini alırıq
-
+ console.log("quantity", quantity);
+ 
   try {
     // İlk olaraq məhsulun mövcudluğunu yoxlayırıq
     const basket = await Basket.findOne({
