@@ -37,14 +37,14 @@ router.get('/:productId', async (req, res) => {
       }
       const existingReview = await Review.findOne({ productId, 'user.id': user.id });
   
-      if (existingReview) {
-        existingReview.rating = rating; 
-        existingReview.comments.push(comment); 
-        await existingReview.save();
-      } else {
+      // if (existingReview) {
+      //   existingReview.rating = rating; 
+      //   existingReview.comments.push(comment); 
+      //   await existingReview.save();
+      // } else {
         const newReview = new Review({ productId, user, rating, comments: [comment] });
         await newReview.save();
-      }
+      //}
       const reviews = await Review.find({ productId });
       const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
       const averageRating = (totalRating / reviews.length).toFixed(2);
@@ -95,12 +95,14 @@ router.get('/:productId', async (req, res) => {
         return res.status(404).json({ message: 'Yorum bulunamadı.' });
       }
       const commentIndex = review.comments.indexOf(comment);
+      console.log({commentIndex});
+      
       if (commentIndex !== -1) {
         review.comments.splice(commentIndex, 1);
         await review.save();
         return res.json({ message: 'Yorum silindi', review });
       } else {
-        return res.status(404).json({ message: 'Silinmek istenen yorum bulunamadı.' });
+        return res.status(401).json({ message: 'Silinmek istenen yorum bulunamadı.' });
       }
     } catch (err) {
       res.status(500).json({ error: 'Yorum silinemedi: ' + err.message });

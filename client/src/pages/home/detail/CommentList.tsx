@@ -82,12 +82,12 @@ const CommentList: FC<ICommentProps> = ({ productId }) => {
                     <Avatar size="small" icon={<UserOutlined />} />
                     <Typography>{rewiev?.userName}</Typography>
                   </Content>
-                  {userData?._id === rewiev?.userId && (
+                  {/* {userData?._id === rewiev?.userId && (
                     <MdDeleteOutline
                       onClick={onDeleteAllComment}
                       className="text-red-500 text-2xl cursor-pointer"
                     />
-                  )}
+                  )} */}
                 </Content>
                 <Content
                   style={{
