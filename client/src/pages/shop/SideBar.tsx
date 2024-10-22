@@ -23,7 +23,7 @@ export interface IFieldType {
   password?: string;
   remember?: string;
   categories?: string[];
-  raiting?: string;
+  averageRating?: string;
   brands?: string[];
   size?: string[];
   minWeight?: number;
@@ -38,7 +38,7 @@ const initialValues: IFieldType = {
   password: "",
   remember: "",
   categories: [],
-  raiting: "",
+  averageRating: "",
   brands: [],
   size: [],
   minWeight: 0,
@@ -191,19 +191,19 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
-            <Form.Item<IFieldType> name="raiting">
+            <Form.Item<IFieldType> name="averageRating">
               <TypographyComponent
                 level={5}
                 style={{ marginBottom: "15px" }}
                 content=" Rating"
               />
               <SelectBox
-                name="raiting"
+                name="averageRating"
                 placeholder={"Select Raiting..."}
                 options={raitingOptions}
                 style={{ width: "100%" }}
                 handleChange={(value) =>
-                  form.setFieldsValue({ raiting: value })
+                  form.setFieldsValue({ averageRating: value })
                 }
                 size="large"
               />
@@ -309,7 +309,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
           </Col>
         </Row>
         <hr />
-        <Row gutter={24} style={{ margin:'15px' }}>
+        <Row gutter={24} style={{ marginTop:'15px' }}>
           <Col span={12}>
             <TypographyComponent
               level={5}
@@ -320,7 +320,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
               <Input
                 name="duration"
                 type="number"
-                placeholder="Warranty Duration"
+                placeholder="Warranty Duration..."
                 size="large"
                 min={0}
               />

@@ -5,11 +5,10 @@ export const useDebounce = (value: string, delay: number = 300) => {
 
   useEffect(() => {
     let timeOutId: any = null;
-    if(value  && value?.length > 0){
-      timeOutId = setTimeout(() => {
-        setDebouncedValue(value);
-      }, delay);
-    }
+
+    timeOutId = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
 
     return () => clearInterval(timeOutId);
   }, [value, delay]);

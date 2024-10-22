@@ -1,43 +1,37 @@
 import "./index.css";
-import CatagoriesSlider from "./CatagoriesSlider";
-import DrawerComponent from "../../layouts/header/basket-panel/ShoppingPanel";
-import InputComponent from "../../shared/components/form-components/InputComponent";
-import ProductCard from "../../components/ProductCard";
-import RangeDrawerComponent from "../../components/Drawer";
 import { SearchOutlined } from "@ant-design/icons";
 import { Col, Row, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { TbArrowsDownUp } from "react-icons/tb";
-import { useSearchParams } from "react-router-dom";
+import { IFieldType, SideBar } from "./SideBar";
+import CatagoriesSlider from "./CatagoriesSlider";
 import { useDebounce } from "../../hooks/useDebounce";
 import { IProduct } from "../../redux/api/product/modules";
 import { useLazyGetProductsQuery } from "../../redux/api/product/product-api";
-import { IFieldType, SideBar } from "./SideBar";
+import InputComponent from "../../shared/components/form-components/InputComponent";
+import ProductCard from "../../components/ProductCard";
+import RangeDrawerComponent, { ICheckboxComponentProps } from "../../components/Drawer";
+import OpenDrawer from "./OpenDrawer";
 
 const Shop = () => {
   const params = new URLSearchParams();
   const [getPrducts, { data: productsData }] = useLazyGetProductsQuery<{
     data: IProduct[];
-    // isLoading:boolean
   }>();
-  // const [searchParams, setSearchParams] = useSearchParams();
-  // console.log("isLoadingProduct", isLoading);
 
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const {
+    handleSubmit,
     control,
     formState: { errors },
     watch,
-    getValues,
     setError,
   } = useForm<{ productName: string }>({
     defaultValues: { productName: undefined },
   });
 
-  const productName = useDebounce(watch("productName"), 300) ?? undefined;
-  console.log("RERENDER D=SHOPP");
+  const productName = useDebounce(watch("productName"), 300) ?? "";
 
   useEffect(() => {
     if (productName && productName.length < 3) {
@@ -51,18 +45,17 @@ const Shop = () => {
 
     if (!productName || productName.length >= 3) {
       if (productName) params.append("productName", productName!);
-      getPrducts(params.toString(), true);
+
+      getPrducts(params.toString());
     }
   }, [productName]);
 
   const onFilter = (values: IFieldType) => {
-    console.log("values", values);
-
     const {
       categories,
       minPrice,
       maxPrice,
-      raiting,
+      averageRating,
       brands,
       size,
       minWeight,
@@ -84,6 +77,7 @@ const Shop = () => {
     if (productName) params.append("productName", productName);
     if (minPrice) params.append("minPrice", minPrice.toString());
     if (maxPrice) params.append("maxPrice", maxPrice.toString());
+    if (averageRating) params.append("averageRating", averageRating.toString());
 
     if (minWeight) params.append("minWeight", minWeight.toString());
     if (maxWeight) params.append("maxWeight", maxWeight.toString());
@@ -92,18 +86,14 @@ const Shop = () => {
     if (dimention) params.append("dimention", dimention.toString());
 
     getPrducts(params.toString(), true);
-    params.delete("category");
-    params.delete("brand");
-    params.delete("size");
-    params.delete("productName");
-    params.delete("minPrice");
-    params.delete("maxPrice");
-    params.delete("minWeight");
-    params.delete("maxWeight");
-    params.delete("duration");
-    params.delete("dimention");
   };
 
+  const onSortong = (value: ICheckboxComponentProps) => {
+    console.log({value});
+    
+    params.append(`${value?.option}`, value?.sort);
+    getPrducts(params.toString(), true); 
+  }
   return (
     <>
       <CatagoriesSlider />
@@ -167,10 +157,11 @@ const Shop = () => {
                     </Typography.Text>
                   )}
                 </div>
-                <TbArrowsDownUp
+                <OpenDrawer onCloseTakeDrawerValues={onSortong}/>
+                {/* <TbArrowsDownUp
                   style={{ fontSize: "30px" }}
                   onClick={() => setDrawerOpen(true)}
-                />
+                /> */}
               </div>
             </Content>
             <Content
@@ -186,11 +177,6 @@ const Shop = () => {
                 <ProductCard product={product} />
               ))}
             </Content>
-            <RangeDrawerComponent 
-              placement="bottom"
-              open={drawerOpen}
-              setOpen={setDrawerOpen}
-            />
           </Col>
         </Row>
       </Content>

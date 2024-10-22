@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
+import { IBasketResponse } from "./modules";
 
 export const basketApi = createApi({
   reducerPath: "basketApi",
@@ -9,25 +10,38 @@ export const basketApi = createApi({
       Authorization: `Bearer ${localStorage.getItem("token")}` || "",
     },
   }),
-  tagTypes: ["Basket"],
+
   endpoints: (builder) => ({
-    getBasket: builder.query<any[], void>({
+    getBasket: builder.query<IBasketResponse, void>({
       query: () => `/api/basket`,
-      providesTags: ["Basket"],
     }),
-    addBasket: builder.mutation<any[], any>({
+    addBasket: builder.mutation<{message: string; basket:IBasketResponse}, any>({
       query: (body) => ({
         url: "/api/basket",
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Basket"],
     }),
 
-    getBasketByUserId: builder.query<any[], {id:string}>({
+    getBasketByUserId: builder.query<IBasketResponse, {id:string}>({
       query: (user) => ({
         url: `/api/basket/${user.id}`,
         method: "GET",
+      })
+    }),
+
+    addProductToBasket: builder.mutation<IBasketResponse, {userId: string; productId: string, quantity: number}>({
+      query: ({userId, productId, quantity}) => ({
+        url: `/api/basket/${userId}/${productId}`,
+        method: "PUT",
+        body:{quantity},
+      })
+    }),
+
+    deleteProductFromBasket: builder.mutation<IBasketResponse, {userId: string; productId: string}>({
+      query: ({userId, productId}) => ({
+        url: `/api/basket/${userId}/${productId}`,
+        method: "DELETE",
       })
     }),
   }),
@@ -38,5 +52,7 @@ export const {
  useLazyGetBasketQuery,
  useGetBasketQuery,
  useGetBasketByUserIdQuery,
- useLazyGetBasketByUserIdQuery
+ useLazyGetBasketByUserIdQuery,
+ useAddProductToBasketMutation,
+ useDeleteProductFromBasketMutation
 } = basketApi;

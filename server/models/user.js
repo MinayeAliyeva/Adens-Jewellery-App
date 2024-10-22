@@ -47,6 +47,7 @@ userShema.methods.createAuthToken = function () {
     {
       _id: this._id,
       firstName: this.firstName,
+      lastName: this.lastName,
       isAdmin: this.isAdmin,
       email: this.email,
       phone: this?.phone,

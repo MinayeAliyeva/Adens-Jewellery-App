@@ -54,10 +54,10 @@ router.post("/", async (req, res) => {
 router.get("/:userId",async (req, res) => {
   try {
     const wishList = await WishList.findOne({ user: req.params.userId })
-      .populate("products.productId", "productName price mainImageUrl");
+      .populate("products.productId");
 
     if (!wishList) {
-      return res.status(404).json({ message: "Favorites not found" });
+      return res.status(200).json({ message: "Favorites not found" , wishList: []});
     }
 
     res.status(200).json(wishList);

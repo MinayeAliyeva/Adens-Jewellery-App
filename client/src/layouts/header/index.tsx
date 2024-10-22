@@ -1,29 +1,21 @@
-import { memo } from "react";
 import { Link } from "react-router-dom";
 import { Layout, Menu } from "antd";
-import { isEmpty } from "lodash";
-import { HeartOutlined } from "@ant-design/icons";
-
 import { HeaderMenu, Logo, ProfileMenuComponent } from "./components";
-import { iconStyle } from "./constants";
 import TranslateComponent from "../../components/TranslateComponent";
 import ShoppingCart from "./basket-panel/ShoppingCard";
+import FavoriteIcon from "./components/FavoriteIcon";
 import { getUserFromToken } from "../../shared/helpers/authStorage";
-import { loadFromLocalStorage } from "../../shared/helpers/localStorageUtil";
 import { useSelector } from "react-redux";
 import { getUserDataSelector } from "../../redux/store";
-
-const isLogin = !isEmpty(getUserFromToken());
+import { isEmpty } from 'lodash';
 
 const { Header: AntdHeader } = Layout;
 
-
 const Header = () => {
-  const userData = useSelector(getUserDataSelector);
-  console.log("HEADER RERENDER", loadFromLocalStorage("token"), getUserFromToken(), userData);
+  const userData=getUserFromToken();
+  const authUser = useSelector(getUserDataSelector)
+  const user =  isEmpty(authUser) ? userData : authUser;
   
-  const token =loadFromLocalStorage("token");
-
   return (
 
       <AntdHeader
@@ -50,17 +42,15 @@ const Header = () => {
             alignItems: "center",
           }}
         >
-          {token ? (
+          {user?._id ? (
             <ProfileMenuComponent />
           ) : (
             <>
               <Link to={"/login"}>Login</Link>
               <Link to={"/register"}>Register</Link>
-              <Link to="/favorite">
-                <HeartOutlined style={iconStyle} />
-              </Link>
             </>
           )}
+          <FavoriteIcon/>
 
           <ShoppingCart />
           <TranslateComponent />

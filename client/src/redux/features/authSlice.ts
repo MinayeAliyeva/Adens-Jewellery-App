@@ -1,55 +1,43 @@
 // authSlice.ts
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { loadFromLocalStorage, removeFromLocalStorage, saveToLocalStorage } from '../../shared/helpers/localStorageUtil';
-import { getUserFromToken } from '../../shared/helpers/authStorage';
-
-// State interfeysini yaradırıq
-interface User {
-    isAdmin: boolean;
-    _id: string;
-    phone?: string;
-    name: string;
-    email: string;
-  }
+import { createSlice } from "@reduxjs/toolkit";
+import {
+  getLocalStorage,
+  removeFromLocalStorage,
+} from "../../shared/helpers/localStorageUtil";
+import { getUserFromToken } from "../../shared/helpers/authStorage";
+import { IDecodedValue } from "../../shared/modules";
 
 interface AuthState {
-  user: User | null;
+  user: IDecodedValue | null;
   isAuthenticated: boolean;
 }
 
-// İlk vəziyyəti təyin edirik
 const initialState: AuthState = {
-  user: loadFromLocalStorage<User>('user'),
-  isAuthenticated: !!loadFromLocalStorage('user'),
+  user: getLocalStorage<IDecodedValue>("user"),
+  isAuthenticated: !!getLocalStorage("user"),
 };
 
-// Slice yaradırıq
 export const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
-    setLogin: (state, action: PayloadAction<User>) => {
-      state.user = action.payload;
-      state.isAuthenticated = true;
-      saveToLocalStorage('user', action.payload);
+    setLogin: (state) => {
+      const decodedUser = getUserFromToken();
+      state.user = decodedUser;
+      state.isAuthenticated = !!decodedUser?._id;
     },
     setLogout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      removeFromLocalStorage('user');
+      removeFromLocalStorage("token");
     },
     setRegister: (state) => {
-        console.log("setRegister");
-        
       const decodedUser = getUserFromToken();
-      // Yeni istifadəçi məlumatlarını `state`-ə və `localStorage`-ə əlavə edirik
       state.user = decodedUser;
       state.isAuthenticated = !!decodedUser?._id;
-     // saveToLocalStorage('user', action.payload);
     },
-    // LocalStorage-dən oxuyub state-i yenidən yükləyən bir action
     setReloadUserFromStorage: (state) => {
-      const user = loadFromLocalStorage<User>('user');
+      const user = getLocalStorage<IDecodedValue>("user");
       if (user) {
         state.user = user;
         state.isAuthenticated = true;
@@ -57,9 +45,10 @@ export const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
       }
-    }
+    },
   },
 });
 
 // Eksporu
-export const { setLogin, setLogout, setRegister, setReloadUserFromStorage } = authSlice.actions;
+export const { setLogin, setLogout, setRegister, setReloadUserFromStorage } =
+  authSlice.actions;

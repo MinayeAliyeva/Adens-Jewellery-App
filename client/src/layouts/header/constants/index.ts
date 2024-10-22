@@ -6,7 +6,7 @@ export interface InavLinksData {
 
 export const menuItems = [
   { key: "profil", label: "Profil" },
-  { key: "Logout", label: "Logout" },
+  { key: "logout", label: "Logout" },
 ];
 export const navLinksData: InavLinksData[] = [
   { path: "/home", label: "Home" },

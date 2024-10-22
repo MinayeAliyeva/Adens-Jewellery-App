@@ -39,4 +39,5 @@ export interface IProduct {
   priceHistory: any[];
   __v: number;
   lastUpdated: string;
+  averageRating?: number;
 }

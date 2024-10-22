@@ -23,7 +23,6 @@ const ImageGallery: FC<IImageGalleryProps> = ({
   const handleModalClose = () => {
     setIsModalVisible(false);
   };
-console.log({mainImageUrl,additionalImages});
 
   return (
     <div style={{ position: "relative" }}>
