@@ -40,6 +40,7 @@ const UsersTable: FC<{ data: any[] }> = ({ data }) => {
   const { data: userBasketData } = useGetBasketByUserIdQuery<{ data: IBasket }>(
     { id: userId }
   );
+  
   console.log("userBasketData", userBasketData?.products);
 
   return (

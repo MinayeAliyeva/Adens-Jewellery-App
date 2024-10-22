@@ -30,90 +30,29 @@ interface IDrawerComponentProps {
   isDrawerVisible: boolean;
 }
 
-const productsData = [
-  {
-    _id: "6705bfc22d3ae83342f5f2c0",
-    productName: "Acton Romero",
-    price: 114,
-    color: "Consectetur dolores",
-    mainImageUrl: "http://localhost:8000/public/images/1728430018313_az.svg",
-    description: "Et voluptates amet",
-    quantity: 1,
-  },
-  {
-    _id: "6705bfc22d3ae83342f5f2c0",
-    productName: "Acton Romero",
-    price: 114,
-    color: "Consectetur dolores",
-    mainImageUrl: "http://localhost:8000/public/images/1728430018313_az.svg",
-    description: "Et voluptates amet",
-    quantity: 1,
-  },
-];
-
 const userData = getUserFromToken();
 const ShoppingPanel: FC<IDrawerComponentProps> = ({
   onClose,
   isDrawerVisible,
 }) => {
-  console.log("userData", userData);
+  const [getBasket, { data: basketData, isLoading: isLoadingBasket }] =
+    useLazyGetBasketByUserIdQuery<any>();
   
-  console.log(userData);
-  const [getBasket, {data: basketData, isLoading: isLoadingBasket}] = useLazyGetBasketByUserIdQuery();
   useEffect(() => {
-    getBasket({id: userData?._id ?? ""});
-  },[])
-  
-  const [products, setProducts] = useState<IProduct[]>(productsData);
+    getBasket({ id: userData?._id ?? "" });
+  }, [userData?._id]);
+
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  console.log({basketData});
-  
-  // const increaseQuantity = (id: string) => {
-  //   setProducts((prev) =>
-  //     prev.map((product) =>
-  //       product._id === id
-  //         ? { ...product, quantity: product.quantity + 1 }
-  //         : product
-  //     )
-  //   );
-  // };
 
-  // const decreaseQuantity = (id: string) => {
-  //   setProducts((prev) =>
-  //     prev.map((product) =>
-  //       product._id === id && product.quantity > 1
-  //         ? { ...product, quantity: product.quantity - 1 }
-  //         : product
-  //     )
-  //   );
-  // };
+  const data = basketData?.products.map((product: any) => product);
 
-  const totalPrice = products.reduce(
-    (total, product) => total + product.price * product.quantity,
-    0
-  );
-
-  // const handleOrder = () => {
-  //   alert("Your order has been placed!");
-  //   setProducts([]);
-  //   onClose();
-  // };
-
-  const showModal = (product: IProduct) => {
-    setSelectedProduct(product);
-    setIsModalVisible(true);
-  };
-
-  const handleModalClose = () => {
-    setIsModalVisible(false);
-    setSelectedProduct(null);
-  };
+  // const totalPrice = data?.reduce((acc, product) => acc + product.productId.price * product.quantity, 0) || 0;
 
   return (
     <>
       <Drawer
-        title={<Typography.Title level={3}>🛒 Shopping Cart</Typography.Title>}
+        title={<Typography.Title level={3}>🛒 Alışveriş Sepeti</Typography.Title>}
         placement="right"
         onClose={onClose}
         visible={isDrawerVisible}
@@ -122,13 +61,11 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
         footer={
           <div style={{ textAlign: "right" }}>
             <Typography.Title level={4}>
-              Total:{" "}
-              <span style={{ color: "#1890ff" }}>${totalPrice.toFixed(2)}</span>
+              {/* Toplam: <span style={{ color: "#1890ff" }}>${totalPrice.toFixed(2)}</span> */}
             </Typography.Title>
             <Button
               type="primary"
               size="large"
-              // onClick={handleOrder}
               icon={<IoIosSend />}
               block
               style={{
@@ -137,88 +74,79 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                 borderRadius: "5px",
               }}
             >
-              Place Order
+              Siparişi Ver
             </Button>
           </div>
         }
       >
-        {products.length > 0 ? (
-          <List
-            itemLayout="horizontal"
-            dataSource={products}
-            renderItem={(product) => (
-              <List.Item key={product._id}>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      src={product.mainImageUrl}
-                      shape="square"
-                      size={64}
-                    />
-                  }
-                  title={
-                    <Typography.Text strong>
-                      {product.productName}
+        <List
+          dataSource={data}
+          renderItem={(product: any) => (
+            <List.Item key={product?._id}>
+              <List.Item.Meta
+                avatar={
+                  <Avatar
+                    src={product?.productId.mainImageUrl}
+                    shape="square"
+                    size={64}
+                  />
+                }
+                title={
+                  <Typography.Text strong>
+                    {product.productId.productName}
+                  </Typography.Text>
+                }
+                description={
+                  <>
+                    <Typography.Text>
+                      Fiyat: ${product.productId.price}
                     </Typography.Text>
-                  }
-                  description={
-                    <>
-                      <Typography.Text>Price: ${product.price}</Typography.Text>
-                      <br />
-                      <Typography.Text>Color: {product.color}</Typography.Text>
-                    </>
-                  }
-                />
-                <div style={{ display: "flex", alignItems: "center" }}>
+                    <br />
+                    <Typography.Text>
+                      Renk: {product.productId.color}
+                    </Typography.Text>
+                  </>
+                }
+              />
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <Button
+                  type="default"
+                  shape="circle"
+                  // onClick={() => decreaseQuantity(product._id)}
+                  style={{ margin: "0 5px" }}
+                >
+                  -
+                </Button>
+                <span style={{ margin: "0 12px", fontSize: "16px" }}>
+                  {product?.quantity}
+                </span>
+                <Button
+                  type="default"
+                  shape="circle"
+                  // onClick={() => increaseQuantity(product._id)}
+                  style={{ margin: "0 5px" }}
+                >
+                  +
+                </Button>
+                <Space style={{ marginLeft: 12 }}>
                   <Button
-                    type="default"
                     shape="circle"
-                    // onClick={() => decreaseQuantity(product._id)}
+                    icon={<IoMdEye />}
+                    // onClick={() => showModal(product)}
+                    style={{ margin: "0 5px" }}
+                  />
+                  <Popconfirm
+                    title="Ürünü sil"
+                    description="Bu ürünü silmek istediğinize emin misiniz?"
+                    icon={<QuestionCircleOutlined style={{ color: "red" }} />}
                   >
-                    -
-                  </Button>
-                  <span style={{ margin: "0 12px", fontSize: "16px" }}>
-                    {product.quantity}
-                  </span>
-                  <Button
-                    type="default"
-                    shape="circle"
-                    // onClick={() => increaseQuantity(product._id)}
-                  >
-                    +
-                  </Button>
-                  <Space style={{ marginLeft: 12 }}>
-                    <Button
-                      shape="circle"
-                      icon={<IoMdEye />}
-                      onClick={() => showModal(product)}
-                    />
-                    <Popconfirm
-                      title="Delete the product"
-                      description="Are you sure to delete this product?"
-                      icon={<QuestionCircleOutlined style={{ color: "red" }} />}
-                    >
-                      <Button
-                        shape="circle"
-                        icon={<DeleteOutlined />}
-                        danger
-                        // onClick={() =>
-                        //   setProducts(
-                        //     products.filter((p) => p._id !== product._id)
-                        //   )
-                        // }
-                      />
-                    </Popconfirm>
-                  </Space>
-                </div>
-              </List.Item>
-            )}
-          />
-        ) : (
-          <Typography.Text style={{ color: "#ff4d4f" }}>
-            Your cart is empty.
-          </Typography.Text>
-        )}
+                    <Button shape="circle" icon={<DeleteOutlined />} danger />
+                  </Popconfirm>
+                </Space>
+              </div>
+            </List.Item>
+          )}
+        />
       </Drawer>
 
       <Modal
@@ -228,7 +156,6 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
           </Typography.Title>
         }
         visible={isModalVisible}
-        onCancel={handleModalClose}
         footer={null}
         bodyStyle={{ padding: "20px", textAlign: "center" }}
       >
@@ -245,16 +172,16 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
               }}
             />
             <Typography.Paragraph>
-              <Typography.Text strong>Description:</Typography.Text>{" "}
+              <Typography.Text strong>Açıklama:</Typography.Text>{" "}
               {selectedProduct.description}
             </Typography.Paragraph>
             <Divider />
             <Space size="middle" direction="vertical">
               <Typography.Text strong>
-                Color: {selectedProduct.color}
+                Renk: {selectedProduct.color}
               </Typography.Text>
               <Typography.Text strong>
-                Price: ${selectedProduct.price}
+                Fiyat: ${selectedProduct.price}
               </Typography.Text>
             </Space>
             <Button
@@ -265,9 +192,9 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                 borderColor: "#1890ff",
                 borderRadius: "5px",
               }}
-              onClick={handleModalClose}
+              // onClick={handleModalClose}
             >
-              Close
+              Kapat
             </Button>
           </>
         )}
