@@ -30,7 +30,7 @@ const AddComment: FC<IAddCommentProps> = ({ productId }) => {
   });
 
   const userData = getUserFromToken();
-  const [addComment] = useAddReviewToProductMutation();
+  const [addComment, { isLoading: isLoadingAddComment }] = useAddReviewToProductMutation();
 
   const onSubmit = (data: IFormField) => {
     const { rating, comment } = data;
@@ -77,11 +77,15 @@ const AddComment: FC<IAddCommentProps> = ({ productId }) => {
           <Button
             type="primary"
             htmlType="submit"
+            disabled={isEmpty(userData)}
+            loading={isLoadingAddComment}
             style={{
               marginTop: "10px",
               width: "200px",
               borderRadius: "5px",
-              backgroundColor: "#40331D",
+              backgroundColor: isEmpty(userData) ? "#BFBFBF" : "#40331D", // Disabled üçün açıq boz
+              color: isEmpty(userData) ? "#666666" : "#fff", // Disabled üçün daha açıq mətni
+              cursor: isEmpty(userData) ? "not-allowed" : "pointer", // İstifadəçi üçün işarə
             }}
           >
             Send Comment

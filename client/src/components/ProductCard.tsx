@@ -148,7 +148,7 @@ const ProductCard: FC<IProps> = ({ product }) => {
               </Typography>
             ))}
           </Content>
-          <Rate defaultValue={product?.averageRating} disabled/>
+          {product?.averageRating && <Rate defaultValue={product?.averageRating} disabled/>}
         </Content>
       </Content>
 

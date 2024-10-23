@@ -7,6 +7,8 @@ const { Review } = require("../models/review");
 router.get('/:productId', async (req, res) => {
     try {
       const reviews = await Review.find({ productId: req.params.productId });
+      const product = await Product.findById(req.params.productId);
+      let averageRating;
       if (!reviews.length) {
         return res.status(200).send({ reviews: [], averageRating: 0 });
       }
@@ -20,8 +22,24 @@ router.get('/:productId', async (req, res) => {
         comments: review.comments
       }));
   
-      const averageRating = Math.floor(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length);
-  
+      if (reviews.length > 0) {
+        let totalRating = 0;
+        let totalComments = 0;
+        
+        reviews.forEach(user => {
+          user?.comments?.forEach(comment => {
+            if(comment.rating){
+              totalRating += comment.rating;
+              totalComments++;
+            }
+          });
+        });
+        averageRating = totalComments > 0 ? Math.floor(totalRating / totalComments) : 0;
+        product.averageRating = averageRating;
+        
+        await product.save();
+      }
+    
       res.status(200).json({ reviews: response, averageRating });
     } catch (err) {
       res.status(500).json({ error: 'Yorumlar alınamadı: ' + err.message });
@@ -32,29 +50,57 @@ router.get('/:productId', async (req, res) => {
     try {
       const { productId, user, rating, comment } = req.body;
       const product = await Product.findById(productId);
+  
       if (!product) {
         return res.status(404).json({ message: 'Ürün bulunamadı.' });
       }
+  
       const existingReview = await Review.findOne({ productId, 'user.id': user.id });
   
-      // if (existingReview) {
-      //   existingReview.rating = rating; 
-      //   existingReview.comments.push(comment); 
-      //   await existingReview.save();
-      // } else {
-        const newReview = new Review({ productId, user, rating, comments: [comment] });
+      let averageRating;
+  
+      if (existingReview) {
+        // Mövcud rəyi yeniləyirik
+        existingReview.rating = rating; 
+        existingReview.comments.push({ comment, rating });
+        await existingReview.save();
+      } else {
+        // Yeni rəy əlavə edirik
+        const newReview = new Review({ 
+          productId, 
+          user, 
+          rating, 
+          comments: [{ comment, rating }]
+        });
         await newReview.save();
-      //}
+      }
+  
       const reviews = await Review.find({ productId });
-      const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
-      const averageRating = (totalRating / reviews.length).toFixed(2);
-      product.averageRating = averageRating;
-      await product.save();
+      
+      if (reviews.length > 0) {
+        let totalRating = 0;
+        let totalComments = 0;
+        reviews.forEach(user => {
+          user?.comments?.forEach(comment => {
+            if(comment.rating){
+              totalRating += comment.rating;
+              totalComments++;
+            }
+          });
+        });
+        averageRating = totalComments > 0 ? Math.floor(totalRating / totalComments) : 0;
+        product.averageRating = averageRating;
+        console.log({ product });
+        
+        await product.save();
+      }
+  
       res.status(201).json({ message: 'Yorum eklendi veya güncellendi', averageRating, reviews });
     } catch (err) {
       res.status(400).json({ error: 'Yorum eklenemedi veya güncellenemedi: ' + err.message });
     }
   });
+  
   
   router.put('/api/reviews/:reviewId', async (req, res) => {
     try {
@@ -86,28 +132,60 @@ router.get('/:productId', async (req, res) => {
       res.status(500).json({ error: 'Yorumlar silinemedi: ' + err.message });
     }
   });
-  
-  router.delete('/:productId/:userId/comment', async (req, res) => {
-    try {
-      const { comment } = req.body;
-      const review = await Review.findOne({ productId: req.params.productId, 'user.id': req.params.userId });
-      if (!review) {
-        return res.status(404).json({ message: 'Yorum bulunamadı.' });
-      }
-      const commentIndex = review.comments.indexOf(comment);
-      console.log({commentIndex});
-      
-      if (commentIndex !== -1) {
-        review.comments.splice(commentIndex, 1);
-        await review.save();
-        return res.json({ message: 'Yorum silindi', review });
-      } else {
-        return res.status(401).json({ message: 'Silinmek istenen yorum bulunamadı.' });
-      }
-    } catch (err) {
-      res.status(500).json({ error: 'Yorum silinemedi: ' + err.message });
+
+router.delete('/:productId/:userId/comment/:commentId', async (req, res) => {
+  try {
+    const { productId, userId, commentId } = req.params;
+    
+    const review = await Review.findOne({ productId, 'user.id': userId });
+    const product = await Product.findById(productId);
+
+    if (!review) {
+      return res.status(404).json({ message: 'Yorum bulunamadı.' });
     }
+
+    
+    const commentIndex = review.comments.findIndex(c => c._id.toString() === commentId);
+   console.log({commentIndex});
+   
+    if (commentIndex !== -1) {
+      review.comments.splice(commentIndex, 1);
+      await review.save();
+
+      if (review.comments.length === 0) {
+        await Review.deleteOne({ _id: review._id });
+      }
+
+      const reviews = await Review.find({ productId });
+      
+      if (reviews.length > 0) {
+        let totalRating = 0;
+        let totalComments = 0;
+        
+        reviews.forEach(user => {
+          user?.comments?.forEach(comment => {
+            if(comment.rating){
+              totalRating += comment.rating;
+              totalComments++;
+            }
+          });
+        });
+        averageRating = totalComments > 0 ? Math.floor(totalRating / totalComments) : 0;
+        product.averageRating = averageRating;
+       
+        
+        await product.save();
+      }
+
+      return res.status(200).send({ message: 'Yorum silindi', review, averageRating });
+    } else {
+      return res.status(404).json({ message: 'Silinmek istenen yorum bulunamadı.' });
+    }
+  } catch (err) {
+    res.status(500).json({ error: 'Yorum silinemedi: ' + err.message });
+  }
 });
+
   
 
 module.exports = router;

@@ -9,6 +9,7 @@ const orderRouter = require("../server/routes/orderRoute");
 const basketRouter = require("../server/routes/basketRoute");
 const wishListRouter = require("../server/routes/wishList");
 const reviewRouter = require("./routes/reviewRouter");
+const logoRouter = require("./routes/logoRouter");
 const path = require("path");
 const cors = require("cors");
 
@@ -31,6 +32,7 @@ app.use("/api/orders", orderRouter);
 app.use("/api/basket", basketRouter);
 app.use("/api/wishList", wishListRouter);
 app.use("/api/reviews", reviewRouter);
+app.use("/api/settings", logoRouter);
 
 app.use("/public", express.static(path.join(__dirname, "public")));
 

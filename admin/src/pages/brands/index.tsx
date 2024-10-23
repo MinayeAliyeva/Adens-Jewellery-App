@@ -17,8 +17,6 @@ import {
   useUpdateBrandByIdMutation,
 } from "../../store/api/brand/brand-api";
 
-
-
 type OnChange = NonNullable<TableProps<ICatagoryResponse>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -31,6 +29,11 @@ export interface IFormField {
 
 const Brand: FC = () => {
   const { t } = useTranslation();
+  const [tableData, setTableData] = useState<ICatagoryResponse[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>();
+  const [filteredInfo, setFilteredInfo] = useState<Filters>({});
+  const [sortedInfo, setSortedInfo] = useState<Sorts>({});
+  
   const [getBrands, { data: brandData, isLoading: isLoadingBrand }] =
     useLazyGetBrandsQuery();
 
@@ -43,7 +46,6 @@ const Brand: FC = () => {
   const [updateBrandById, { isLoading: isLoadingUpdateBrandById }] =
     useUpdateBrandByIdMutation();
 
-  const [tableData, setTableData] = useState<ICatagoryResponse[]>([]);
 
   const isLoading =
     isLoadingCreatedBrand ||
@@ -52,20 +54,19 @@ const Brand: FC = () => {
 
   useEffect(() => {
     if (!isLoading) {
-      getBrands().then((res) => setTableData(res?.data!));
+      getBrands().then((res) => {
+        setTableData(res?.data!);
+      });
     }
   }, [isLoading]);
 
-  const [selectedId, setSelectedId] = useState<string | null>();
 
-  const [filteredInfo, setFilteredInfo] = useState<Filters>({});
-  const [sortedInfo, setSortedInfo] = useState<Sorts>({});
 
   const handleChange: OnChange = (pagination, filters, sorter) => {
     setFilteredInfo(filters);
     setSortedInfo(sorter as Sorts);
   };
- 
+
   const clearFilters = () => {
     setFilteredInfo({});
   };
@@ -87,6 +88,8 @@ const Brand: FC = () => {
     reset,
     control,
     formState: { errors },
+    setError,
+    clearErrors,
   } = useForm<IFormField>({
     resolver: yupResolver(schema),
   });
@@ -95,59 +98,66 @@ const Brand: FC = () => {
     if (selectedId) {
       updateBrandById({ name: category?.name, id: category?.id! });
     } else {
-      craeteBrand({ name: category?.name });
+      craeteBrand({ name: category?.name }).then((res:any) => {
+        if (res?.error?.data)
+        setError("name", { type: "required", message: res?.error?.data });
+     
+      });
     }
     setSelectedId(null);
     reset();
   };
 
-  const editCategory = (id?: string | null) => {
+  const editBrand = (id?: string | null) => {
     reset();
+    clearErrors("name");
     setSelectedId(id!);
   };
 
   const onCancel = () => {
     reset();
+    clearErrors("name");
     setSelectedId(null);
     setTableData(brandData!);
   };
 
-  const onCreateCategory = () => {
+  const onCreateBrand = () => {
     if (tableData?.find((data) => data?._id === "")) return;
-    setTableData((prev) => [{ name: "", _id: "" }, ...prev! ?? []]);
+    setTableData((prev) => [{ name: "", _id: "" }, ...(prev! ?? [])]);
   };
   const onDeleteCategoryById = (id: string) => {
     deleteBrandById(id);
   };
 
   const memorizedColumns = useMemo(
-    () =>columns({
-      handleSubmit,
-      onFinish,
-      errors,
-      control,
-      filteredInfo,
-      setAgeSort,
-      sortedInfo,
-      editCategory,
-      selectedId,
-      onCancel,
-      onDeleteCategoryById,
-      t
-    }),
+    () =>
+      columns({
+        handleSubmit,
+        onFinish,
+        errors,
+        control,
+        filteredInfo,
+        setAgeSort,
+        sortedInfo,
+        editBrand,
+        selectedId,
+        onCancel,
+        onDeleteCategoryById,
+        t,
+      }),
     [
       errors,
       control,
       filteredInfo,
       setAgeSort,
       sortedInfo,
-      editCategory,
+      editBrand,
       selectedId,
       onCancel,
       onDeleteCategoryById,
-      t
+      t,
     ]
-  )
+  );
 
   return (
     <>
@@ -168,7 +178,7 @@ const Brand: FC = () => {
           icon={<IoIosAddCircleOutline />}
           variant="outlined"
           buttonText="Create New Brand"
-          onClick={onCreateCategory}
+          onClick={onCreateBrand}
         />
       </Space>
       <Form>
@@ -178,7 +188,6 @@ const Brand: FC = () => {
           loading={isLoadingBrand || isLoading}
           dataSource={tableData}
           onChange={handleChange}
-       
         />
       </Form>
     </>
