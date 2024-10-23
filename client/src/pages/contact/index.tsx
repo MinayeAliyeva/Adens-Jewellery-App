@@ -10,16 +10,26 @@ const Contact = () => {
 
   return (
     <Content
-      style={{ padding: "50px", backgroundColor: "#f0f2f5", height: "100vh" }}
+      style={{
+        padding: "50px",
+        backgroundColor: "#f0f2f5",
+        height: "100vh",
+      }}
     >
-      <Row gutter={16} justify="center">
-        <Col xs={24} sm={16} md={12}>
+      <Row gutter={16} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
+        <Col
+          xs={24}
+          sm={16}
+          md={12}
+         
+        >
           <Card
             style={{
               borderRadius: "10px",
               boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
               padding: "30px",
               marginBottom: "30px",
+              marginTop: "150px",
             }}
           >
             <Title level={2} style={{ textAlign: "center" }}>

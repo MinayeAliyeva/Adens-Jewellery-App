@@ -1,17 +1,28 @@
 import { Layout, Typography, Collapse, Row, Col, Button } from "antd";
 import { FC } from "react";
 
-const {  Content } = Layout;
+const { Content } = Layout;
 const { Title } = Typography;
 const { Panel } = Collapse;
 
 const FAQPage: FC = () => {
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Content style={{ padding: "40px", backgroundColor: "#ffffff" }}>
+    <Layout>
+      <Content
+        style={{
+          padding: "40px",
+          backgroundColor: "#ffffff",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Row justify="center">
-          <Col span={20}>
-            <Title level={2} style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <Col style={{ width: "1500px" }}>
+            <Title
+              level={2}
+              style={{ textAlign: "center", marginBottom: "40px" }}
+            >
               Frequently Asked Questions
             </Title>
             <Collapse defaultActiveKey={["1"]} accordion>
@@ -69,11 +80,23 @@ const FAQPage: FC = () => {
                 type="primary"
                 size="large"
                 href="/contact"
-                style={{ marginRight: "20px", padding: '10px 20px' }} // Buton boyutları artırıldı
+                style={{
+                  marginRight: "20px",
+                  padding: "10px 20px",
+                  backgroundColor: "rgb(64, 51, 29)",
+                }}
               >
                 Contact Us
               </Button>
-              <Button type="default" size="large" href="/shop" style={{ padding: '10px 20px' }}>
+              <Button
+                type="default"
+                size="large"
+                href="/shop"
+                style={{
+                  padding: "10px 20px",
+                  color: "rgb(64, 51, 29)",
+                }}
+              >
                 Shop Now
               </Button>
             </div>

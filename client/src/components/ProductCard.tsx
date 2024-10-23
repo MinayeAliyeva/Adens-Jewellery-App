@@ -62,7 +62,6 @@ const ProductCard: FC<IProps> = ({ product }) => {
     }).then((res) => {
       if (isEmpty(res?.data)) return;
       dispatch(setBasketProductCount(res?.data.basket?.products.length));
-
       if (res?.data.basket?.products.find((p) => p.quantity === 1)) {
         showSuccessToast("product sebete elave edildi");
       } else showSuccessToast("sebetedeki mehsulun miqdati  yenilendi");
@@ -79,15 +78,17 @@ const ProductCard: FC<IProps> = ({ product }) => {
       userId: decodedUser?._id,
     }).then((res) => {
       console.log({ res });
-      if(isEmpty(res?.data)) return;
-        dispatch(setFavoriteProductCount(res.data?.wishList?.products?.length ?? 0));
+      if (isEmpty(res?.data)) return;
+      dispatch(
+        setFavoriteProductCount(res.data?.wishList?.products?.length ?? 0)
+      );
     });
   };
 
   return (
     <Content
       className="w-full max-w-md transition-transform hover:scale-105 relative group"
-      style={{ height: "600px", width: "400px" }}
+      style={{ height: "600px", width: "400px",padding:'20px' }}
     >
       <Content className="relative w-full h-2/3 overflow-hidden">
         <img
@@ -138,42 +139,44 @@ const ProductCard: FC<IProps> = ({ product }) => {
         </Content>
 
         <Content className="absolute bottom-4 left-3 right-3 flex flex-col items-center bg-white bg-opacity-80 p-4 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <Content className="flex space-x-6">
+          <Content className="flex space-x-1">
             {product?.size?.map((size: string) => (
               <Typography
                 key={size}
                 className="border px-4 py-1 transition duration-300 hover:bg-white"
               >
-                Size: {size}
+                {size}
               </Typography>
             ))}
           </Content>
-          {product?.averageRating && <Rate defaultValue={product?.averageRating} disabled/>}
+          {product?.averageRating && (
+            <Rate defaultValue={product?.averageRating} disabled />
+          )}
         </Content>
       </Content>
 
-      <Content className="mt-6 h-1/3">
-        <Typography className="text-xl font-semibold text-gray-800">
-          {product?.productName}
+      <Content className="mt-2 h-1/3">
+        <Typography className="text-[16px] font-semibold text-gray-800">
+          Product Name: {product?.productName}
         </Typography>
-        <Typography className="text-xl font-semibold text-gray-800">
+        <Typography className="text-[16px] font-semibold text-gray-800">
           Category: {product?.category?.name}
         </Typography>
-        <Typography className="text-xl font-semibold text-gray-800">
+        <Typography className="text-[16px] font-semibold text-gray-800">
           Brand: {product?.brand?.name}
         </Typography>
-        <Typography className="text-xl font-semibold text-gray-800">
+        <Typography className="text-[16px] font-semibold text-gray-800">
           Price: {product?.price}
         </Typography>
 
-        <Typography className="text-xl font-semibold text-gray-800">
-          weight: {product?.weight}
+        <Typography className="text-[16px] font-semibold text-gray-800">
+          Weight: {product?.weight}
         </Typography>
-        <Typography className="text-xl font-semibold text-gray-800">
-          dimensions: {product?.dimensions}
+        <Typography className="text-[16px] font-semibold text-gray-800">
+          Dimensions: {product?.dimensions}
         </Typography>
-        <Typography className="text-xl font-semibold text-gray-800">
-          warrantyDuration: {product?.warrantyDuration}
+        <Typography className="text-[16px] font-semibold text-gray-800">
+          WarrantyDuration: {product?.warrantyDuration}
         </Typography>
 
         {product?.totalQty > 0 ? (
@@ -181,7 +184,7 @@ const ProductCard: FC<IProps> = ({ product }) => {
         ) : (
           <Content className="flex items-center mt-2">
             <Typography className="text-red-600 mr-2">Out of Stock</Typography>
-            <IoIosNotificationsOutline />
+            <IoIosNotificationsOutline style={{cursor:'pointer',fontSize:'20px'}} />
           </Content>
         )}
       </Content>

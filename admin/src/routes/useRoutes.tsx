@@ -6,7 +6,6 @@ import Products from "../pages/products";
 import PrivateRouting from "./PrivateRouting";
 import MainLayout from "../layout/MainLayout";
 import Category from "../pages/categories";
-import UsersTable from "../pages/users/UsersTable";
 import Brand from "../pages/brands";
 import SettingsPage from "../pages/settings";
 import Users from "../pages/users";
