@@ -25,19 +25,20 @@ const CommentList: FC<ICommentProps> = ({ productId }) => {
 
   const [deleteAllComment] = useDeleteAllCommentFromReviewsMutation();
 
+  console.log({reviewData});
+  
   const transformReviewsData = reviewData?.reviews?.map((review: any) => ({
     userName: review.user.firstName + " " + review.user.lastName,
     userId: review.user.id,
     body: [
       {
         content: review.comments,
-        rating: review.rating,
         userId: review.user.id,
       },
     ],
   }));
-  const onDeleteComment = (comment: string) => {
-    deleteComment({ productId, userId: userData?._id!, comment }).then(
+  const onDeleteComment = (commentId: string) => {
+    deleteComment({ productId, userId: userData?._id!, commentId }).then(
       (res) => {
         console.log({ res });
       }
@@ -47,7 +48,8 @@ const CommentList: FC<ICommentProps> = ({ productId }) => {
   const onDeleteAllComment = () => {
     deleteAllComment({ userId: userData?._id!, productId });
   };
-
+  console.log({transformReviewsData});
+  
   return (
     <>
       <Card
@@ -110,19 +112,19 @@ const CommentList: FC<ICommentProps> = ({ productId }) => {
                         }}
                       >
                         <Content style={{ marginLeft: "10px" }}>
-                          {item?.content?.map((comment: any) => (
+                          {item?.content?.map((data: any) => (
                             <Content style={{ display: "flex" }}>
                               {userData?._id === item.userId && (
                                 <MdDeleteOutline
-                                  onClick={() => onDeleteComment(comment)}
+                                  onClick={() => onDeleteComment(data?._id)}
                                   className="text-red-500 text-2xl cursor-pointer"
                                 />
                               )}
-                              <Typography.Text>{comment}</Typography.Text>
+                              <Typography.Text>{data?.comment}</Typography.Text>
+                             { data?.rating && <Rate disabled value={data?.rating} />}
                             </Content>
                           ))}
                         </Content>
-                        <Rate disabled value={item?.rating} />
                       </Content>
                     );
                   })}

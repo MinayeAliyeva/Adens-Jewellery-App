@@ -24,7 +24,7 @@ export const columns = ({
   editTable,
   isEdit,
   isCreate,
-  editCategory,
+  editBrand,
   selectedId,
   errors,
   onFinish,
@@ -41,7 +41,7 @@ export const columns = ({
   editTable?: (isEdit: boolean) => void;
   isEdit?: boolean;
   isCreate?: boolean;
-  editCategory?: (id: string) => void;
+  editBrand?: (id: string) => void;
   selectedId?: string | null;
   errors: FieldErrors<IFormField>;
   onFinish: (values: IFormField) => void;
@@ -135,12 +135,12 @@ export const columns = ({
       return (
         <div>
           {(record._id && record._id !== selectedId) ||
-          record?._id === undefined ? (
+          record?._id === undefined || (record?._id === undefined && !errors?.name?.message) ? (
             <Content style={{ display: "flex", gap: "20px" }}>
               <Button
                 htmlType="button"
                 icon={<CiEdit />}
-                onClick={() => editCategory?.(record._id)}
+                onClick={() => editBrand?.(record._id)}
                 color="primary"
                 variant="dashed"
               />

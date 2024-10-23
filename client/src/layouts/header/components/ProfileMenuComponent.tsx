@@ -3,16 +3,21 @@ import { UserOutlined } from "@ant-design/icons";
 import { menuItems } from "../constants";
 import { setLogout } from "../../../redux/features/authSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const ProfileMenuComponent = () => {
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   const handleLogout = () => {
     dispatch(setLogout());
+    navigate("/");
   };
 
   const handleMenuClick: MenuProps["onClick"] = (e) => {
     if(e.key === "logout"){
       handleLogout();
+    }else if(e.key === "profil"){
+      navigate("/profile");
     }
   };
 

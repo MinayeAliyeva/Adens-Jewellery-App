@@ -15,8 +15,8 @@ const initialValue = {
   sortPriceAsc: false,
   sortRaitingDesc: false,
   sortRaitingAsc: false,
-  sorCreatetDateAsc: false,
-  sorCreatetDateDesc: false,
+  sortCreatetDateAsc: false,
+  sortCreateDateDesc: false, 
 };
 const RangeDrawerComponent: FC<IDrawerComponentProps> = ({
   open,
@@ -54,7 +54,7 @@ const RangeDrawerComponent: FC<IDrawerComponentProps> = ({
         <Space direction="vertical" style={{ width: "100%" }}>
           <Typography.Title level={5}>Price</Typography.Title>
           <Checkbox
-            name="sortPrice"
+            name="sortPriceDesc"
             value="desc"
             checked={checkedValues.sortPriceDesc}
             onChange={(e) => handleCheckboxChange({checked: e.target.checked, option:'sortPriceDesc', sort:'desc'})}
@@ -62,7 +62,7 @@ const RangeDrawerComponent: FC<IDrawerComponentProps> = ({
             Yüksekten Aşağıya
           </Checkbox>
           <Checkbox
-            name="sortPrice"
+            name="sortPriceAsc"
             value="asc"
             checked={checkedValues.sortPriceAsc}
             onChange={(e) => handleCheckboxChange({checked: e.target.checked, option:'sortPriceAsc', sort:'asc'})}
@@ -75,7 +75,7 @@ const RangeDrawerComponent: FC<IDrawerComponentProps> = ({
         <Space direction="vertical" style={{ width: "100%" }}>
           <Typography.Title level={5}>Raiting</Typography.Title>
           <Checkbox
-            name="sortPrice"
+            name="sortRaitingDesc"
             value="desc"
             checked={checkedValues.sortRaitingDesc}
             onChange={(e) => handleCheckboxChange({checked: e.target.checked, option:'sortRaitingDesc', sort:'desc'})}
@@ -83,7 +83,7 @@ const RangeDrawerComponent: FC<IDrawerComponentProps> = ({
             Yüksekten Aşağıya
           </Checkbox>
           <Checkbox
-            name="sortPrice"
+            name="sortRaitingAsc"
             value="asc"
             checked={checkedValues.sortRaitingAsc}
             onChange={(e) => handleCheckboxChange({checked: e.target.checked, option:'sortRaitingAsc', sort:'asc'})}
@@ -97,18 +97,18 @@ const RangeDrawerComponent: FC<IDrawerComponentProps> = ({
         <Space direction="vertical" style={{ width: "100%" }}>
           <Typography.Title level={5}>Yaranma Tarxi</Typography.Title>
           <Checkbox
-            name="sortPrice"
+            name="sortCreateDateDesc"
             value="desc"
-            checked={checkedValues.sortRaitingDesc}
+            checked={checkedValues.sortCreateDateDesc}
             onChange={(e) => handleCheckboxChange({checked: e.target.checked, option:'sortCreateDateDesc', sort:'desc'})}
           >
             Yüksekten Aşağıya
           </Checkbox>
           <Checkbox
-            name="sortPrice"
+            name="sortCreatetDateAsc"
             value="asc"
-            checked={checkedValues.sortRaitingAsc}
-            onChange={(e) => handleCheckboxChange({checked: e.target.checked, option:'sorCreatetDateAsc', sort:'asc'})}
+            checked={checkedValues.sortCreatetDateAsc}
+            onChange={(e) => handleCheckboxChange({checked: e.target.checked, option:'sortCreatetDateAsc', sort:'asc'})}
           >
             Düşükten Yükseğe
           </Checkbox>

@@ -10,6 +10,7 @@ import { Modal, Typography } from "antd";
 import ButtonComponent from "../../../components/form-components/ButtonComponent";
 import { useGetBasketByUserIdQuery } from "../../../redux/api/basket/basket-api";
 import { useNavigate } from "react-router-dom";
+import { isEmpty } from "lodash";
 
 const ShoppingCart = () => {
   const navigate = useNavigate();
@@ -27,8 +28,7 @@ const ShoppingCart = () => {
   const onClose = () => {
     setIsDrawerVisible(false);
   };
-  const basketDataCount = count > 0 ?  count : (basketData?.products?.length || 0);
-  console.log({basketDataCount});
+  const basketDataCount = isEmpty(userData) ? 0 : count || basketData?.products?.length || 0;
   const onModalCancle = () => {
     setIsModalOpen(false);
   };

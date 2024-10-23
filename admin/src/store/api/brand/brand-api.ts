@@ -10,45 +10,42 @@ export const brandApi = createApi({
     //   Authorization: `Bearer ${localStorage.getItem("token")}` || "",
     // },
   }),
-  tagTypes: ["Brand"],
+
   endpoints: (builder) => ({
+    // Tüm markaları getir
     getBrands: builder.query<IBrandsResponse[], void>({
       query: () => `/api/brands`,
-      providesTags: (result) => 
-        result 
-          ? result.map(({ _id }) => ({ type: "Brand", _id })) 
-          : ["Brand"],
     }),
-    createBrand: builder.mutation<IBrandsResponse[], { name: string }>({
+
+    createBrand: builder.mutation<IBrandsResponse, { name: string }>({
       query: (body) => ({
         url: "/api/brands",
         method: "POST",
         body,
       }),
-      invalidatesTags: ["Brand"],
     }),
+
     deleteBrandById: builder.mutation<IBrandsResponse, string>({
       query: (id) => ({
         url: `/api/brands/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Brand", id }],
     }),
+
     updateBrandById: builder.mutation<IBrandsResponse, { name: string; id: string }>({
       query: (body) => ({
-        url: `/api/brands/${body?.id}`,
+        url: `/api/brands/${body.id}`,
         method: "PUT",
         body,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "Brand", id }],
     }),
   }),
 });
 
 export const {
-  useGetBrandsQuery,
-  useLazyGetBrandsQuery,
-  useCreateBrandMutation,
-  useDeleteBrandByIdMutation,
-  useUpdateBrandByIdMutation,
+  useGetBrandsQuery, 
+  useLazyGetBrandsQuery, 
+  useCreateBrandMutation, 
+  useDeleteBrandByIdMutation, 
+  useUpdateBrandByIdMutation, 
 } = brandApi;

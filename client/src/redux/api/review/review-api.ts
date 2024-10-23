@@ -44,11 +44,10 @@ export const reviewApi = createApi({
     }),
 
     // Belirli bir kullanıcıdan, belirli bir ürüne ait bir yorumu sil
-    deleteCommentFromReviews: builder.mutation<any, { productId: string, userId: string, comment: string }>({
-      query: ({ productId, userId, comment }) => ({
-        url: `/api/reviews/${productId}/${userId}/comment`,
+    deleteCommentFromReviews: builder.mutation<any, { productId: string, userId: string, commentId: string }>({
+      query: ({ productId, userId, commentId }) => ({
+        url: `/api/reviews/${productId}/${userId}/comment/${commentId}`,
         method: "DELETE",
-        body: { comment },
       }),
       invalidatesTags: (result, error, { productId }) => 
         [{ type: 'Review', id: productId }],  // Yorum silindiğinde cache'i invalidate eder
