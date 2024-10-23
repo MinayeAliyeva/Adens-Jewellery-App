@@ -1,10 +1,12 @@
 import { Col, Layout, Row, Typography } from "antd";
 import { ButtonStyle, ColStyle, TypographyStyle } from "./style";
 import ButtonComponent from "../../components/form-components/ButtonComponent";
+import { Link, useNavigate } from "react-router-dom";
 const infoImg = "./assets/images/aboutbg.jpg";
 const infoImg2 = "./assets/images/aboutbg2.jpg";
 
 const About = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Layout style={{ padding: "20px" }}>
@@ -17,7 +19,11 @@ const About = () => {
               Together with you, enhance your temperament – affirm your
               luxurious beauty with impressive designs…
             </Typography>
-            <ButtonComponent buttonText={"Shop Now"} style={ButtonStyle} />
+            <ButtonComponent
+              onClick={() => navigate("/shop")}
+              buttonText={"Shop Now"}
+              style={ButtonStyle}
+            />
           </Col>
           <Col span={12}>
             <img
@@ -45,7 +51,11 @@ const About = () => {
               Genuine gold and silver jewelry for young people, elegant design,
               diverse designs help you perfect and transform your daily style
             </Typography>
-            <ButtonComponent buttonText={"Shop Now"} style={ButtonStyle} />
+            <ButtonComponent
+              onClick={() => navigate("/shop")}
+              buttonText={"Shop Now"}
+              style={ButtonStyle}
+            />
           </Col>
         </Row>
       </Layout>

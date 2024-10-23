@@ -141,22 +141,7 @@ const Shop = () => {
                     </Typography.Text>
                   )}
                 </div>
-                //!Add
-                <div style={{ width: "450px" }}>
-                  <InputComponent
-                    style={{ padding: "7px 10px" }}
-                    size="large"
-                    name="productName"
-                    suffix={<SearchOutlined style={{ fontSize: "30px" }} />}
-                    control={control as any}
-                    placeholder="Search product by category name..."
-                  />
-                  {errors?.productName?.message && (
-                    <Typography.Text style={{ color: "red", marginTop: "5px" }}>
-                      {errors?.productName?.message}
-                    </Typography.Text>
-                  )}
-                </div>
+       
                 <OpenDrawer onCloseTakeDrawerValues={onSortong}/>
                 {/* <TbArrowsDownUp
                   style={{ fontSize: "30px" }}

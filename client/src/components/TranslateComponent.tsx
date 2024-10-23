@@ -1,17 +1,18 @@
 import { Content } from "antd/es/layout/layout";
 import i18n from "../i18n";
 import ButtonComponent from "./form-components/ButtonComponent";
-// import { ButtonComponent } from "./ButtonComponent";
 const az = "/assets/images/lang-img/az.svg";
 const en = "/assets/images/lang-img/en.svg";
 
 const changeLanguage = (lng: string) => {
   i18n.changeLanguage(lng);
+  console.log("lng", lng);
 };
 
 const TranslateComponent = () => {
   return (
-    <Content style={{marginLeft: "60px"}}>
+    <Content style={{ marginLeft: "60px" }}>
+      
       <ButtonComponent
         type="text"
         onClick={() => changeLanguage("az")}
@@ -26,6 +27,7 @@ const TranslateComponent = () => {
           backgroundSize: "cover",
         }}
       />
+
       <ButtonComponent
         type="text"
         onClick={() => changeLanguage("en")}

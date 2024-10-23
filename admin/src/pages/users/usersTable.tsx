@@ -41,7 +41,7 @@ const UsersTable: FC<{ data: any[] }> = ({ data }) => {
     { id: userId }
   );
   
-  console.log("userBasketData", userBasketData?.products);
+
 
   return (
     <Table<DataType>

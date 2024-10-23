@@ -1,6 +1,6 @@
 import { Drawer, Button, Typography, Divider, Switch, Space } from "antd";
 import { FC, useState, useEffect } from "react";
-import { LanguageComponent } from "./header/components";
+
 import { MoonOutlined, SunOutlined } from "@ant-design/icons";
 
 interface ISettingsSidebarProps {
@@ -49,7 +49,7 @@ const SettingsSidebar: FC<ISettingsSidebarProps> = ({
       <Typography.Title level={4} style={{ marginBottom: 0 }}>
         Dil Seçimi
       </Typography.Title>
-      <LanguageComponent />
+
       <Divider />
 
       <Typography.Title level={4} style={{ marginBottom: 0 }}>

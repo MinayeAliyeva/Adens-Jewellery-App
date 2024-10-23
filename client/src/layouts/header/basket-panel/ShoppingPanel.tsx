@@ -11,7 +11,7 @@ import {
   Space,
   Popconfirm,
 } from "antd";
-import { Dispatch, FC, memo, SetStateAction, useEffect, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { IoIosSend, IoMdEye } from "react-icons/io";
 import { getUserFromToken } from "../../../shared/helpers/authStorage";
 import {
@@ -45,7 +45,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
       data: IBasketResponse;
       isLoading: boolean;
     }>();
-    
+
   const [addProductToBasket, { isLoading: isLoadingAddProductToBasket }] =
     useAddProductToBasketMutation({});
 
@@ -56,11 +56,12 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
 
   useEffect(() => {
     if (isDrawerVisible && userData?._id) {
-      getBasket({ id: userData?._id ?? "" })
+      getBasket({ id: userData?._id ?? "" });
     }
   }, [userData?._id, isDrawerVisible]);
 
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  console.log("selectedProduct", selectedProduct);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -88,7 +89,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
     setSelectedProduct(null);
     setIsModalVisible(false);
   };
-  
+
   const onDeleteProductFromBasket = (productId: string) => {
     deleteProductFromBasket({ userId: userData?._id ?? "", productId }).then(
       (res) => {
@@ -99,7 +100,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
       }
     );
   };
-  
+
   const isLoading =
     isLoadingBasket ||
     isLoadingAddProductToBasket ||
@@ -167,6 +168,13 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                       <Typography.Text>
                         Renk: {product.productId.color}
                       </Typography.Text>
+
+                      <Typography.Text>
+                        Category: {product.productId.catetogy}
+                      </Typography.Text>
+                      <Typography.Text>
+                        Size: {product.productId.catetogy}
+                      </Typography.Text>
                     </>
                   }
                 />
@@ -217,54 +225,54 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
         </SpinComponent>
       </Drawer>
       <Modal
-        title={
-          <Typography.Title level={3}>
-            {selectedProduct?.productName}
-          </Typography.Title>
-        }
+        width={750}
+        height={500}
         onClose={onCloseSelectedProductInfoModal}
         onCancel={onCloseSelectedProductInfoModal}
         visible={isModalVisible}
         footer={null}
-        bodyStyle={{ padding: "20px", textAlign: "center" }}
       >
         {selectedProduct && (
           <>
             <Avatar
               src={selectedProduct.mainImageUrl}
-              size={150}
+              size={400}
               shape="square"
               style={{
                 marginBottom: "20px",
                 borderRadius: "10px",
                 border: "2px solid #1890ff",
+                width: "100%",
+                objectFit: "cover",
               }}
             />
-            <Typography.Paragraph>
-              <Typography.Text strong>Açıklama:</Typography.Text>{" "}
-              {selectedProduct.description}
-            </Typography.Paragraph>
-            <Divider />
+            {/* <Space>
+            
+            </Space> */}
+
             <Space size="middle" direction="vertical">
               <Typography.Text strong>
-                Renk: {selectedProduct.color}
+                Product Name: {selectedProduct?.productName}
               </Typography.Text>
               <Typography.Text strong>
-                Fiyat: ${selectedProduct.price}
+                Description: {selectedProduct.description}
+              </Typography.Text>{" "}
+              <Typography.Text strong>
+                Color: {selectedProduct.color}
+              </Typography.Text>
+              <Typography.Text strong>
+                Price: ${selectedProduct.price}
+              </Typography.Text>
+              <Typography.Text strong>
+                Category: {selectedProduct.category}
+              </Typography.Text>
+              <Typography.Text strong>
+                size:{" "}
+                {selectedProduct.size?.map((size) =>
+                  Array.isArray(size) ? size.split(",") : size
+                )}
               </Typography.Text>
             </Space>
-            <Button
-              type="primary"
-              style={{
-                marginTop: "20px",
-                backgroundColor: "#1890ff",
-                borderColor: "#1890ff",
-                borderRadius: "5px",
-              }}
-              onClick={onCloseSelectedProductInfoModal}
-            >
-              Kapat
-            </Button>
           </>
         )}
       </Modal>

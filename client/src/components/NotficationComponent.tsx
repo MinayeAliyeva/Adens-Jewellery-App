@@ -1,5 +1,5 @@
 import { toast } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'; // Toastify stilləri yüklə
+import 'react-toastify/dist/ReactToastify.css'; 
 
 export const showSuccessToast = (message: string) => {
   toast.success(message, {

@@ -88,7 +88,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
   const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {
     onFilter?.(values!);
   };
-  //!TODO: Add CHECKING Min Weight  INPUT MIN MAX +++
+
   //! Button style and side bar style editing  calback take loading and give submit button loading={loading} and disble={loading}
 
   const clearFilters = () => {

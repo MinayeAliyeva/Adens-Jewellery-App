@@ -1,4 +1,4 @@
-import { Avatar, Badge, Space } from "antd";
+import { Badge, Space } from "antd";
 import { SpaceSize } from "antd/es/space";
 import { FC, ReactElement, ReactNode } from "react";
 
