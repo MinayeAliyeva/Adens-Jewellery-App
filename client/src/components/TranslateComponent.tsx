@@ -1,11 +1,11 @@
 import { Content } from "antd/es/layout/layout";
-import i18n from "../i18n";
+// import i18n from "../i18n";
 import ButtonComponent from "./form-components/ButtonComponent";
 const az = "/assets/images/lang-img/az.svg";
 const en = "/assets/images/lang-img/en.svg";
 
 const changeLanguage = (lng: string) => {
-  i18n.changeLanguage(lng);
+  // i18n.changeLanguage(lng);
   console.log("lng", lng);
 };
 

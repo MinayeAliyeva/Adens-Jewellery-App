@@ -1,144 +1,168 @@
-import React from 'react';
-import { Layout, Avatar, Typography, Row, Col, Card, Button, Divider, List } from 'antd';
+import {
+  Layout,
+  Avatar,
+  Typography,
+  Row,
+  Col,
+  Card,
+  Button,
+  Divider,
+  List,
+} from "antd";
+import { getUserFromToken } from "../../shared/helpers/authStorage";
+import { useEffect } from "react";
+import { useLazyGetFavoriteByUserIdQuery } from "../../redux/api/favorite/favorite-api";
+import { useSelector } from "react-redux";
+import { getUserFavoriteProductCountSelector } from "../../redux/store";
+import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
+import { useLazyGetBasketByUserIdQuery } from "../../redux/api/basket/basket-api";
+import { IBasketResponse } from "../../redux/api/basket/modules";
 
-const { Header, Content, Footer } = Layout;
+const { Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
 
+interface IDecodedValue {
+  isAdmin: boolean;
+  _id: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  email: string;
+}
+
 const UserProfile = () => {
-  const user = {
-    name: 'John Doe',
-    email: 'johndoe@example.com',
-    phone: '+1234567890',
-    bio: 'Passionate about technology and design. Always eager to learn new things.',
-    profileImageUrl: 'https://via.placeholder.com/150',
-  };
+  const userData: IDecodedValue | null = getUserFromToken();
+  const favoriteCount = useSelector(getUserFavoriteProductCountSelector);
+  const [
+    getUserFavoriteData,
+    { data: userFavoriteDate, isFetching: isFetchingUserFavorite },
+  ] = useLazyGetFavoriteByUserIdQuery();
+  const [getBasket, { data: basketData, isLoading: isLoadingBasket }] =
+    useLazyGetBasketByUserIdQuery<{
+      data: IBasketResponse;
+      isLoading: boolean;
+    }>();
 
-  // Örnek sipariş verileri
-  const orders = [
-    {
-      id: '1',
-      productName: 'Florence Sosa',
-      price: 132,
-      date: '09.10.2024',
-      status: 'Delivered',
-    },
-    {
-      id: '2',
-      productName: 'Elegant Ring',
-      price: 99,
-      date: '05.10.2024',
-      status: 'Pending',
-    },
-  ];
-
-  // Örnek favori ürünler
-  const favorites = [
-    {
-      productName: 'Classic Necklace',
-      price: 89,
-      imageUrl: 'http://localhost:800/public/images/classic_necklace.jpg',
-    },
-    {
-      productName: 'Stylish Bracelet',
-      price: 59,
-      imageUrl: 'http://localhost:8000/public/images/stylish_bracelet.jpg',
-    },
-  ];
-
-  // Örnek sepet bilgileri
-  const cart = [
-    {
-      productName: 'Modern Watch',
-      price: 150,
-      quantity: 1,
-    },
-  ];
+  useEffect(() => {
+    if (userData?._id) {
+      getUserFavoriteData({ userId: userData?._id ?? "" });
+    }
+  }, [userData?._id, favoriteCount]);
+  useEffect(() => {
+    if (userData?._id) {
+      getBasket({ id: userData?._id ?? "" });
+    }
+  }, [userData?._id]);
+  console.log("basketData", basketData);
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ background: '#fff', padding: '20px' }}>
-        <Title level={2} style={{ margin: 0 }}>User Profile</Title>
-      </Header>
-      <Content style={{ padding: '20px' }}>
+    <Layout style={{ minHeight: "100vh", padding: "25px" }}>
+      <Content style={{ padding: "40px" }}>
         <Row justify="center">
           <Col span={16}>
-            <Card>
+            <Card bordered={false} style={{ borderRadius: "12px" }}>
               <Row gutter={16}>
-                <Col span={6} style={{ textAlign: 'center' }}>
-                  <Avatar size={120} src={user.profileImageUrl} />
-                  <Title level={4}>{user.name}</Title>
+                <Col
+                  span={6}
+                  style={{
+                    textAlign: "center",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <Avatar
+                    size={120}
+                    icon={<UserOutlined />}
+                    style={{ marginBottom: "16px" }}
+                  />
+                  <Title level={4}>
+                    {userData?.firstName} {userData?.lastName}
+                  </Title>
                 </Col>
                 <Col span={18}>
                   <Paragraph>
-                    <strong>Email:</strong> {user.email}
+                    <strong>Email:</strong> {userData?.email}
                   </Paragraph>
                   <Paragraph>
-                    <strong>Phone:</strong> {user.phone}
+                    <strong>Phone:</strong> {userData?.phone}
                   </Paragraph>
-                  <Paragraph>
-                    <strong>Bio:</strong> {user.bio}
-                  </Paragraph>
+
                   <Divider />
-                  <Button type="primary" style={{ marginRight: '10px' }}>
-                    Edit Profile
+
+                  <Button
+                    type="primary"
+                    icon={<LogoutOutlined />}
+                    style={{
+                      borderRadius: "8px",
+                      backgroundColor: "#3e160f",
+                      borderColor: "#3e160f",
+                    }}
+                  >
+                    Log Out
                   </Button>
-                  <Button type="default">Log Out</Button>
+                </Col>
+              </Row>
+              <Divider />
+              <Row>
+                <Col span={24}>
+                  <Title level={4}>
+                    Favore Products Caunt :{favoriteCount}
+                  </Title>
+                  <List
+                    grid={{ gutter: 16, column: 4 }}
+                    dataSource={userFavoriteDate?.products || []}
+                    renderItem={(product) => (
+                      <List.Item>
+                        <img
+                          style={{
+                            borderRadius: "50%",
+                            width: "150px",
+                            height: "150px",
+                          }}
+                          alt={product?.productId?.productName}
+                          src={product?.productId?.mainImageUrl}
+                        />
+                        <Card.Meta title={product?.productId?.productName} />
+                      </List.Item>
+                    )}
+                  />
+                </Col>
+              </Row>
+              <Divider />
+              <Row>
+                <Col span={24}>
+                  <Title level={4}>
+                    Basket Products count {basketData?.products?.length}
+                  </Title>
+                  <List
+                    grid={{ gutter: 16, column: 4 }}
+                    dataSource={basketData?.products || []}
+                    renderItem={(product) => (
+                      <List.Item>
+                        <img
+                          style={{
+                            borderRadius: "50%",
+                            width: "150px",
+                            height: "150px",
+                          }}
+                          alt={product?.productId?.productName}
+                          src={product?.productId?.mainImageUrl}
+                        />
+                        <Card.Meta title={product?.productId?.productName} />
+                      </List.Item>
+                    )}
+                  />
                 </Col>
               </Row>
             </Card>
 
             <Divider />
-
-            <Title level={3}>Orders</Title>
-            <List
-              itemLayout="horizontal"
-              dataSource={orders}
-              renderItem={item => (
-                <List.Item>
-                  <List.Item.Meta
-                    title={<a href="#">{item.productName}</a>}
-                    description={`Price: $${item.price} - Date: ${item.date} - Status: ${item.status}`}
-                  />
-                </List.Item>
-              )}
-            />
-
-            <Divider />
-
-            <Title level={3}>Favorites</Title>
-            <Row gutter={16}>
-              {favorites.map((item, index) => (
-                <Col span={8} key={index}>
-                  <Card
-                    hoverable
-                    cover={<img alt={item.productName} src={item.imageUrl} />}
-                  >
-                    <Card.Meta title={item.productName} description={`Price: $${item.price}`} />
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-
-            <Divider />
-
-            <Title level={3}>Cart</Title>
-            <List
-              itemLayout="horizontal"
-              dataSource={cart}
-              renderItem={item => (
-                <List.Item>
-                  <List.Item.Meta
-                    title={<a href="#">{item.productName}</a>}
-                    description={`Price: $${item.price} - Quantity: ${item.quantity}`}
-                  />
-                </List.Item>
-              )}
-            />
           </Col>
         </Row>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>
-        ©2024 Your Company
+      <Footer style={{ textAlign: "center" }}>
+        ©2024 Your Company - All Rights Reserved
       </Footer>
     </Layout>
   );

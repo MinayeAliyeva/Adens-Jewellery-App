@@ -1,10 +1,8 @@
-import "./index.css";
 import { SearchOutlined } from "@ant-design/icons";
 import { Col, Row, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo } from 'react';
 import { useForm } from "react-hook-form";
-import { TbArrowsDownUp } from "react-icons/tb";
 import { IFieldType, SideBar } from "./SideBar";
 import CatagoriesSlider from "./CatagoriesSlider";
 import { useDebounce } from "../../hooks/useDebounce";
@@ -12,17 +10,19 @@ import { IProduct } from "../../redux/api/product/modules";
 import { useLazyGetProductsQuery } from "../../redux/api/product/product-api";
 import InputComponent from "../../shared/components/form-components/InputComponent";
 import ProductCard from "../../components/ProductCard";
-import RangeDrawerComponent, { ICheckboxComponentProps } from "../../components/Drawer";
+import { ICheckboxComponentProps } from "../../components/Drawer";
 import OpenDrawer from "./OpenDrawer";
 
 const Shop = () => {
-  const params = new URLSearchParams();
+ 
+  const params = useMemo(() => new URLSearchParams(), []) as  URLSearchParams;
+  console.log({params: params.toString()});
+  
   const [getPrducts, { data: productsData }] = useLazyGetProductsQuery<{
     data: IProduct[];
   }>();
 
   const {
-    handleSubmit,
     control,
     formState: { errors },
     watch,
@@ -43,12 +43,36 @@ const Shop = () => {
       setError("productName", { type: "manual", message: "" });
     }
 
+   if (!productName) params.delete("productName");
     if (!productName || productName.length >= 3) {
       if (productName) params.append("productName", productName!);
-
+      
       getPrducts(params.toString());
     }
   }, [productName]);
+
+  const clearFilterParams = (isFilter?: boolean) => {
+    params.delete("category");
+    params.delete("brand");
+    params.delete("size");
+    params.delete("minPrice");
+    params.delete("maxPrice");
+    params.delete("averageRating");
+    params.delete("minWeight");
+    params.delete("maxWeight");
+    params.delete("duration");
+    params.delete("dimention");
+    getPrducts(params.toString(), true);
+  };
+
+  const clearSortingParams = () => {
+    params.delete("sortPriceDesc");
+    params.delete("sortPriceAsc");
+    params.delete("sortRaitingDesc");
+    params.delete("sortRaitingAsc");
+    params.delete("sortCreateDateDesc");
+    params.delete("sortCreatetDateAsc");
+  };
 
   const onFilter = (values: IFieldType) => {
     const {
@@ -89,11 +113,12 @@ const Shop = () => {
   };
 
   const onSortong = (value: ICheckboxComponentProps) => {
-    console.log({value});
-    
+    if(!value?.option || !value.sort)return;
+    clearSortingParams();
     params.append(`${value?.option}`, value?.sort);
     getPrducts(params.toString(), true); 
   }
+  
   return (
     <>
       <CatagoriesSlider />
@@ -111,7 +136,7 @@ const Shop = () => {
               minHeight: "100vh",
             }}
           >
-            <SideBar onFilter={onFilter} />
+            <SideBar onFilter={onFilter} clearFilterParams={clearFilterParams} />
           </Col>
 
           <Col span={19}>

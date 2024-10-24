@@ -54,11 +54,11 @@ const Favorite = () => {
         ) : (
           <Content style={{ minHeight: "100vh" }}>
             <SpinComponent loading={isFetchingUserFavorite}>
-              {userFavoriteDate?.products.map((product) => {
+              {userFavoriteDate?.products?.map((product) => {
                 return (
                   <UserFavoriteProduct
                     product={product.productId}
-                    key={product.productId._id}
+                    key={product.productId?._id}
                   />
                 );
               })}

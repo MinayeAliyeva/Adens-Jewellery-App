@@ -82,18 +82,18 @@ const UserFavoriteProduct: FC<IFavoriteListProps> = ({ product }) => {
               marginRight: "20px",
               borderRadius: "8px",
             }}
-            src={product.mainImageUrl}
-            alt={product.productName}
+            src={product?.mainImageUrl}
+            alt={product?.productName}
             preview={false}
           />
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <Title level={4}>{product.productName}</Title>
-            <Text type="secondary">{product.price}</Text>
+            <Title level={4}>{product?.productName}</Title>
+            <Text type="secondary">{product?.price}</Text>
             <Text type="secondary" style={{ marginTop: "5px" }}>
-              {product.description}
+              {product?.description}
             </Text>
             <Text type="secondary" style={{ marginTop: "5px" }}>
-              Creation Date: {product.creationDate || "N/A"}
+              Creation Date: {product?.creationDate || "N/A"}
             </Text>
           </div>
         </Content>

@@ -6,7 +6,7 @@ import {
   Button,
   Typography,
   Avatar,
-  Divider,
+
   Modal,
   Space,
   Popconfirm,
@@ -182,6 +182,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                   <Button
                     type="default"
                     shape="circle"
+                    disabled={product?.quantity === 1}
                     onClick={() => setQuantity(product.productId._id, -1)}
                     style={{ margin: "0 5px" }}
                   >
@@ -264,7 +265,10 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                 Price: ${selectedProduct.price}
               </Typography.Text>
               <Typography.Text strong>
-                Category: {selectedProduct.category}
+                Category: {selectedProduct?.category?.name}
+              </Typography.Text>
+              <Typography.Text strong>
+                Brand: {selectedProduct?.brand?.name}
               </Typography.Text>
               <Typography.Text strong>
                 size:{" "}

@@ -16,6 +16,7 @@ const Header = () => {
   const userData = getUserFromToken();
   const authUser = useSelector(getUserDataSelector);
   const user = isEmpty(authUser) ? userData : authUser;
+
   const { t } = useTranslation();
   return (
     <AntdHeader
@@ -46,7 +47,7 @@ const Header = () => {
           <ProfileMenuComponent />
         ) : (
           <>
-            <Link to={"/login"}>{t('Login')}</Link>
+            <Link to={"/login"}>{t("Login")}</Link>
             <Link to={"/register"}>Register</Link>
           </>
         )}

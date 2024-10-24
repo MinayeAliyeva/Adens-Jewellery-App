@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import type { FormProps } from "antd";
 import {
   Button,
@@ -78,14 +78,16 @@ const raitingOptions = [
 
 interface ISideBarProps {
   onFilter?: (values: IFieldType) => void;
+  clearFilterParams?: () => void;
 }
 
-export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
+export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
   const { data: categoriesData } = useGetCategoriesQuery();
   const { data: brandData } = useGetBrandsQuery();
   const [form] = Form.useForm();
 
   const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {
+    clearFilterParams?.();
     onFilter?.(values!);
   };
 
@@ -93,6 +95,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
 
   const clearFilters = () => {
     form.resetFields();
+    clearFilterParams?.();
   };
 
   return (
@@ -131,6 +134,9 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
                     minPrice >= maxPrice ? maxPrice : minPrice
                   );
                 }}
+                onFocus={() => {
+                  form.setFieldValue("minPrice", null);
+                }}
               />
             </Form.Item>
           </Col>
@@ -149,14 +155,13 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
                   const minPrice = form.getFieldValue("minPrice") || 0;
                   const maxPrice = Number(e.target.value);
                   if (!maxPrice || !minPrice) return;
-                  // if(!maxPrice && minPrice) {
-                  //   form.setFieldValue("maxPrice", 0)
-                  //   return
-                  // };
                   form.setFieldValue(
                     "maxPrice",
                     maxPrice >= minPrice ? maxPrice : minPrice
                   );
+                }}
+                onFocus={() => {
+                  form.setFieldValue("maxPrice", null);
                 }}
               />
             </Form.Item>
@@ -274,6 +279,9 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
                     minWeight >= maxWeight ? maxWeight : minWeight
                   );
                 }}
+                onFocus={() => {
+                  form.setFieldValue("minWeight", null);
+                }}
                 type="number"
                 name="minWeight"
                 size="large"
@@ -304,6 +312,9 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
                     maxWeight >= minWeight ? maxWeight : minWeight
                   );
                 }}
+                onFocus={() => {
+                  form.setFieldValue("maxWeight", null);
+                }}
               />
             </Form.Item>
           </Col>
@@ -323,6 +334,9 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
                 placeholder="Warranty Duration..."
                 size="large"
                 min={0}
+                onFocus={() => {
+                  form.setFieldValue("duration", null);
+                }}
               />
             </Form.Item>
           </Col>
@@ -341,6 +355,9 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
                 type="number"
                 size="large"
                 min={0}
+                onFocus={() => {
+                  form.setFieldValue("dimention", null);
+                }}
               />
             </Form.Item>
           </Col>
@@ -358,6 +375,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter }) => {
             <Button
               type="primary"
               htmlType="submit"
+              disabled={form.isFieldsTouched(true)}
               style={{ backgroundColor: "#70b3bf" }}
               size="large"
               icon={<SendOutlined />}
