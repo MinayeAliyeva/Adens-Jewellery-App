@@ -30,7 +30,7 @@ interface IProps {
 }
 
 const ProductCard: FC<IProps> = ({ product }) => {
-  const decodedUser: IDecodedValue = getUserFromToken()!;
+  const userData = getUserFromToken()!;
 
   const dispatch = useDispatch();
 
@@ -41,23 +41,23 @@ const ProductCard: FC<IProps> = ({ product }) => {
     useLazyGetFavoriteByUserIdQuery();
 
   useEffect(() => {
-    if (decodedUser?._id && !isLoadingUserFavoriteData) {
-      getUserFavoriteData({ userId: decodedUser?._id ?? "" });
+    if (userData?._id && !isLoadingUserFavoriteData) {
+      getUserFavoriteData({ userId: userData?._id ?? "" });
     }
-  }, [decodedUser?._id, isLoadingUserFavoriteData]);
+  }, [userData?._id, isLoadingUserFavoriteData]);
 
   const isActiveFavorite =
     userFavoriteDate?.products?.find((p) => p.productId._id === product?._id)
       ?.isFavorite ?? false;
 
   const onCreateOrder = () => {
-    if (!decodedUser?._id) {
+    if (!userData?._id) {
       showErrorToast("Bu ishlem ichin Uye olmaniz lazim");
       return;
     }
     addBasket({
       productId: product?._id,
-      userId: decodedUser?._id,
+      userId: userData?._id,
       quantity: 1,
     }).then((res) => {
       if (isEmpty(res?.data)) return;
@@ -69,15 +69,14 @@ const ProductCard: FC<IProps> = ({ product }) => {
   };
 
   const onCreateWishList = () => {
-    if (!decodedUser?._id) {
+    if (!userData?._id) {
       showErrorToast("Bu ishlem ichin Uye olmaniz lazim");
       return;
     }
     addFavorite({
       productId: product?._id,
-      userId: decodedUser?._id,
+      userId: userData?._id,
     }).then((res) => {
-      console.log({ res });
       if (isEmpty(res?.data)) return;
       dispatch(
         setFavoriteProductCount(res.data?.wishList?.products?.length ?? 0)
@@ -88,7 +87,7 @@ const ProductCard: FC<IProps> = ({ product }) => {
   return (
     <Content
       className="w-full max-w-md transition-transform hover:scale-105 relative group"
-      style={{ height: "600px", width: "400px",padding:'20px' }}
+      style={{ height: "600px", width: "400px", padding: "20px" }}
     >
       <Content className="relative w-full h-2/3 overflow-hidden">
         <img
@@ -173,6 +172,9 @@ const ProductCard: FC<IProps> = ({ product }) => {
           Weight: {product?.weight}
         </Typography>
         <Typography className="text-[16px] font-semibold text-gray-800">
+          Creation Date: {product?.creationDate}
+        </Typography>
+        <Typography className="text-[16px] font-semibold text-gray-800">
           Dimensions: {product?.dimensions}
         </Typography>
         <Typography className="text-[16px] font-semibold text-gray-800">
@@ -184,7 +186,9 @@ const ProductCard: FC<IProps> = ({ product }) => {
         ) : (
           <Content className="flex items-center mt-2">
             <Typography className="text-red-600 mr-2">Out of Stock</Typography>
-            <IoIosNotificationsOutline style={{cursor:'pointer',fontSize:'20px'}} />
+            <IoIosNotificationsOutline
+              style={{ cursor: "pointer", fontSize: "20px" }}
+            />
           </Content>
         )}
       </Content>

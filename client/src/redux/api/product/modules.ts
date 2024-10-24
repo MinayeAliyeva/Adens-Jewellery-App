@@ -19,7 +19,7 @@ interface ProductAvailability {
   stores: any[];
 }
 export interface IProduct {
-  productAvailability: ProductAvailability;
+  productAvailability?: ProductAvailability;
   _id: string;
   productName: string;
   size: string[];
@@ -36,8 +36,9 @@ export interface IProduct {
   warrantyDuration: string;
   creationDate: string;
   brand: Brand;
-  priceHistory: any[];
+  priceHistory?: any[];
   __v: number;
-  lastUpdated: string;
+  lastUpdated?: string;
   averageRating?: number;
+  
 }
