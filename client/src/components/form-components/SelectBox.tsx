@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, memo } from "react";
 import { Select, Space } from "antd";
 import { SelectProps } from "antd/es/select";
 
@@ -24,4 +24,4 @@ const SelectBox: FC<ISelectBox> = ({
   />
 );
 
-export default SelectBox;
+export default memo(SelectBox);

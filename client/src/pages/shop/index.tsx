@@ -12,6 +12,7 @@ import InputComponent from "../../shared/components/form-components/InputCompone
 import ProductCard from "../../components/ProductCard";
 import { ICheckboxComponentProps } from "../../components/Drawer";
 import OpenDrawer from "./OpenDrawer";
+import { useTranslation } from "react-i18next";
 
 const Shop = () => {
  
@@ -118,7 +119,7 @@ const Shop = () => {
     params.append(`${value?.option}`, value?.sort);
     getPrducts(params.toString(), true); 
   }
-  
+  const { t } = useTranslation();
   return (
     <>
       <CatagoriesSlider />
@@ -158,7 +159,7 @@ const Shop = () => {
                     name="productName"
                     suffix={<SearchOutlined style={{ fontSize: "30px" }} />}
                     control={control as any}
-                    placeholder="Search product by name..."
+                    placeholder={t("Search product by name...")}
                   />
                   {errors?.productName?.message && (
                     <Typography.Text style={{ color: "red", marginTop: "5px" }}>

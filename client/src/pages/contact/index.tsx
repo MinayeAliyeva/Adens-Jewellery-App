@@ -1,5 +1,6 @@
 import { Card, Form, Input, Button, Typography, Row, Col } from "antd";
 import { Content } from "antd/es/layout/layout";
+import { useTranslation } from "react-i18next";
 
 const { Title, Paragraph } = Typography;
 
@@ -7,7 +8,7 @@ const Contact = () => {
   const onFinish = (values: any) => {
     console.log("Success:", values);
   };
-
+  const { t } = useTranslation();
   return (
     <Content
       style={{
@@ -33,18 +34,17 @@ const Contact = () => {
             }}
           >
             <Title level={2} style={{ textAlign: "center" }}>
-              Contact Us
+              {t("Contact Us")}
             </Title>
             <Paragraph style={{ textAlign: "center" }}>
-              If you have any questions, feel free to reach out to us by filling
-              out the form below.
+              {t("If you have any questions, feel free to reach out to us by filling out the form below.")}
             </Paragraph>
 
             <Form layout="vertical" onFinish={onFinish}>
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
-                    label="Name"
+                    label={t("Name")}
                     name="name"
                     rules={[
                       { required: true, message: "Please enter your name!" },
@@ -55,7 +55,7 @@ const Contact = () => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    label="Email"
+                    label={t("Email")}
                     name="email"
                     rules={[
                       {
@@ -76,7 +76,7 @@ const Contact = () => {
               <Row gutter={16}>
                 <Col span={12}>
                   <Form.Item
-                    label="Phone"
+                    label={t("Phone")}
                     name="phone"
                     rules={[
                       {
@@ -90,7 +90,7 @@ const Contact = () => {
                 </Col>
                 <Col span={12}>
                   <Form.Item
-                    label="Address"
+                    label={t("Address")}
                     name="address"
                     rules={[
                       { required: true, message: "Please enter your address!" },
@@ -102,7 +102,7 @@ const Contact = () => {
               </Row>
 
               <Form.Item
-                label="Message"
+                label={t("Message")}
                 name="message"
                 rules={[
                   { required: true, message: "Please enter your message!" },
@@ -122,7 +122,7 @@ const Contact = () => {
                     fontSize: "16px",
                   }}
                 >
-                  Send Message
+                  {t("Send Message")}
                 </Button>
               </Form.Item>
             </Form>

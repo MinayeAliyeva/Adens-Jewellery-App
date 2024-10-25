@@ -1,5 +1,5 @@
 import React, { FC, useState } from "react";
-import { List, Table, Typography } from "antd";
+import { Table, Typography } from "antd";
 import type { TableColumnsType } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { useGetBasketByUserIdQuery } from "../../store/api/basket/basket-api";

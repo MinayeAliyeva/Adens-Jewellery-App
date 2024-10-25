@@ -4,6 +4,7 @@
   "Edit Product": "Məhsulu Redaktə edin",
   "Upload Main Image": "Əsas Şəkli Yükləyin",
   "User Name": "İstifadəçi adı",
+  "Email": "Email",
   "Categories": "Kateqoriyalar",
   "Analytics": "Analitika",
   "Users": "İstifadəçilər",
@@ -40,5 +41,7 @@
   "Enter warranty duration": "Zəmanət müddətini daxil edin",
   "Main image is required!": "Əsas şəkil tələb olunur!",
   "Upload Additional Images": "Əlavə şəkilləri yükləyin",
-  "Update Product": "Məhsulu yeniləyin"
+  "Update Product": "Məhsulu yeniləyin",
+  "invalid email address": "Geçerli bir email adresi giriniz!",
+  "Enter email": "Email daxil edin"
 }

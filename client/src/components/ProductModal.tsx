@@ -1,5 +1,5 @@
 import { Modal, Typography, Avatar, Divider, Space, Button } from "antd";
-import { FC } from "react";
+import { FC, memo } from "react";
 
 interface IProduct {
   productName: string;
@@ -82,4 +82,4 @@ const ProductModal: FC<IProductModalProps> = ({
   );
 };
 
-export default ProductModal;
+export default memo(ProductModal);

@@ -1,4 +1,5 @@
 import { Rule } from "antd/es/form";
+import i18next from "i18next";
 import * as yup from "yup";
 interface IRule {
   [key: string]: Rule[];
@@ -6,7 +7,7 @@ interface IRule {
 
 export const rule: IRule = {
   passwordRules: [
-    { required: true, message: "Parolanızı girin!" },
+    { required: true, message: i18next.t("Enter email" )},
     {
       min: 6,
       message: "Parola en az 6 karakter olmalıdır!",
@@ -35,7 +36,7 @@ export const rule: IRule = {
     },
     {
       type: "email",
-      message: "Geçerli bir email adresi giriniz!",
+      message: i18next.t("invalid email address"),
     },
   ],
 };

@@ -1,14 +1,6 @@
-import { FC, useMemo } from "react";
+import { FC } from "react";
 import type { FormProps } from "antd";
-import {
-  Button,
-  Checkbox,
-  Col,
-  Form,
-  Input,
-  Row,
-  Space,
-} from "antd";
+import { Button, Checkbox, Col, Form, Input, Row, Space } from "antd";
 import Title from "antd/es/typography/Title";
 import { Content } from "antd/es/layout/layout";
 import TypographyComponent from "../../components/TypographyComponent";
@@ -16,6 +8,7 @@ import { useGetCategoriesQuery } from "../../redux/api/catagory/catagory-api";
 import SelectBox from "../../components/form-components/SelectBox";
 import { useGetBrandsQuery } from "../../redux/api/brand/brand-api";
 import { ClearOutlined, SendOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 
 export interface IFieldType {
   minPrice?: number;
@@ -97,7 +90,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
     form.resetFields();
     clearFilterParams?.();
   };
-
+  const { t } = useTranslation();
   return (
     <Content
       style={{
@@ -114,7 +107,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
         autoComplete="off"
       >
         <Title level={5} style={{ marginTop: "15px" }}>
-          Filter by Price
+          {t("Filter by Price")}
         </Title>
         <Row gutter={24}>
           <Col span={12}>
@@ -175,11 +168,11 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
               <TypographyComponent
                 level={5}
                 style={{ marginBottom: "15px" }}
-                content=" Category"
+                content={t("Category")}
               />
               <SelectBox
                 name="categories"
-                placeholder={"Select Category..."}
+                placeholder={t("Select Category...")}
                 options={
                   categoriesData?.map((categories) => ({
                     label: categories.name,
@@ -200,11 +193,11 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
               <TypographyComponent
                 level={5}
                 style={{ marginBottom: "15px" }}
-                content=" Rating"
+                content={t("Rating")}
               />
               <SelectBox
                 name="averageRating"
-                placeholder={"Select Raiting..."}
+                placeholder={t("Select Raiting...")}
                 options={raitingOptions}
                 style={{ width: "100%" }}
                 handleChange={(value) =>
@@ -222,15 +215,16 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
               <TypographyComponent
                 level={5}
                 style={{ marginBottom: "15px" }}
-                content="Brand"
+                content={t("Brand")}
               />
               <SelectBox
                 name="brands"
-                placeholder={"Select Brand..."}
+                placeholder={t("Select Brand...")}
                 options={brandData?.map((brand) => ({
                   label: brand.name,
                   value: brand?._id,
                 }))}
+                size="large"
                 style={{ width: "100%" }}
                 mode="multiple"
                 handleChange={(value) => form.setFieldsValue({ brands: value })}
@@ -242,7 +236,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
               <TypographyComponent
                 level={5}
                 style={{ marginBottom: "15px" }}
-                content="Size Options..."
+                content={t("Size Options...")}
               />
               <Row gutter={[8, 8]} justify="start">
                 <Checkbox.Group
@@ -250,7 +244,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
                     form.setFieldsValue({ size: value });
                   }}
                 >
-                  {sizes.map((option, idx) => (
+                  {sizes?.map((option, idx) => (
                     <Checkbox key={idx} value={option.value}>
                       {option?.label}
                     </Checkbox>
@@ -266,7 +260,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
             <TypographyComponent
               level={5}
               style={{ marginBottom: "15px" }}
-              content="Min Weight (g)"
+              content={t("Min Weight (g)")}
             />
             <Form.Item<IFieldType> name="minWeight">
               <Input
@@ -294,7 +288,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
             <TypographyComponent
               level={5}
               style={{ marginBottom: "15px" }}
-              content="Max Weight (g)"
+              content={t("Max Weight (g)")}
             />
             <Form.Item<IFieldType> name="maxWeight">
               <Input
@@ -320,12 +314,12 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
           </Col>
         </Row>
         <hr />
-        <Row gutter={24} style={{ marginTop:'15px' }}>
+        <Row gutter={24} style={{ marginTop: "15px" }}>
           <Col span={12}>
             <TypographyComponent
               level={5}
               style={{ marginBottom: "15px" }}
-              content="Warranty Duration"
+              content={t("Warranty Duration")}
             />
             <Form.Item<IFieldType> name="duration">
               <Input
@@ -345,7 +339,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
             <TypographyComponent
               level={5}
               style={{ marginBottom: "15px" }}
-              content=" Dimentions size (cm)"
+              content={t("Dimentions size (cm)")}
             />
 
             <Form.Item<IFieldType> name="dimention">
@@ -380,7 +374,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
               size="large"
               icon={<SendOutlined />}
             >
-              Submit
+              {t("Submit")}
             </Button>
             <Button
               type="primary"
@@ -390,7 +384,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
               icon={<ClearOutlined />}
               onClick={clearFilters}
             >
-              Clear Filters
+              {t("Clear Filters")}
             </Button>
           </Space>
         </Form.Item>

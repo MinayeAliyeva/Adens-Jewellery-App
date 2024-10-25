@@ -5,6 +5,10 @@ const { Product } = require("../models/product");
 const { Basket } = require("../models/basket");
 const auth = require("../middlware/auth");
 
+const calculateTotalPrice = (products) => {
+  return products.reduce((total, product) => total + product.price * product.quantity, 0);
+};
+
 router.post("/",  async (req, res) => {
   const { productId, quantity, userId } = req.body;
 
@@ -38,10 +42,7 @@ router.post("/",  async (req, res) => {
       basket.products.push({ productId, quantity, price: product.price });
     }
 
-    basket.totalPrice = basket.products.reduce(
-      (total, item) => total + item.price * item.quantity,
-      0
-    );
+    basket.totalPrice = calculateTotalPrice(basket.products);
 
     await basket.save();
 
@@ -66,13 +67,17 @@ router.get("/", auth, async (req, res) => {
 });
 
 router.get("/:userId", /*auth, */ async (req, res) => {
-  console.log("req.params.userId", req.params.userId);
-
   try {
-    const basket = await Basket.findOne({ user: req.params.userId }).populate(
-      "products.productId"
+    const basket = await Basket.findOne({ user: req.params.userId }).populate({
+        path: "products.productId",
+        populate: [{
+          path: "brand",
+          select: "name"
+        }, {
+          path: "category",
+          select: "name"
+        }]}
     );
-    console.log("basket", basket);
 
     res.status(200).json(basket);
   } catch (error) {
@@ -85,18 +90,20 @@ router.delete("/:userId/:productId", async (req, res) => {
   const { userId, productId } = req.params;
 
   try {
-    // İstifadəçinin səbətində məhsulu tapır və silir
     const basket = await Basket.findOneAndUpdate(
       { user: userId },
       { $pull: { products: { productId: productId } } },
-      { new: true } // yenilənmiş səbəti qaytarır
+      { new: true }
     );
 
     if (!basket) {
       return res.status(404).json({ message: "Basket or product not found" });
     }
+    const updatedTotalPrice = calculateTotalPrice(basket.products);
 
-    // Səbətin müvəffəqiyyətlə yeniləndiyini bildirir
+    basket.totalPrice = updatedTotalPrice;
+    await basket.save();
+
     res.status(200).json({ message: "Product removed from basket", basket });
   } catch (error) {
     console.error(error);
@@ -104,13 +111,12 @@ router.delete("/:userId/:productId", async (req, res) => {
   }
 });
 
-router.put("/:userId/:productId",  async (req, res) => {
+router.put("/:userId/:productId", async (req, res) => {
   const { userId, productId } = req.params;
-  const { quantity } = req.body; // `body`-dən quantity dəyərini alırıq
- console.log("quantity", quantity);
- 
+  const { quantity } = req.body;
+  console.log("quantity", quantity);
+
   try {
-    // İlk olaraq məhsulun mövcudluğunu yoxlayırıq
     const basket = await Basket.findOne({
       user: userId,
       "products.productId": productId,
@@ -120,28 +126,29 @@ router.put("/:userId/:productId",  async (req, res) => {
       return res.status(404).json({ message: "Basket or product not found" });
     }
 
-    // Cari məhsulun miqdarını alırıq
     const product = basket.products.find(
       (p) => p.productId.toString() === productId
     );
 
     if (product) {
-      // Məhsulun cari miqdarı
       const currentQuantity = product.quantity;
 
-      // Əgər cari miqdar 1-dirsə, onu dəyişdirmirik
-      if (currentQuantity === 1) {
-        return res.status(200).json({
+      if (currentQuantity === 1 && quantity === -1) {
+        return res.status(400).json({
           message: "Product quantity cannot be reduced below 1",
           quantity: currentQuantity,
         });
       } else {
-        // `quantity`-ni artırırıq
         const updatedBasket = await Basket.findOneAndUpdate(
           { user: userId, "products.productId": productId },
-          { $inc: { "products.$.quantity": quantity } }, // `quantity`-ni artırır
-          { new: true } // Yenilənmiş səbəti qaytarır
+          { $inc: { "products.$.quantity": quantity } },
+          { new: true } 
         );
+
+        const updatedTotalPrice = calculateTotalPrice(updatedBasket.products);
+
+        updatedBasket.totalPrice = updatedTotalPrice;
+        await updatedBasket.save();
 
         return res
           .status(200)

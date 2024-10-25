@@ -2,10 +2,16 @@ const express = require("express");
 const router = express.Router();
 const { WishList } = require("../models/wishList");
 const { Product } = require("../models/product");
+// const auth = require( "../middlware/auth");
+const { User } = require("../models/user");
 
 // Sevimli məhsulu əlavə et
 router.post("/", async (req, res) => {
   const { productId, userId } = req.body;
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).json({ message: "User not found" });
+  }
 
   try {
     // Məhsulu tap

@@ -1,9 +1,8 @@
 import { Button, Rate, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { FC, useEffect } from "react";
+import { FC, memo, useEffect } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { IDecodedValue } from "../shared/modules";
 import { useAddBasketMutation } from "../redux/api/basket/basket-api";
 import { IProduct } from "../redux/api/product/modules";
 
@@ -196,4 +195,4 @@ const ProductCard: FC<IProps> = ({ product }) => {
   );
 };
 
-export default ProductCard;
+export default  memo(ProductCard);

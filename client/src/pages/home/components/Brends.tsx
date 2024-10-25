@@ -1,4 +1,6 @@
 import { Col, Layout, Row, Typography } from "antd";
+import { useTranslation } from "react-i18next";
+
 const brand1 = "/assets/images/brand-2.png";
 const brand2 = "/assets/images/brand-3.png";
 const brand3 = "/assets/images/brand-4.png";
@@ -6,6 +8,7 @@ const brand4 = "/assets/images/brand-5.png";
 const brand5 = "/assets/images/band.png";
 
 const Brends = () => {
+  const { t } = useTranslation();
   return (
     <Layout
       style={{
@@ -34,9 +37,9 @@ const Brends = () => {
             textAlign: "center",
           }}
         >
-          We only discovered this fabulous fine jeweler recently. The premises
-          are beautiful, and the staff is extremely knowledgeable and friendly.
-          It’s impossible to walk out empty-handed! It is a...
+          {t(
+            "We only discovered this fabulous fine jeweler recently. The premises are beautiful, and the staff is extremely knowledgeable and friendly. It’s impossible to walk out empty-handed It is a..."
+          )}
         </Typography>
         <Typography style={{ color: "gray", fontSize: "20px" }}>
           "Luca Moretti"-"Designer"

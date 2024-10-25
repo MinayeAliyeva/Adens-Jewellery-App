@@ -1,48 +1,46 @@
-import { Content } from "antd/es/layout/layout";
-// import i18n from "../i18n";
+import i18n from "../i18n/index";
 import ButtonComponent from "./form-components/ButtonComponent";
-const az = "/assets/images/lang-img/az.svg";
-const en = "/assets/images/lang-img/en.svg";
+
+const az = "/assets/images/az.svg";
+const en = "/assets/images/eng.svg";
 
 const changeLanguage = (lng: string) => {
-  // i18n.changeLanguage(lng);
   console.log("lng", lng);
+  i18n.changeLanguage(lng);
 };
 
 const TranslateComponent = () => {
   return (
-    <Content style={{ marginLeft: "60px" }}>
-      
+    <>
       <ButtonComponent
         type="text"
         onClick={() => changeLanguage("az")}
         style={{
           fontSize: "16px",
-          width: 24,
-          height: 24,
-
+          width: 44,
+          height: 44,
+          marginLeft: "20px",
           backgroundImage: `url(${az})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
       />
-
       <ButtonComponent
         type="text"
         onClick={() => changeLanguage("en")}
         style={{
           fontSize: "16px",
-          width: 24,
-          height: 24,
-          marginLeft: "10px",
+          width: 44,
+          height: 44,
+          marginLeft: "20px",
           backgroundImage: `url(${en})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
       />
-    </Content>
+    </>
   );
 };
 

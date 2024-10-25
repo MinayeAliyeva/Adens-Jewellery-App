@@ -19,7 +19,6 @@ const Login = () => {
   const navigate = useNavigate();
 
   const onFinish = async (values: { email: string; password: string }) => {
-    
     try {
       await schema.validate(values);
       getAdmin(values).then((res) => {
@@ -83,7 +82,7 @@ const Login = () => {
               <Input
                 size="large"
                 prefix={<UserOutlined />}
-                placeholder={t("User Name")}
+                placeholder={t("Email")}
                 className="rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </Form.Item>

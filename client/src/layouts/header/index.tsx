@@ -48,7 +48,7 @@ const Header = () => {
         ) : (
           <>
             <Link to={"/login"}>{t("Login")}</Link>
-            <Link to={"/register"}>Register</Link>
+            <Link to={"/register"}>{t("Register")}</Link>
           </>
         )}
         <FavoriteIcon />

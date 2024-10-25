@@ -16,12 +16,12 @@ const routes: TypeRouteObject[] = [
     element: <MainLayout />,
     auth: true,
     children: [
-      { index: true, element: <Navigate to="/products" /> , auth: true},
-      { path: "/products", element: <Products />,  auth: true},
-      { path: "/categories", element: <Category />,  auth: true},
-      { path: "/brands", element: <Brand />,  auth: true},
-      { path: "/users", element: <Users />,  auth: true},
-      { path: "/settings", element: <SettingsPage />,  auth: true},
+      { index: true, element: <Navigate to="/products" />, auth: true },
+      { path: "/products", element: <Products />, auth: true },
+      { path: "/categories", element: <Category />, auth: true },
+      { path: "/brands", element: <Brand />, auth: true },
+      { path: "/users", element: <Users />, auth: true },
+      { path: "/settings", element: <SettingsPage />, auth: true },
     ],
   },
   {
@@ -33,10 +33,8 @@ const routes: TypeRouteObject[] = [
 
 const authMap = (routes: TypeRouteObject[]) => {
   return routes.map((route: TypeRouteObject) => {
-    
-    if (route.auth){
-        
-        route.element = <PrivateRouting>{route.element}</PrivateRouting>;
+    if (route.auth) {
+      route.element = <PrivateRouting>{route.element}</PrivateRouting>;
     }
     if (route.children) route.children = authMap(route.children);
     return route;
