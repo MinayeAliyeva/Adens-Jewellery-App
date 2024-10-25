@@ -1,5 +1,4 @@
-import React from "react";
-import { Checkbox, Typography } from "antd";
+import { Checkbox } from "antd";
 import { Controller, useForm } from "react-hook-form";
 
 interface IFormInputs {
@@ -9,7 +8,7 @@ interface IFormInputs {
 }
 
 const CheckboxComponent = () => {
-  const { control, handleSubmit } = useForm<IFormInputs>({
+  const { control } = useForm<IFormInputs>({
     defaultValues: {
       highToLow: false,
       lowToHigh: false,

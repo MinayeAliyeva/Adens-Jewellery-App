@@ -31,7 +31,6 @@ const upload = multer({ storage, limits: { fileSize: 1024 * 1024 * 5 } });
 // });
 //filterleme !! sayfalama limit() ile edilir select() ile ise data hisselerini select {} limit ise number qebul edir
 //Catagory gore filter price gore min,max  name gore, price asc desc
-//!color,brand ,weight,dimensions brand dimensions catagory arrey olacak
 
 router.get("/", async (req, res) => {
   try {

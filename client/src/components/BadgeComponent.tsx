@@ -1,6 +1,6 @@
 import { Badge, Space } from "antd";
 import { SpaceSize } from "antd/es/space";
-import { FC, ReactElement, ReactNode } from "react";
+import { FC, memo, ReactElement, ReactNode } from "react";
 
 interface IBadgeComponentProps {
     count?: number | null;
@@ -9,7 +9,7 @@ interface IBadgeComponentProps {
     children?: ReactNode | ReactElement
 }
 
-const BadgeComponent: FC<IBadgeComponentProps> = ({count, size="middle", shape, children}) => {
+const BadgeComponent: FC<IBadgeComponentProps> = ({count, size="middle", children}) => {
   return (
     <Space size={size}>
       <Badge count={count}>
@@ -19,4 +19,4 @@ const BadgeComponent: FC<IBadgeComponentProps> = ({count, size="middle", shape, 
   );
 };
 
-export default BadgeComponent;
+export default memo(BadgeComponent);

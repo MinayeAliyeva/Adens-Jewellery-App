@@ -6,6 +6,7 @@
   "Edit Product": "Edit Product",
   "Upload Main Image": "Upload Main Image",
   "User Name": "User Name",
+  "Email": "Email",
   "Categories": "Categories",
   "Analytics": "Analytics",
   "Users": "Users",
@@ -47,6 +48,8 @@
   "Reset":"Reset",
   "Search":"Search",
   "Filter":"Filter",
-  "close":"close"
+  "close":"close",
   
+  "invalid email address": "invalid email address!",
+  "Enter email": "Enter email"
 }

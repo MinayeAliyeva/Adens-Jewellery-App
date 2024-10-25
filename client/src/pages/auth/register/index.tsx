@@ -20,6 +20,7 @@ import { ContentStyle, MainContentStyle } from "./style";
 import { isEmpty } from "lodash";
 import { useDispatch } from "react-redux";
 import { setRegister } from "../../../redux/features/authSlice";
+import { useTranslation } from "react-i18next";
 
 const { Title } = Typography;
 
@@ -34,7 +35,7 @@ interface IRegisterFormValues {
 
 const Register: FC = () => {
   const [registerUser] = useRegisterUserMutation();
-
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -83,7 +84,7 @@ const Register: FC = () => {
             color: "#3e160e",
           }}
         >
-          Register
+          {t("Register")}
         </Title>
 
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>

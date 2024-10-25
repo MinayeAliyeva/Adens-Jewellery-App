@@ -1,5 +1,5 @@
 import { Layout, LayoutProps } from "antd";
-import React, { CSSProperties, FC } from "react";
+import React, { CSSProperties, FC, memo } from "react";
 
 const { Content } = Layout;
 
@@ -42,4 +42,4 @@ const Container: FC<IContainerProps> = ({
   );
 };
 
-export default Container;
+export default memo(Container);

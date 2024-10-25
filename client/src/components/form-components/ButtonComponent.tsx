@@ -1,4 +1,4 @@
-import { CSSProperties, FC } from "react";
+import { CSSProperties, FC, memo } from "react";
 import { Button } from "antd";
 import { ButtonProps } from "antd";
 interface IButtonProps extends ButtonProps {
@@ -49,4 +49,4 @@ const ButtonComponent: FC<IButtonProps> = ({
   );
 };
 
-export default ButtonComponent;
+export default memo(ButtonComponent);

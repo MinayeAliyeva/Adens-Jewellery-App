@@ -1,4 +1,4 @@
-import { CSSProperties, FC, ReactElement } from "react";
+import { CSSProperties, FC, memo, ReactElement } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Select, SelectProps } from "antd";
 
@@ -63,4 +63,4 @@ const SelectBoxComponent: FC<ISelectBoxProps> = ({
   );
 };
 
-export default SelectBoxComponent;
+export default memo(SelectBoxComponent);

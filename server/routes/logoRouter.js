@@ -5,25 +5,21 @@ const Logo = require('../models/logo');
 
 const router = express.Router();
 
-// Şəkil üçün mühafizə yerini təyin edirik
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'uploads/'); // 'uploads/' qovluğunda saxlayacağıq
+    cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    cb(null, `logo_${Date.now()}${path.extname(file.originalname)}`); // Unikal fayl adı
+    cb(null, `logo_${Date.now()}${path.extname(file.originalname)}`);
   },
 });
 
-// multer middleware
 const upload = multer({ storage });
 
-// Logo yükləmək üçün endpoint
 router.post('/', upload.single('logo'), async (req, res) => {
   try {
-    // Yeni logo məlumatını yaradıb saxlamaq
     const logo = new Logo({
-      imageUrl: req.file.path, // Yüklənmiş faylın yolu
+      imageUrl: req.file.path,
     });
     await logo.save();
 
@@ -33,7 +29,6 @@ router.post('/', upload.single('logo'), async (req, res) => {
   }
 });
 
-// Logo məlumatını əldə etmək üçün endpoint
 router.get('/', async (req, res) => {
   try {
     const logo = await Logo.findOne();

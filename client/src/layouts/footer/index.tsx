@@ -1,6 +1,7 @@
 import { Layout, Row, Col, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { IFooterStyle } from "./style";
+import { useTranslation } from "react-i18next";
 const { Footer } = Layout;
 
 const FooterStyle: IFooterStyle = {
@@ -14,7 +15,7 @@ const FooterStyle: IFooterStyle = {
 };
 
 const CustomFooter = () => {
-  
+  const { t } = useTranslation();
   return (
     <Footer style={FooterStyle}>
       <Row justify="center" gutter={[16, 24]} style={{ width: "100%" }}>
@@ -23,16 +24,16 @@ const CustomFooter = () => {
           style={{ display: "flex", flexDirection: "column", gap: "10px" }}
         >
           <Typography style={{ color: "#000", marginBottom: "16px" }}>
-            About
+            {t("About")}
           </Typography>
           <Typography>
             <Link to="/about" style={{ color: "#000" }}>
-              About Us
+             {t("About Us")}
             </Link>
           </Typography>
           <Typography>
             <Link to="/company" style={{ color: "#000" }}>
-              Company
+              {t("Company")}
             </Link>
           </Typography>
         </Col>
@@ -41,16 +42,16 @@ const CustomFooter = () => {
           style={{ display: "flex", flexDirection: "column", gap: "10px" }}
         >
           <Typography style={{ color: "#000", marginBottom: "16px" }}>
-            Services
+            {t("Services")}
           </Typography>
           <Typography>
             <Link to="/services" style={{ color: "#000" }}>
-              Consulting
+              {t("Consulting")}
             </Link>
           </Typography>
           <Typography>
             <Link to="/services" style={{ color: "#000" }}>
-              Product Development
+             {t("Product Development")}
             </Link>
           </Typography>
         </Col>
@@ -59,16 +60,16 @@ const CustomFooter = () => {
           style={{ display: "flex", flexDirection: "column", gap: "10px" }}
         >
           <Typography style={{ color: "#000", marginBottom: "16px" }}>
-            İletişim
+            {t("Message")}
           </Typography>
           <Typography>
             <Link to="/contact" style={{ color: "#000" }}>
-              Contact us
+              {t("Contact us")}
             </Link>
           </Typography>
           <Typography>
             <Link to="/support" style={{ color: "#000" }}>
-              Help
+              {t("Help")}
             </Link>
           </Typography>
         </Col>
@@ -77,7 +78,7 @@ const CustomFooter = () => {
           style={{ display: "flex", flexDirection: "column", gap: "10px" }}
         >
           <Typography style={{ color: "#000", marginBottom: "16px" }}>
-            Sosial Media
+            {t("Sosial Media")}
           </Typography>
           <Typography>
             <Link to="https://facebook.com" style={{ color: "#000" }}>
@@ -92,7 +93,7 @@ const CustomFooter = () => {
         </Col>
       </Row>
       <Typography style={{ marginTop: "40px", marginBottom: 0 }}>
-        © {new Date().getFullYear()} All rights reserved.
+        © {new Date().getFullYear()} {t("All rights reserved.")}
       </Typography>
     </Footer>
   );

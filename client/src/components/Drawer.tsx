@@ -49,7 +49,6 @@ const RangeDrawerComponent: FC<IDrawerComponentProps> = ({
       height={650}
     >
       <Space direction="vertical" style={{ width: "100%" }}>
-        {/* <Divider orientation="left">Sıralama Seçenekleri</Divider> */}
 
         <Space direction="vertical" style={{ width: "100%" }}>
           <Typography.Title level={5}>Price</Typography.Title>

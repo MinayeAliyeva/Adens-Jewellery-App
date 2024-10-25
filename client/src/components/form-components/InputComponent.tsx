@@ -1,4 +1,4 @@
-import { FC, ReactElement } from "react";
+import { FC, memo, ReactElement } from "react";
 import { Input, InputProps } from "antd";
 import { Controller, Control } from "react-hook-form";
 
@@ -40,4 +40,4 @@ const InputComponent: FC<IInputProps> = ({
   );
 };
 
-export default InputComponent;
+export default memo(InputComponent);

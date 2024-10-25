@@ -3,6 +3,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import TestiminalCart from "./TestiminalCart";
+import { useTranslation } from "react-i18next";
 //!BAckend ile yazilacak
 const testimonials = [
   {
@@ -43,13 +44,14 @@ const Testimonial = () => {
     autoplaySpeed: 2000,
     arrows: false,
   };
+  const { t } = useTranslation();
   return (
     <div
       className="testimonial-container"
       style={{ padding: "20px", height: "500px" }}
     >
       <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-        Customer Reviews
+        {t("Customer Reviews")}
       </h2>
       <div
         style={{

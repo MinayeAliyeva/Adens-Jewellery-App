@@ -15,6 +15,7 @@ import { loginSchema } from "../../../validation/loginValidation";
 import { setLogin } from "../../../redux/features/authSlice";
 import { saveToLocalStorage } from "../../../shared/helpers/localStorageUtil";
 import ButtonComponent from "../../../components/form-components/ButtonComponent";
+import { t } from "i18next";
 
 const { Title } = Typography;
 
@@ -74,7 +75,7 @@ const Login: React.FC = () => {
             color: "#3e160e",
           }}
         >
-          Login
+          {t("Login")}
         </Title>
         {errors?.error?.message && (
           <Alert

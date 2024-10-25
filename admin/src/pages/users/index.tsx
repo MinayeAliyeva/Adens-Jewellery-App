@@ -1,15 +1,11 @@
 import { useGetUsersQuery } from "../../store/api/users/users-api";
+import UsersTable from "./UserTable";
 
-import UsersTable from "./UsersTable";
 
 const Users = () => {
   const { data } = useGetUsersQuery<any>();
 
-  return (
-    <>
-      <UsersTable data={data}/>
-    </>
-  );
+  return (<UsersTable data={data}/>);
 };
 
 export default Users;
