@@ -7,25 +7,20 @@ import { FaSave } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import InputComponent from "../../utils/components/InputComponent";
-import {
-  Control,
-  FieldErrors,
-  UseFormHandleSubmit,
-} from "react-hook-form";
+import { Control, FieldErrors, UseFormHandleSubmit } from "react-hook-form";
 import { IFormField } from ".";
 import { IBrandsResponse } from "../../store/api/brand/modules";
 import SelectBoxComponent from "../../utils/components/SelectBoxComponent";
 import { Content } from "antd/es/layout/layout";
 
-
-export interface IPaginationData{
+export interface IPaginationData {
   current: number;
   pageSize: number;
-};
+}
 
-export const defaultPaginationData: IPaginationData= {
+export const defaultPaginationData: IPaginationData = {
   current: 1,
-  pageSize: 10
+  pageSize: 10,
 };
 
 export const paginationSizeOptions: string[] = ["10, 20, 30"];
@@ -33,7 +28,6 @@ export const paginationSizeOptions: string[] = ["10, 20, 30"];
 export const schema = yup.object().shape({
   name: yup.string().required("First Name is required"),
 });
-
 
 const brandOptions = (brands?: IBrandsResponse[]) =>
   brands?.map((item) => ({
@@ -82,7 +76,7 @@ export const columns = ({
     title: "№",
     dataIndex: "_id",
     key: "_id",
-    width: 320,
+    width: 220,
 
     render: (_, __, index) => index + 1,
   },
@@ -90,7 +84,7 @@ export const columns = ({
     title: "Category name",
     dataIndex: "name",
     key: "name",
-    width: 520,
+    width: 320,
     render: (name: string, record: ICatagoryResponse) => {
       return (
         <>
@@ -98,6 +92,7 @@ export const columns = ({
             <Typography>{name}</Typography>
           ) : (
             <InputComponent
+           
               defaultValue={name}
               name="name"
               control={control as any}
