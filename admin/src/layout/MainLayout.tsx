@@ -65,7 +65,7 @@ const MainLayout: React.FC = () => {
                 alt="logo"
                 loading="lazy"
                 style={{
-                  width: collapsed ? "40px" : "150px",
+                  width: collapsed ? "50px" : "150px",
                   transition: "width 0.3s",
                   height: logoData?.[0]?.currentlyLogo ? "70px" : "auto",
                 }}

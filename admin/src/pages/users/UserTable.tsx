@@ -1,23 +1,8 @@
 import React, { FC, useState } from "react";
 import { Table, Typography } from "antd";
-import type { TableColumnsType } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { useGetBasketByUserIdQuery } from "../../store/api/basket/basket-api";
-
-interface IProduct {
-  productId: any;
-  quantity: number;
-  price: number;
-  _id: string;
-}
-
-interface IBasket {
-  _id: string;
-  user: string;
-  products: IProduct[];
-  totalPrice: number;
-  __v: number;
-}
+import { columns } from "./data";
+import { useTranslation } from "react-i18next";
 
 interface DataType {
   key: React.Key;
@@ -28,21 +13,9 @@ interface DataType {
   email: string;
 }
 
-const columns: TableColumnsType<DataType> = [
-  { title: "First Name", dataIndex: "firstName", key: "firstName" },
-  { title: "Last Name", dataIndex: "lastName", key: "lastName" },
-  { title: "Phone", dataIndex: "phone", key: "phone" },
-  { title: "Email", dataIndex: "email", key: "email" },
-];
-
 const UsersTable: FC<{ data: any[] }> = ({ data }) => {
   const [userId, setUserId] = useState<string>("");
-  const { data: userBasketData } = useGetBasketByUserIdQuery<{ data: IBasket }>(
-    { id: userId }
-  );
-  
-
-
+  const { t } = useTranslation();
   return (
     <Table<DataType>
       columns={columns}

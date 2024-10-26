@@ -1,5 +1,5 @@
 import { FC, memo, useCallback, useEffect, useMemo, useState } from "react";
-import { Form, Space, Table } from "antd";
+import { Form, message, Space, Table } from "antd";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IoIosAddCircleOutline } from "react-icons/io";
@@ -21,6 +21,7 @@ import {
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import { ButtonComponent } from "../../utils/components/ButtonComponent";
 import { useGetBrandsQuery } from "../../store/api/brand/brand-api";
+import { useTranslation } from "react-i18next";
 
 type OnChange = NonNullable<TableProps<ICatagoryResponse>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
@@ -55,8 +56,6 @@ const Category: FC = () => {
     reset,
     control,
     formState: { errors },
-    setError,
-    clearErrors,
   } = useForm<IFormField>({
     resolver: state.createCategory ? yupResolver(schema) : undefined,
   });
@@ -108,11 +107,13 @@ const Category: FC = () => {
       columnKey: "age",
     });
   };
-
+  useEffect(() => {
+    if (!errors?.name?.message) return;
+    message.error(errors?.name?.message);
+  }, [errors?.name?.message]);
   const onCreateCategory = useCallback(() => {
     state.paginationData = defaultPaginationData;
     reset();
-    clearErrors("name");
     setState((prev) => ({
       ...(prev ?? {}),
       selectedId: "",
@@ -143,6 +144,8 @@ const Category: FC = () => {
             name: category?.name,
             id: category?.id!,
             brand: category.brand!,
+          }).then(() => {
+            message.success("Ugurla yenilendi");
           });
         setState((prev) => ({
           ...prev,
@@ -154,7 +157,7 @@ const Category: FC = () => {
         craeteCategory({ name: category?.name, brand: category.brand! })
           .then((res: any) => {
             if (res?.error?.data)
-              setError("name", { type: "required", message: res?.error?.data });
+            message.error(res?.error?.data);  
             else {
               setState((prev) => ({
                 ...prev,
@@ -163,10 +166,11 @@ const Category: FC = () => {
                 createCategory: false,
                 updateCategory: false,
               }));
+              message.success("Ugurla əlavə olundu");
             }
           })
           .catch((err) => {
-            console.error("err", err);
+            message.error("Category yaradarken xəta baş verdi");
           });
       }
     },
@@ -175,7 +179,6 @@ const Category: FC = () => {
 
   const editCategory = (id?: string | null) => {
     reset();
-    clearErrors("name");
     setState((prev) => ({
       ...prev,
       selectedId: id!,
@@ -186,7 +189,6 @@ const Category: FC = () => {
 
   const onCancel = () => {
     reset();
-    clearErrors("name");
     setState((prev) => ({
       ...prev,
       selectedId: "",
@@ -199,7 +201,7 @@ const Category: FC = () => {
   const onDeleteCategoryById = (id: string) => {
     deleteCategoryById(id);
   };
-
+  const { t } = useTranslation();
   const memorizedColumns = useMemo(
     () =>
       columns({
@@ -217,6 +219,7 @@ const Category: FC = () => {
         onCancel,
         onDeleteCategoryById,
         brandData: brandData,
+        t
       }),
     [
       errors,

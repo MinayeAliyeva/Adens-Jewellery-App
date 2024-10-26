@@ -1,23 +1,37 @@
-import { Upload, Button, message, UploadProps, UploadFile } from "antd";
+import {
+  Upload,
+  Button,
+  message,
+  UploadProps,
+  UploadFile,
+  Row,
+  Col,
+} from "antd";
 import ImgCrop from "antd-img-crop";
-import { useGetLogoQuery, useCreateLogoMutation, useUpdateLogoMutation, useDeleteLogoMutation } from "../../store/api/setting/setting-api";
-import  { ILogos} from "../../store/api/setting/modules";
-
+import {
+  useGetLogoQuery,
+  useCreateLogoMutation,
+  useUpdateLogoMutation,
+  useDeleteLogoMutation,
+} from "../../store/api/setting/setting-api";
+import { ILogos } from "../../store/api/setting/modules";
+import { MdDelete } from "react-icons/md";
+import { GrUpdate } from "react-icons/gr";
 const Logo: React.FC = () => {
   const { data: logoData } = useGetLogoQuery();
   const [createLogo] = useCreateLogoMutation();
   const [updateLogo] = useUpdateLogoMutation();
-  const [deleteLogo] = useDeleteLogoMutation();  
+  const [deleteLogo] = useDeleteLogoMutation();
 
-  const handleCreate =  (fileList: UploadFile[]) => {
+  const handleCreate = (fileList: UploadFile[]) => {
     if (!fileList[0]) return message.warning("Yükləmək üçün logo seçin.");
     const formData = new FormData();
     formData.append("logo", fileList[0].originFileObj as File);
 
     try {
-       createLogo(formData).then(() => {
-           message.success("Logo uğurla yaradıldı.");
-       });
+      createLogo(formData).then(() => {
+        message.success("Logo uğurla yaradıldı.");
+      });
     } catch (error) {
       message.error("Logo yaradılarkən səhv baş verdi.");
     }
@@ -29,18 +43,18 @@ const Logo: React.FC = () => {
 
   const handleUpdate = (logoId: string) => {
     try {
-       updateLogo({ logoId }).then(() => {
+      updateLogo({ logoId }).then(() => {
         message.success("Logo uğurla yeniləndi.");
-       });
+      });
     } catch (error) {
       message.error("Logo yenilənərkən səhv baş verdi.");
     }
   };
 
-  const handleDelete =  (logoId: string) => {
+  const handleDelete = (logoId: string) => {
     try {
       deleteLogo({ logoId }).then(() => {
-        message.success("Logo uğurla silindi.")
+        message.success("Logo uğurla silindi.");
       });
     } catch (error) {
       message.error("Logo silinərkən səhv baş verdi.");
@@ -49,32 +63,38 @@ const Logo: React.FC = () => {
 
   return (
     <div>
-     <ImgCrop rotationSlider>
-      <Upload
-        
-        listType="picture-card"
-        fileList={[]}
-        onChange={onChange}
-        // onPreview={onPreview}
-      >
-        '+ Upload'
-      </Upload>
-    </ImgCrop>
-     
-      <br/><br/>
+      <ImgCrop rotationSlider>
+        <Upload  listType="picture-card" fileList={[]} onChange={onChange}>
+          '+ Upload'
+        </Upload>
+      </ImgCrop>
 
-      {logoData?.[0]?.logos?.map((logo:ILogos) => (
-        <div key={logo._id}>
-          <img src={logo.url} alt={logo._id} style={{ width: 100, height: 100 }} />
-          <br/> <br/>
-          <Button onClick={() => handleUpdate(logo._id)} type="default">
-            Yenilə
-          </Button>
-          <Button onClick={() => handleDelete(logo._id)} type="dashed">
-            Sil
-          </Button>
-        </div>
-      ))}
+      <Row style={{ gap: "20px" }}>
+        {" "}
+        {logoData?.[0]?.logos?.map((logo: ILogos) => (
+          <Col>
+            {" "}
+            <div key={logo._id}>
+              <img
+                src={logo.url}
+                alt={logo._id}
+                style={{
+                  width: "150px",
+                  height: "150px",
+                  objectFit: "contain",
+                }}
+              />
+              <br /> <br />
+              <Button onClick={() => handleUpdate(logo._id)} type="default">
+                <GrUpdate />
+              </Button>
+              <Button onClick={() => handleDelete(logo._id)} type="dashed">
+                <MdDelete />
+              </Button>
+            </div>
+          </Col>
+        ))}
+      </Row>
     </div>
   );
 };

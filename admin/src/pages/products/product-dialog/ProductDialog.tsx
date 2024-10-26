@@ -2,7 +2,17 @@ import SelectBox from "../../../utils/components/SelectBox";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import dayjs from "dayjs";
 import { UploadOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Form, Input, Modal, Row, Upload } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Form,
+  Input,
+  message,
+  Modal,
+  Row,
+  Upload,
+} from "antd";
 import { DatePickerProps } from "antd/es/date-picker";
 import { UploadChangeParam, UploadFile } from "antd/es/upload";
 import { isEqual } from "lodash";
@@ -108,9 +118,14 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
 
       try {
         if (product?._id && !isUpdateProduct) {
-          await updateProductById({ id: product._id, body: formData });
+          await updateProductById({ id: product._id, body: formData }).then(
+            () => {
+              message.success("Product update!!!");
+            }
+          );
         } else if (!product?._id) {
           await addProduct(formData).then((res) => {
+            message.success("Product created!!!");
             form.resetFields();
           });
         }
@@ -169,7 +184,9 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             <Form.Item
               label={t("Product Name")}
               name="productName"
-              rules={[{ required: true, message: "Product name is required!" }]}
+              rules={[
+                { required: true, message: t("Product name is required!") },
+              ]}
             >
               <Input placeholder={t("Enter product name")} />
             </Form.Item>
@@ -178,7 +195,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             <Form.Item
               label={t("Size Options")}
               name="size"
-              rules={[{ required: true, message: "Size is required!" }]}
+              rules={[{ required: true, message: t("Size is required!") }]}
             >
               <SelectBox
                 name="size"
@@ -198,7 +215,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             <Form.Item
               label={t("Price")}
               name="price"
-              rules={[{ required: true, message: "Price is required!" }]}
+              rules={[{ required: true, message: t("Price is required!") }]}
             >
               <Input type="number" placeholder={t("Enter price")} />
             </Form.Item>
@@ -217,7 +234,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
               label={t("Category Name")}
               name="category"
               rules={[
-                { required: true, message: "Category name is required!" },
+                { required: true, message: t("Category name is required!") },
               ]}
             >
               <SelectBox
@@ -243,7 +260,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
             <Form.Item
               label={t("Brand")}
               name="brand"
-              rules={[{ required: true, message: "Brand  is required!" }]}
+              rules={[{ required: true, message: t("Brand  is required!") }]}
             >
               <SelectBox
                 name="brand"

@@ -192,6 +192,7 @@ const Brand: FC = () => {
   };
   const onDeleteBrandById = (id: string) => {
     deleteBrandById(id);
+    message.success("Brand Delete!!!")
   };
 
   const memorizedColumns = useMemo(

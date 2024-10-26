@@ -16,7 +16,7 @@ export const sizeOptions = [
 
 export const columns = (t: TFunction<"translation", string>)=>[
   {
-    title: "Image",
+    title: t("Image"),
     dataIndex: "mainImageUrl",
     key: "mainImageUrl",
     render: (_: string, record: IProduct) => {
@@ -35,50 +35,50 @@ export const columns = (t: TFunction<"translation", string>)=>[
     key: "productName",
   },
   {
-    title: "Size",
+    title: t("Size"),
     dataIndex: "size",
     key: "size",
     render: (item: string[]) => item?.join(", "),
   },
   {
-    title: "Price",
+    title: t("Price"),
     dataIndex: "price",
     key: "price",
   },
   {
-    title: "Catagory",
+    title: t("Catagory"),
     dataIndex: "category",
     key: "category",
     render: (category: ICatagoryResponse) => <Typography>{category?.name}</Typography>
   },
   {
-    title: "Brand",
+    title: t("Brand"),
     dataIndex: "brand",
     key: "brand",
     render: (brand: IBrandsResponse) => <Typography>{brand?.name}</Typography>
   },
   {
-    title: "Total product count",
+    title: t("Product count"),
     dataIndex: "totalQty",
     key: "totalQty",
   },
   {
-    title: "Weight (g)",
+    title: t("Weight (g)"),
     dataIndex: "weight",
     key: "weight",
   },
   {
-    title: "CreationDate",
+    title: t("CreationDate"),
     dataIndex: "creationDate",
     key: "creationDate",
   },
   {
-    title: "Dimensions",
+    title: t("Dimensions"),
     dataIndex: "dimensions",
     key: "dimensions",
   },
   {
-    title: "WarrantyDuration",
+    title: t("WarrantyDuration"),
     dataIndex: "warrantyDuration",
     key: "warrantyDuration",
   },
@@ -89,7 +89,7 @@ export const columns = (t: TFunction<"translation", string>)=>[
       
       return (
         <Content style={{ display: "flex", gap: "20px" }}>
-          <CreateEditDialogButton product={record} icon={<FaRegEdit/>}  buttonText="Edit" variant="dashed"/>
+          <CreateEditDialogButton product={record} icon={<FaRegEdit/>}  buttonText={t("Edit")} variant="dashed"/>
           <OpenDeleteDialogButton product={record} />
         </Content>
       );
