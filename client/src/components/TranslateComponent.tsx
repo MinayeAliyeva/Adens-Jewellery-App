@@ -1,4 +1,5 @@
-import i18n from "../i18n/index";
+
+import i18n from "../utils/i18n";
 import ButtonComponent from "./form-components/ButtonComponent";
 
 const az = "/assets/images/az.svg";
