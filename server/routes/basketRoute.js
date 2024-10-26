@@ -114,7 +114,6 @@ router.delete("/:userId/:productId", async (req, res) => {
 router.put("/:userId/:productId", async (req, res) => {
   const { userId, productId } = req.params;
   const { quantity } = req.body;
-  console.log("quantity", quantity);
 
   try {
     const basket = await Basket.findOne({

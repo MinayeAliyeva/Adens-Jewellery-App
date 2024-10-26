@@ -128,7 +128,6 @@ router.get("/:id", auth, async (req, res) => {
 
 router.post("/", auth, async (req, res) => {
   const { orderItems, shippingAddress, totalPrice } = req.body;
-  // console.log({ orderItems, shippingAddress, totalPrice });
   const user = await User.findOne({ email: req.body.user.email });
   //   const user = await User.findById({ req.body.userId });
   if (orderItems?.length <= 0) {
@@ -145,7 +144,6 @@ router.post("/", auth, async (req, res) => {
     }
     await product.save();
   });
-  console.log({user, products});
   
  
 
@@ -158,7 +156,6 @@ router.post("/", auth, async (req, res) => {
 
   user.orders.push(order?._id);
   await user.save();
-  console.log("order", order);
   
   res
     .status(200)

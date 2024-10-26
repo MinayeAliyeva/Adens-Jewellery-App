@@ -10,11 +10,17 @@ export const brandApi = createApi({
     //   Authorization: `Bearer ${localStorage.getItem("token")}` || "",
     // },
   }),
-
+  tagTypes: ["Brand"],
   endpoints: (builder) => ({
-    // Tüm markaları getir
     getBrands: builder.query<IBrandsResponse[], void>({
       query: () => `/api/brands`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ _id }) => ({ type: "Brand" as const, id: _id })),
+              { type: "Brand", id: "LIST" },
+            ]
+          : [{ type: "Brand", id: "LIST" }],
     }),
 
     createBrand: builder.mutation<IBrandsResponse, { name: string }>({
@@ -23,6 +29,9 @@ export const brandApi = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: (_, error) => {
+        return error ? [] : [{ type: "Brand", id: "LIST" }];
+      },
     }),
 
     deleteBrandById: builder.mutation<IBrandsResponse, string>({
@@ -30,6 +39,9 @@ export const brandApi = createApi({
         url: `/api/brands/${id}`,
         method: "DELETE",
       }),
+      invalidatesTags: (_, error) => {
+        return error ? [] : [{ type: "Brand", id: "LIST" }];
+      },
     }),
 
     updateBrandById: builder.mutation<IBrandsResponse, { name: string; id: string }>({
@@ -38,6 +50,9 @@ export const brandApi = createApi({
         method: "PUT",
         body,
       }),
+      invalidatesTags: (_, error, { id }) => {
+        return error ? [] : [{ type: "Brand", id }, { type: "Brand", id: "LIST" }];
+      },
     }),
   }),
 });

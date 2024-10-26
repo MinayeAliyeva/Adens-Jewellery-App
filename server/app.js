@@ -42,12 +42,11 @@ const connectInfo = {
   DATABASE_NAME: "adensdb",
 };
 (async () => {
-  console.log("daxil");
   try {
     await mongoose.connect(
       `mongodb+srv://${connectInfo?.USER_NAME}:${connectInfo?.PASSWORD}@cluster0.pp6ku.mongodb.net/${connectInfo?.DATABASE_NAME}?retryWrites=true&w=majority`
     );
-    console.log(" mongodb baglantisi kuruldu");
+    console.log("mongodb baglantisi kuruldu");
   } catch (error) {
     console.log(error);
   }

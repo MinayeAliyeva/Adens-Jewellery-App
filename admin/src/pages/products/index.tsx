@@ -17,7 +17,7 @@ const Products = () => {
         buttonText={t("Create Product")}
         type="primary"
       />
-      <ProductsTable t={t} loading={isLoading} data={data!} columns={columns} />
+      <ProductsTable loading={isLoading} data={data ?? []} columns={columns(t)} />
     </>
   );
 };

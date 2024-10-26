@@ -9,7 +9,6 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   const category = await Category.findById(req.params.id);
-  console.log("category", category);
 
   if (!category) {
     return res.status(404).send("aradığınız kategori yok.");
@@ -39,7 +38,6 @@ router.put("/:id", async (req, res) => {
 
   
   // let findedCategory = await Category.findOne({ name: req.body.name });
-  // console.log({findedCategory});
   
   
   // if (findedCategory && findedCategory?.brand?._id === req.body?.brand) {

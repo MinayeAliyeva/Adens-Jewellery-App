@@ -3,7 +3,6 @@ import { Outlet } from "react-router-dom";
 import Footer from "./footer";
 import Container from "../components/Container";
 const MainLayout = () => {
-  console.log("RERENDER MAIN LAYOUT");
   
   return (
     <>

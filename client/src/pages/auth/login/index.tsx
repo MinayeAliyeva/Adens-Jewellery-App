@@ -1,4 +1,4 @@
-import { Form, Typography, Alert } from "antd";
+import { Form, Typography, Alert, message } from "antd";
 import { isEmpty } from "lodash";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -46,7 +46,6 @@ const Login: React.FC = () => {
         email: data.email,
         password: data.password,
       }).then((res: any) => {
-        console.log({ res: res });
         if (!isEmpty(res?.error)) {
           setError("error", {
             type: "server",
@@ -60,7 +59,7 @@ const Login: React.FC = () => {
         navigate("/home");
       });
     } catch (error) {
-      console.log("Login error", error);
+      message.error("Something went wrong!!!");
     }
   };
 

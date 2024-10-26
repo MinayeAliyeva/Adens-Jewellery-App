@@ -7,13 +7,23 @@ import { FaSave } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import InputComponent from "../../utils/components/InputComponent";
-import { Control, FieldErrors, UseFormHandleSubmit } from "react-hook-form";
+import { Control, UseFormHandleSubmit } from "react-hook-form";
 import { IFormField } from ".";
 import { Content } from "antd/es/layout/layout";
 import { TFunction } from "i18next";
 
+export interface IPaginationData {
+  current: number;
+  pageSize: number;
+};
+
+export const defaultPaginationData: IPaginationData = {
+  current: 1,
+  pageSize: 10,
+};
+
 export const schema = yup.object().shape({
-  name: yup.string().required("First Name is required"),
+  name: yup.string().required("Brand Name is required"),
 });
 
 export const columns = ({
@@ -21,16 +31,17 @@ export const columns = ({
   filteredInfo,
   setAgeSort,
   sortedInfo,
+  createBrand,
+  updateBrand,
   editTable,
   isEdit,
   isCreate,
   editBrand,
   selectedId,
-  errors,
   onFinish,
   handleSubmit,
   onCancel,
-  onDeleteCategoryById,
+  onDeleteBrandById,
   t
 }: {
   handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
@@ -41,12 +52,13 @@ export const columns = ({
   editTable?: (isEdit: boolean) => void;
   isEdit?: boolean;
   isCreate?: boolean;
+  createBrand?: boolean;
+  updateBrand?: boolean;
   editBrand?: (id: string) => void;
   selectedId?: string | null;
-  errors: FieldErrors<IFormField>;
   onFinish: (values: IFormField) => void;
   onCancel: () => void;
-  onDeleteCategoryById: (id: string) => void;
+  onDeleteBrandById: (id: string) => void;
   t: TFunction<"translation", string>
 }): TableColumnsType<ICatagoryResponse> => [
   {
@@ -62,13 +74,12 @@ export const columns = ({
     dataIndex: "name",
     key: "name",
     render: (name: string, record: ICatagoryResponse) => {
-      if (!record?._id && !record?.name) {
+      if (!record?._id && !record?.name && createBrand) {
         return (
           <InputComponent
             name="name"
             control={control as any}
             placeholder="Brand Name"
-            errorMessage={errors?.name?.message}
           />
         );
       }
@@ -80,7 +91,6 @@ export const columns = ({
               name="name"
               control={control as any}
               placeholder="Brand Name"
-              errorMessage={errors?.name?.message}
             />
           ) : (
             <Typography>{name}</Typography>
@@ -132,10 +142,13 @@ export const columns = ({
     key: "actions",
     align: "right",
     render: (_, record: ICatagoryResponse) => {
+      const isEdit =
+      (record?._id !== selectedId && !createBrand && !updateBrand) ||
+      (createBrand && record?._id !== selectedId && !updateBrand) ||
+      (updateBrand && record?._id !== selectedId);
       return (
         <div>
-          {(record._id && record._id !== selectedId) ||
-          record?._id === undefined || (record?._id === undefined && !errors?.name?.message) ? (
+          {isEdit? (
             <Content style={{ display: "flex", gap: "20px" }}>
               <Button
                 htmlType="button"
@@ -145,7 +158,7 @@ export const columns = ({
                 variant="dashed"
               />
               <Button
-                onClick={() => onDeleteCategoryById(record?._id)}
+                onClick={() => onDeleteBrandById(record?._id)}
                 icon={<MdDelete />}
                 htmlType="button"
                 color="danger"
@@ -158,8 +171,9 @@ export const columns = ({
                 type="primary"
                 htmlType="button"
                 icon={<FaSave />}
-                onClick={handleSubmit((values) =>
+                onClick={handleSubmit((values) =>{
                   onFinish({ ...values, id: record?._id })
+                }
                 )}
               />
               <Button

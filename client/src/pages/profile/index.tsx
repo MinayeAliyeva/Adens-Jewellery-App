@@ -53,7 +53,6 @@ const UserProfile = () => {
       getBasket({ id: userData?._id ?? "" });
     }
   }, [userData?._id]);
-  console.log("basketData", basketData);
 
   return (
     <Layout style={{ minHeight: "100vh", padding: "25px" }}>

@@ -5,7 +5,6 @@ import { Content } from 'antd/es/layout/layout';
 const renderNavLink = (link:InavLinksData) => <NavLink key={link.path} to={link.path} label={link.label}/>;
 
 export const HeaderMenu = () => {
-    console.log("HEADER MENU RERENDER ");
   return (
     <Content style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
         {navLinksData?.map(renderNavLink)}

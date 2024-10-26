@@ -6,7 +6,6 @@ const az = "/assets/images/az.svg";
 const en = "/assets/images/eng.svg";
 
 const changeLanguage = (lng: string) => {
-  console.log("lng", lng);
   i18n.changeLanguage(lng);
 };
 

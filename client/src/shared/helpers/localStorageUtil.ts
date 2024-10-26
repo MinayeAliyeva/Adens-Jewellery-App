@@ -20,7 +20,6 @@ export const decodeJWT = (token: string) => {
 export const getLocalStorage = <T>(key: string): T | null => {
   try {
     const serializedData = localStorage.getItem(key);
-    // console.log("jwt", decodeJWT(serializedData!));
 
     return serializedData ? JSON.parse(serializedData) : null;
   } catch (error) {

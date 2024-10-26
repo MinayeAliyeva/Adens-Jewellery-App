@@ -6,6 +6,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { IBrandsResponse } from "../../store/api/brand/modules";
 import { ICatagoryResponse } from "../../store/api/catagory/modules";
 import { IProduct } from "../../store/api/product/modules";
+import { TFunction } from "i18next";
 
 export const sizeOptions = [
   { label: "Small", value: "S" },
@@ -13,7 +14,7 @@ export const sizeOptions = [
   { label: "Large", value: "L" },
 ];
 
-export const columns = [
+export const columns = (t: TFunction<"translation", string>)=>[
   {
     title: "Image",
     dataIndex: "mainImageUrl",
@@ -22,14 +23,14 @@ export const columns = [
       return (
         <img
           src={record?.mainImageUrl}
-          alt={record.productName}
+          alt={record?.productName}
           style={{ width: 50, height: 50, objectFit: "cover" }}
         />
       );
     },
   },
   {
-    title: "Name",
+    title: t("Product Name"),
     dataIndex: "productName",
     key: "productName",
   },

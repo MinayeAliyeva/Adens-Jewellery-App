@@ -6,7 +6,6 @@ const { Title, Paragraph } = Typography;
 
 const Contact = () => {
   const onFinish = (values: any) => {
-    console.log("Success:", values);
   };
   const { t } = useTranslation();
   return (
