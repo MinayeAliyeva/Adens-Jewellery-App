@@ -19,7 +19,6 @@ const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
   let token = req.header("Authorization");
-  console.log("AUTH token", token);
 
   if (!token) {
     return res.status(401).send("yetkiniz yok.");

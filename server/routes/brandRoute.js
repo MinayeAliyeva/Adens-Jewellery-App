@@ -17,7 +17,6 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  console.log({brand: req.body});
   let findedBrand = await Brand.findOne({ name: req.body.name });
 
   if (findedBrand) {

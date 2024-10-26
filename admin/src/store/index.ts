@@ -7,6 +7,7 @@ import { catagoryApi } from "./api/catagory/catagory-api";
 import { brandApi } from "./api/brand/brand-api";
 import { usersApi } from "./api/users/users-api";
 import { basketApi } from "./api/basket/basket-api";
+import { settingApi } from "./api/setting/setting-api";
 
 // Create the Redux store
 export const store = configureStore({
@@ -18,6 +19,7 @@ export const store = configureStore({
     [brandApi.reducerPath]: brandApi.reducer,
     [usersApi.reducerPath]: usersApi.reducer,
     [basketApi.reducerPath]: basketApi.reducer,
+    [settingApi.reducerPath]: settingApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -26,7 +28,8 @@ export const store = configureStore({
       catagoryApi.middleware,
       brandApi.middleware,
       usersApi.middleware,
-      basketApi.middleware
+      basketApi.middleware,
+      settingApi.middleware
     ),
 });
 

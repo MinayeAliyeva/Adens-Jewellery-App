@@ -52,7 +52,6 @@ export const catagoryApi = createApi({
         body,
       }),
       invalidatesTags: (result, error, { id }) => {
-        // Səhv olmadıqda yalnız spesifik Category-nin və ümumi siyahının tag-larını invalidates edir
         return error ? [] : [{ type: "Category", id }, { type: "Category", id: "LIST" }];
       },
     }),

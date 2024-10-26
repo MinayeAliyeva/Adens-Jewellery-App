@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { MdClearAll } from "react-icons/md";
 import type { TableProps } from "antd";
+import { map } from "lodash";
 import {
   columns,
   defaultPaginationData,
@@ -107,6 +108,7 @@ const Category: FC = () => {
       columnKey: "age",
     });
   };
+
   const onCreateCategory = useCallback(() => {
     state.paginationData = defaultPaginationData;
     reset();
@@ -124,8 +126,10 @@ const Category: FC = () => {
     setState((prev) => ({
       ...(prev ?? {}),
       tableData: [{ name: "", _id: "" }, ...prev.tableData],
+      createCategory: true,
+      paginationData: defaultPaginationData,
     }));
-  }, []);
+  }, [state.tableData]);
 
   const onFinish = useCallback(
     (category: IFormField) => {
@@ -180,7 +184,6 @@ const Category: FC = () => {
     }));
   };
 
-
   const onCancel = () => {
     reset();
     clearErrors("name");
@@ -189,6 +192,7 @@ const Category: FC = () => {
       selectedId: "",
       createCategory: false,
       updateCategory: false,
+      tableData: categoryData!,
     }));
   };
 
@@ -223,6 +227,10 @@ const Category: FC = () => {
       state.updateCategory,
     ]
   );
+  const tableDataSource = useMemo(
+    () => map(state.tableData, (item) => ({ ...item, key: item._id })),
+    [state.tableData]
+  );
   return (
     <>
       <Space style={{ marginBottom: 16 }}>
@@ -250,9 +258,11 @@ const Category: FC = () => {
         <Table<ICatagoryResponse>
           columns={memorizedColumns}
           loading={isLoadingCategory || isLoading}
-          dataSource={state.tableData}
+          dataSource={tableDataSource}
           onChange={handleChange}
           pagination={{
+            defaultCurrent: state.paginationData?.current,
+            defaultPageSize: state.paginationData?.pageSize,
             pageSize: state.paginationData?.pageSize,
             current: state.paginationData?.current,
             onShowSizeChange(current, pageSize) {
@@ -269,6 +279,9 @@ const Category: FC = () => {
                   current: page,
                   pageSize,
                 },
+                createCategory: false,
+                updateCategory: false,
+                tableData: categoryData!,
               });
             },
           }}

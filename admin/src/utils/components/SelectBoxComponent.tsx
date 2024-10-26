@@ -1,4 +1,4 @@
-import { CSSProperties, FC, ReactElement } from "react";
+import { CSSProperties, FC } from "react";
 import {
   Control,
   Controller,
@@ -35,7 +35,6 @@ const SelectBoxComponent: FC<ISelectBoxProps<FieldValues>> = ({
   size = "large",
   ...rest
 }) => {
-    console.log({defaultValue});
     
   return (
     <>
@@ -75,32 +74,3 @@ const SelectBoxComponent: FC<ISelectBoxProps<FieldValues>> = ({
 };
 
 export default SelectBoxComponent;
-
-// import React from 'react';
-// import { Select } from 'antd';
-// import type { SelectProps } from 'antd';
-
-// const options: SelectProps['options'] = [];
-
-// for (let i = 10; i < 36; i++) {
-//   options.push({
-//     value: i.toString(36) + i,
-//     label: i.toString(36) + i,
-//   });
-// }
-
-// const handleChange = (value: string) => {
-//   console.log(`selected ${value}`);
-// };
-
-// const SelectBoxComponent: React.FC = () => (
-//   <Select
-//     mode="tags"
-//     style={{ width: '100%' }}
-//     placeholder="Tags Mode"
-//     onChange={handleChange}
-//     options={options}
-//   />
-// );
-
-// export default SelectBoxComponent;

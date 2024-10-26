@@ -5,7 +5,6 @@ import type { GetProp } from "antd";
 const onChange: GetProp<typeof Checkbox.Group, "onChange"> = (
   checkedValues
 ) => {
-  console.log("checked = ", checkedValues);
 };
 
 interface ICheckboxProps {

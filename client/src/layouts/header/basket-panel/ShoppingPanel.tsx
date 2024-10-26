@@ -61,7 +61,6 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
   }, [userData?._id, isDrawerVisible]);
 
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
-  console.log("selectedProduct", selectedProduct);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 

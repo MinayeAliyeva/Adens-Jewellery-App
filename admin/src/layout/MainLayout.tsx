@@ -1,12 +1,13 @@
 import TranslateComponent from "../utils/components/TranslateComponent";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Col, Divider, Layout, Row, theme } from "antd";
+import { Col, Divider, Image, Layout, Row, Spin, theme } from "antd";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiLogOutCircle } from "react-icons/bi";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { ButtonComponent } from "../utils/components/ButtonComponent";
 import { menu } from "./data";
+import { useGetLogoQuery } from "../store/api/setting/setting-api";
 
 const logo = "/assets/images/logo.png";
 const { Header, Sider, Content } = Layout;
@@ -29,6 +30,8 @@ const MainLayout: React.FC = () => {
     setCollapsed(!collapsed);
   };
 
+  const { data: logoData, isLoading } = useGetLogoQuery();
+  const logoUrl = logoData?.[0]?.currentlyLogo || logo;
   return (
     <Layout>
       <Sider
@@ -52,20 +55,27 @@ const MainLayout: React.FC = () => {
             padding: "10px",
           }}
         >
-          <Link to="/">
-            <img
-              src={logo}
-              alt="logo"
-              style={{
-                width: collapsed ? "40px" : "150px",
-                transition: "width 0.3s",
-              }}
-            />
-          </Link>
+          {isLoading ? (
+            <Spin />
+          ) : (
+            <Link to="/">
+              <Image
+                preview={false}
+                src={logoUrl}
+                alt="logo"
+                loading="lazy"
+                style={{
+                  width: collapsed ? "40px" : "150px",
+                  transition: "width 0.3s",
+                  height: logoData?.[0]?.currentlyLogo ? "70px" : "auto",
+                }}
+              />
+            </Link>
+          )}
         </Content>
         <Divider style={{ backgroundColor: "#292c3261" }} />
 
-        {menu.map((item) => (
+        {menu?.map((item) => (
           <Content key={item.path}>
             <Content
               style={{

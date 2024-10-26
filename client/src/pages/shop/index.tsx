@@ -17,7 +17,6 @@ import { useTranslation } from "react-i18next";
 const Shop = () => {
  
   const params = useMemo(() => new URLSearchParams(), []) as  URLSearchParams;
-  console.log({params: params.toString()});
   
   const [getPrducts, { data: productsData }] = useLazyGetProductsQuery<{
     data: IProduct[];

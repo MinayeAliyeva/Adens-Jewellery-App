@@ -57,7 +57,6 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
       productId: product?._id,
       userId: userData?._id,
     }).then((res) => {
-      console.log({ res });
       if (isEmpty(res?.data)) return;
       dispatch(
         setFavoriteProductCount(res.data?.wishList?.products?.length ?? 0)

@@ -60,9 +60,7 @@ const Register: FC = () => {
   const onSubmit = async (data: IRegisterFormValues) => {
     try {
       const res = await registerUser(data);
-      console.log({ res });
       if (!isEmpty(res?.data)) {
-        console.log("ONSUBMET");
         
         reset();
         dispatch(setRegister())

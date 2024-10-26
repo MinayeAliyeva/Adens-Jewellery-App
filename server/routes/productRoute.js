@@ -76,7 +76,6 @@ router.get("/", async (req, res) => {
       const allProducts = await Product.find()
         .populate("category")
         .populate("brand");
-      console.log("allProducts", allProducts);
 
       return res.status(200).send(allProducts);
     }
@@ -205,7 +204,6 @@ router.post(
       repairService: req.body.repairService,
       priceHistory: req.body.priceHistory,
     });
-    console.log("server product post", product);
 
     try {
       const result = await product.save();
@@ -293,7 +291,6 @@ router.put(
         },
         { new: true }
       );
-      console.log({ updatedProduct });
 
       res.status(200).send(updatedProduct);
     } catch (error) {

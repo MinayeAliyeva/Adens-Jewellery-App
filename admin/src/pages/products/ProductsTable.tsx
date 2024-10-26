@@ -1,10 +1,10 @@
-import { SearchOutlined } from "@ant-design/icons";
-import type { InputRef, TableColumnType, TableColumnsType } from "antd";
-import { Button, Input, Space, Table } from "antd";
-import type { FilterDropdownProps } from "antd/es/table/interface";
-import { TFunction } from "i18next";
-import { map } from "lodash";
 import { FC, memo, useMemo, useRef } from "react";
+import { Button, Input, Space, Table } from "antd";
+import type { InputRef, TableColumnType, TableColumnsType } from "antd";
+import { SearchOutlined } from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
+import type { FilterDropdownProps } from "antd/es/table/interface";
+import { map } from "lodash";
 import { IProduct } from "../../store/api/product/modules";
 
 type DataIndex = keyof IProduct;
@@ -13,10 +13,9 @@ const ProductsTable: FC<{
   data: IProduct[];
   columns: TableColumnsType<IProduct>;
   loading: boolean;
-  t: TFunction<"translation", string>;
-}> = ({ data, columns, loading, t }) => {
+}> = ({ data, columns, loading}) => {
   const searchInput = useRef<InputRef>(null);
-
+  const { t } = useTranslation();
   const handleSearch = (
     selectedKeys: string[],
     confirm: FilterDropdownProps["confirm"],
@@ -124,8 +123,8 @@ const ProductsTable: FC<{
       }),
     [columns]
   );
-
-  return <Table loading={loading} columns={tableColumns} dataSource={data} />;
+  const tableDataSource = useMemo(() => map(data,item => ({ ...item, key: item._id })), [data]);
+  return <Table loading={loading} columns={tableColumns} dataSource={tableDataSource}  />;
 };
 
 export default memo(ProductsTable);

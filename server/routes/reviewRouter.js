@@ -90,7 +90,6 @@ router.get('/:productId', async (req, res) => {
         });
         averageRating = totalComments > 0 ? Math.floor(totalRating / totalComments) : 0;
         product.averageRating = averageRating;
-        console.log({ product });
         
         await product.save();
       }
@@ -146,7 +145,6 @@ router.delete('/:productId/:userId/comment/:commentId', async (req, res) => {
 
     
     const commentIndex = review.comments.findIndex(c => c._id.toString() === commentId);
-   console.log({commentIndex});
    
     if (commentIndex !== -1) {
       review.comments.splice(commentIndex, 1);

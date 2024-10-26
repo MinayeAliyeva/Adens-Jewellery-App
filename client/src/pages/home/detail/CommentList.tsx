@@ -23,9 +23,7 @@ const CommentList: FC<ICommentProps> = ({ productId }) => {
   );
   const [deleteComment] = useDeleteCommentFromReviewsMutation();
 
-  const [deleteAllComment] = useDeleteAllCommentFromReviewsMutation();
 
-  console.log({reviewData});
   
   const transformReviewsData = reviewData?.reviews?.map((review: any) => ({
     userName: review.user.firstName + " " + review.user.lastName,
@@ -40,15 +38,11 @@ const CommentList: FC<ICommentProps> = ({ productId }) => {
   const onDeleteComment = (commentId: string) => {
     deleteComment({ productId, userId: userData?._id!, commentId }).then(
       (res) => {
-        console.log({ res });
       }
     );
   };
 
-  const onDeleteAllComment = () => {
-    deleteAllComment({ userId: userData?._id!, productId });
-  };
-  console.log({transformReviewsData});
+
   
   return (
     <>

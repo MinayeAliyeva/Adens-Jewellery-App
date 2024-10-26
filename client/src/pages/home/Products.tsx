@@ -5,7 +5,6 @@ import { IProduct } from "../../redux/api/product/modules";
 
 const Products = () => {
   const { data } = useGetProductsQuery<{ data: IProduct[] }>("");
-//  console.log('data',data);
  
   return (
     <>
