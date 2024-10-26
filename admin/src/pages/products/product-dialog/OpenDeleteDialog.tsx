@@ -3,6 +3,7 @@ import { MdDelete } from "react-icons/md";
 import { ButtonComponent } from "../../../utils/components/ButtonComponent";
 import { IProduct } from "../../../store/api/product/modules";
 import DeleteDialog from "./DeleteDialog";
+import { useTranslation } from "react-i18next";
 
 interface OpenDeleteDialogButtonProps {
   product?: IProduct;
@@ -18,6 +19,7 @@ const OpenDeleteDialogButton: React.FC<OpenDeleteDialogButtonProps> = ({
     setIsDelete(true);
     setOpen(true);
   };
+  const { t } = useTranslation();
 
   return (
     <>
@@ -25,19 +27,13 @@ const OpenDeleteDialogButton: React.FC<OpenDeleteDialogButtonProps> = ({
         style={{ marginBottom: "10px" }}
         danger
         type="primary"
-        buttonText="Delete"
+        buttonText={t("Delete")}
         onClick={handleDeleteClick}
-        icon={<MdDelete/>}
+        icon={<MdDelete />}
         variant="dashed"
         color="danger"
       />
-      {open && (
-        <DeleteDialog
-          open={open}
-          setOpen={setOpen}
-          product={product}
-        />
-      )}
+      {open && <DeleteDialog open={open} setOpen={setOpen} product={product} />}
     </>
   );
 };

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { MdDelete } from "react-icons/md";
-import { Modal, Row, Col, Typography, Divider } from "antd";
+import { Modal, Row, Col, Typography, Divider, message } from "antd";
 import { IProduct } from "../../../store/api/product/modules";
 import { useDeleteProductByIdMutation } from "../../../store/api/product/product-api";
 import { ButtonComponent } from "../../../utils/components/ButtonComponent";
@@ -19,6 +19,7 @@ const DeleteDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
     if (product?._id) {
       deleteProductById(product._id).then(() => {
         setOpen?.(false);
+        message.success("Product delete!!!")
       });
     }
   };
@@ -31,9 +32,9 @@ const DeleteDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         <Typography.Title
           level={4}
           style={{
-            color: "#1f1f1f", // Başlıkta koyu gri renk
+            color: "#1f1f1f", 
             textAlign: "center",
-            fontWeight: 600, // Kalın başlık
+            fontWeight: 600, 
           }}
         >
           Delete Confirmation
@@ -45,9 +46,9 @@ const DeleteDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
       onCancel={toggleOpen}
       width={"500px"}
       bodyStyle={{
-        backgroundColor: "#ffffff", // Temiz ve sade beyaz arka plan
+        backgroundColor: "#ffffff", 
         padding: "20px",
-        borderRadius: "10px", // Modal köşeleri hafif yuvarlatıldı
+        borderRadius: "10px", 
       }}
       footer={null}
     >
@@ -55,17 +56,16 @@ const DeleteDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         style={{
           textAlign: "center",
           fontSize: "16px",
-          color: "#595959", // Daha açık gri metin
+          color: "#595959", 
         }}
       >
         Are you sure you want to delete the product{" "}
-        <strong style={{ color: "#faad14" }}> {/* Ürünün adı parlak turuncu */}
+        <strong style={{ color: "#faad14" }}> 
           "{product?.productName}"
         </strong>
         ? This action cannot be undone.
       </Typography.Paragraph>
       <Divider style={{ margin: "20px 0", borderColor: "#d9d9d9" }} />{" "}
-      {/* Daha ince gri çizgi */}
       <Row justify="center" gutter={16} style={{ marginTop: 20 }}>
         <Col>
           <ButtonComponent

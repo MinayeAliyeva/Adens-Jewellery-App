@@ -12,6 +12,7 @@ import { IFormField } from ".";
 import { IBrandsResponse } from "../../store/api/brand/modules";
 import SelectBoxComponent from "../../utils/components/SelectBoxComponent";
 import { Content } from "antd/es/layout/layout";
+import { TFunction } from "i18next";
 
 export interface IPaginationData {
   current: number;
@@ -53,6 +54,7 @@ export const columns = ({
   handleSubmit,
   onCancel,
   onDeleteCategoryById,
+  t,
 }: {
   handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
   control: Control<IFormField>;
@@ -71,6 +73,7 @@ export const columns = ({
   onDeleteCategoryById: (id: string) => void;
   brandData?: IBrandsResponse[];
   createCategory: boolean;
+  t: TFunction;
 }): TableColumnsType<ICatagoryResponse> => [
   {
     title: "№",
@@ -81,7 +84,7 @@ export const columns = ({
     render: (_, __, index) => index + 1,
   },
   {
-    title: "Category name",
+    title:t("Category name"),
     dataIndex: "name",
     key: "name",
     width: 320,
@@ -92,7 +95,6 @@ export const columns = ({
             <Typography>{name}</Typography>
           ) : (
             <InputComponent
-           
               defaultValue={name}
               name="name"
               control={control as any}
@@ -106,7 +108,7 @@ export const columns = ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder="Search address"
+          placeholder="Search "
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -141,7 +143,7 @@ export const columns = ({
     ellipsis: true,
   },
   {
-    title: "Brand name",
+    title: t("Brand name"),
     dataIndex: "brand",
     key: "brand",
     width: 520,
@@ -177,7 +179,7 @@ export const columns = ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder="Search address"
+          placeholder="Search category"
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])

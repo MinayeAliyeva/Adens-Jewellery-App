@@ -101,7 +101,7 @@ export const columns = ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder="Search address"
+          placeholder="Search brand"
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])

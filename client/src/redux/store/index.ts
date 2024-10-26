@@ -11,12 +11,13 @@ import { basketCountSlice } from "../features/basketProductCountSlice";
 import { favoriteApi } from "../api/favorite/favorite-api";
 import { favoriteCountSlice } from "../features/favoriteProductCount";
 import { reviewApi } from "../api/review/review-api";
+import { logoApi } from "../api/logo/logo-api";
 
 export const store = configureStore({
   reducer: {
-    "authReducer": authSlice.reducer,
-    "basketProductCountReducer": basketCountSlice.reducer,
-    "favoriteCountReducer": favoriteCountSlice.reducer,
+    authReducer: authSlice.reducer,
+    basketProductCountReducer: basketCountSlice.reducer,
+    favoriteCountReducer: favoriteCountSlice.reducer,
     [productApi.reducerPath]: productApi.reducer,
     [catagoryApi.reducerPath]: catagoryApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
@@ -25,6 +26,7 @@ export const store = configureStore({
     [basketApi.reducerPath]: basketApi.reducer,
     [favoriteApi.reducerPath]: favoriteApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
+    [logoApi.reducerPath]: logoApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -35,7 +37,8 @@ export const store = configureStore({
       orderApi.middleware,
       basketApi.middleware,
       favoriteApi.middleware,
-      reviewApi.middleware
+      reviewApi.middleware,
+      logoApi.middleware
     ),
 });
 
@@ -44,6 +47,9 @@ export type AppDispatch = typeof store.dispatch;
 
 setupListeners(store.dispatch);
 // Selectors
-export const getUserDataSelector = (state: RootState) => state.authReducer?.user;
-export const getUserBasketProductCountSelector = (state: RootState) => state.basketProductCountReducer?.count;
-export const getUserFavoriteProductCountSelector = (state: RootState) => state.favoriteCountReducer?.count;
+export const getUserDataSelector = (state: RootState) =>
+  state.authReducer?.user;
+export const getUserBasketProductCountSelector = (state: RootState) =>
+  state.basketProductCountReducer?.count;
+export const getUserFavoriteProductCountSelector = (state: RootState) =>
+  state.favoriteCountReducer?.count;

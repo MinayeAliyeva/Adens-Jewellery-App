@@ -56,9 +56,6 @@ router.post("/auth", async (req, res) => {
     return res.status(400).send("Hatali Email ya Parala");
   }
   const token = user.createAuthToken();
-
-  
-
   res.send(token);
 });
 
