@@ -48,5 +48,20 @@
   "Name": "Name",
   "Email": "Email",
   "Phone": "Phone",
-  "Address": "Address"
+  "Address": "Address",
+  "You must be a member for this process.": "You must be a member for this process.",
+  "Product added to basket": "Product added to basket",
+  "Product removed from basket": "Product removed from basket",
+  "Product count": "Product count",
+  "Basket is empty": "Basket is empty",
+  "Your basket quantity updated successfully": "Your basket quantity updated successfully",
+  "Close": "Close",
+  "Clear": "Clear",
+  "Password": "Sifre",
+  "Enter password": "Enter password",
+  "Password must be at least 6 characters!": "Password must be at least 6 characters!",
+  "Password must contain at least one uppercase letter!": "Password must contain at least one uppercase letter!", 
+  "Password must contain at least one lowercase letter!": "Password must contain at least one lowercase letter!",
+  "Password must contain at least one digit!": "Password must contain at least one digit!",
+  "Password must contain at least one special character!": "Password must contain at least one special character!"
 }

@@ -1,6 +1,8 @@
-import { Button, message } from "antd";
+import { Button } from "antd";
 import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
+import { isEmpty } from "lodash";
+import { useTranslation } from "react-i18next";
 import {
   DollarCircleOutlined,
   HeartFilled,
@@ -17,16 +19,17 @@ import {
   useAddProductToFavoriteMutation,
   useLazyGetFavoriteByUserIdQuery,
 } from "../../../redux/api/favorite/favorite-api";
-import { isEmpty } from "lodash";
 import { setFavoriteProductCount } from "../../../redux/features/favoriteProductCount";
 import { setBasketProductCount } from "../../../redux/features/basketProductCountSlice";
-import { showSuccessToast } from "../../../components/NotficationComponent";
+import { showErrorToast, showSuccessToast } from "../../../shared/components/NotficationComponent";
+
 
 interface IProductInfoProps {
   product: IProduct;
 }
 
 const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const userData = getUserFromToken();
 
@@ -45,28 +48,43 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
   }, [userData?._id, isLoadingAddUserFavoriteData]);
 
   const isActiveFavorite =
-    userFavoriteDate?.products?.find((p) => p.productId._id === product?._id)
+    userFavoriteDate?.products?.find((p) => p.productId?._id === product?._id)
       ?.isFavorite ?? false;
 
-  const onCreateWishList = () => {
-    if (!userData?._id) {
-      message.error("Bu ishlem ichin Uye olmaniz lazim");
-      return;
-    }
+  const uptadedWithList = () => {
     addFavorite({
       productId: product?._id,
-      userId: userData?._id,
+      userId: userData?._id ?? ""
     }).then((res) => {
       if (isEmpty(res?.data)) return;
       dispatch(
         setFavoriteProductCount(res.data?.wishList?.products?.length ?? 0)
       );
     });
+  }
+
+
+  const onCreateWishList = () => {
+    if (!userData?._id) {
+      showErrorToast(t("You must be a member for this process."));
+      return;
+    }
+    showSuccessToast(t("Product Add to Wishlist"));
+    uptadedWithList();
+  };
+
+  const onRemoveWishList = () => {
+    if (!userData?._id) {
+      showErrorToast(t("You must be a member for this process."));
+      return;
+    }
+    showSuccessToast(t("Product Remove to Wishlist"));
+    uptadedWithList();
   };
 
   const onCreateOrder = () => {
     if (!userData?._id) {
-      message.error("Bu ishlem ichin Uye olmaniz lazim");
+      showErrorToast(t("You must be a member for this process."));
       return;
     }
     addBasket({
@@ -75,16 +93,20 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
       quantity: 1,
     }).then((res) => {
       if (isEmpty(res?.data)) return;
-      dispatch(setBasketProductCount(res?.data.basket?.products.length));
+      dispatch(setBasketProductCount(res?.data?.basket?.products.length));
 
-      if (res?.data.basket?.products.find((p) => p.quantity === 1)) {
-        showSuccessToast("product sebete elave edildi");
-      } else showSuccessToast("sebetedeki mehsulun miqdati  yenilendi");
+      if (res?.data.basket?.products.find((p) => p?.quantity === 1)) {
+        showSuccessToast(t("Product added to basket"));
+      } else showSuccessToast(t("Your basket quantity updated successfully"));
     });
   };
 
   const handlePayment = () => {
-    message.success("Payment process started successfully.");
+    if (!userData?._id) {
+      showErrorToast(t("You must be a member for this process."));
+      return;
+    }
+    showSuccessToast("Payment process started successfully.");
   };
 
   return (
@@ -93,7 +115,7 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
         {isActiveFavorite ? (
           <HeartFilled
             className="cursor-pointer transition-colors duration-300 text-3xl text-red-600"
-            onClick={onCreateWishList}
+            onClick={onRemoveWishList}
           />
         ) : (
           <HeartOutlined
@@ -136,6 +158,11 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
       {product?.warrantyDuration && (
         <Paragraph>
           <strong>Warranty Duration:</strong> {product?.warrantyDuration} years
+        </Paragraph>
+      )}
+      {product?.category && (
+        <Paragraph>
+          <strong>Category:</strong> {product?.category?.name}
         </Paragraph>
       )}
       {product?.brand && (

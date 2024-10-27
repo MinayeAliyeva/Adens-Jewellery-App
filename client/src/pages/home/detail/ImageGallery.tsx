@@ -14,7 +14,7 @@ const ImageGallery: FC<IImageGalleryProps> = ({
 }) => {
   const [previewImage, setPreviewImage] = useState(mainImageUrl);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
+
   const handleImageClick = (img: string) => {
     setPreviewImage(img);
     setIsModalVisible(true);
@@ -26,18 +26,15 @@ const ImageGallery: FC<IImageGalleryProps> = ({
 
   return (
     <div style={{ position: "relative" }}>
-      <img
-        src={mainImageUrl} 
-        alt={productName}
-        style={{
-          width: "100%",
-          height: "450px",
-          borderRadius: "10px",
-          objectFit: "cover",
-          transition: "transform 0.5s ease-in-out",
-        }}
-        onClick={() => handleImageClick(mainImageUrl)} 
-      />
+      <div style={{
+        backgroundImage: `url(${mainImageUrl})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center", 
+        width: "100%",
+        height: "620px",
+        borderRadius: "10px",
+        transition: "transform 0.5s ease-in-out",
+      }} />
       <div
         style={{
           position: "absolute",
@@ -49,10 +46,10 @@ const ImageGallery: FC<IImageGalleryProps> = ({
       >
         {[mainImageUrl, ...additionalImages].map((img, index) => (
           <img
-            key={index}
+            key={`img-${index}`}
             src={img}
             alt={productName}
-            onClick={() => handleImageClick(img)} 
+            onClick={() => handleImageClick(img)}
             style={{
               width: "80px",
               height: "80px",
@@ -66,7 +63,7 @@ const ImageGallery: FC<IImageGalleryProps> = ({
         ))}
       </div>
       <Modal
-        visible={isModalVisible}
+        open={isModalVisible}
         onCancel={handleModalClose}
         footer={null}
         width={800}

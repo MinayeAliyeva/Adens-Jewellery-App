@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { Carousel } from "antd";
-import Container from "../../components/Container";
 import Typography from "antd/es/typography/Typography";
 import { useTranslation } from "react-i18next";
+import Container from "./Container";
 
 const caruselImg1 = "/assets/images/carusel1.jpg";
 const caruselImg2 = "/assets/images/carusel2.jpg";
@@ -54,7 +54,7 @@ const CaruselComponent: FC = () => {
                 animationDelay: `${index * 0.5}s`,
               }}
             >
-              {t(slide.text)} {/* `t` fonksiyonu kullanılacak */}
+              {t(slide.text)} 
             </Typography>
           </Container>
         </div>

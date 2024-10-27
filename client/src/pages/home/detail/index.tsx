@@ -1,13 +1,13 @@
 import AddComment from "./AddComment";
 import CommentList from "./CommentList";
 import { useParams } from "react-router-dom";
-import { useGetProducDetailByIdQuery } from "../../../redux/api/product/product-api";
 import ProductDetail from "./ProductDetail";
-import { IProduct } from "../../../redux/api/product/modules";
+import RelatedProducts from "./RelatedProducts";
+import { useGetProducDetailByIdQuery } from "../../../redux/api/product/product-api";
 
 const Detail = () => {
   const { id } = useParams();
-  const { data: product } = useGetProducDetailByIdQuery<{ data: IProduct }>(
+  const { data } = useGetProducDetailByIdQuery(
     id!
   );
 
@@ -19,9 +19,10 @@ const Detail = () => {
         minHeight: "900px",
       }}
     >
-      <ProductDetail product={product} />
-      <CommentList productId={product?._id} />
-      <AddComment productId={product?._id} />
+      <ProductDetail product={data?.product!} />
+      <RelatedProducts relatedProducts={data?.relatedProducts!}/>
+      <CommentList productId={data?.product?._id!} />
+      <AddComment productId={data?.product?._id!}/>
     </div>
   );
 };

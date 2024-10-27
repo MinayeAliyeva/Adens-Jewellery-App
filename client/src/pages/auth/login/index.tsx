@@ -8,14 +8,15 @@ import { Content } from "antd/es/layout/layout";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { IoMdLogIn } from "react-icons/io";
 
-import InputComponent from "../../../components/form-components/InputComponent";
 import { useLoginUserMutation } from "../../../redux/api/user/user-api";
 import { ContentStyle, MainContentStyle } from "./style";
 import { loginSchema } from "../../../validation/loginValidation";
 import { setLogin } from "../../../redux/features/authSlice";
 import { saveToLocalStorage } from "../../../shared/helpers/localStorageUtil";
-import ButtonComponent from "../../../components/form-components/ButtonComponent";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
+import PasswordInputComponent from "../../../shared/components/form-components/PasswordInputComponent";
+import ButtonComponent from "../../../shared/components/form-components/ButtonComponent";
+import InputComponent from "../../../shared/components/form-components/InputComponent";
 
 const { Title } = Typography;
 
@@ -26,6 +27,7 @@ interface ILoginFormValues {
 }
 
 const Login: React.FC = () => {
+  const { t } = useTranslation();
   const {
     control,
     handleSubmit,
@@ -86,27 +88,27 @@ const Login: React.FC = () => {
 
         <Form layout="vertical" onFinish={handleSubmit(onSubmit)}>
           <Form.Item
-            label="Email"
+            label={t("Email")}
             validateStatus={errors.email ? "error" : ""}
             help={errors.email ? errors.email.message : ""}
           >
             <InputComponent
               name="email"
               control={control}
-              placeholder="Email"
+              placeholder={t("Email")}
               prefix={<MailOutlined />}
             />
           </Form.Item>
 
           <Form.Item
-            label="Password"
+            label={t("Password")}
             validateStatus={errors.password ? "error" : ""}
             help={errors.password ? errors.password.message : ""}
           >
-            <InputComponent
-              name="password"
+            <PasswordInputComponent
               control={control}
-              placeholder="Password"
+              name="password"
+              placeholder={t("Password")}
               prefix={<LockOutlined />}
               type="password"
             />
@@ -115,7 +117,7 @@ const Login: React.FC = () => {
           <Form.Item>
             <ButtonComponent
               icon={<IoMdLogIn />}
-              buttonText="Login"
+              buttonText={t("Login")}
               htmlType="submit"
               loading={isLoadingLogin}
               style={{

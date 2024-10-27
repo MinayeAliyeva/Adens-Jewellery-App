@@ -1,11 +1,12 @@
 import { FC, useState } from "react";
-import RangeDrawerComponent, { ICheckboxComponentProps } from "../../components/Drawer";
 import { TbArrowsDownUp } from "react-icons/tb";
-
+import RangeDrawerComponent, {
+  ICheckboxComponentProps,
+} from "../../shared/components/Drawer";
 interface IOpenDrawerProps {
-    onCloseTakeDrawerValues: (value: ICheckboxComponentProps) => void
-};
-const OpenDrawer:FC<IOpenDrawerProps> = ({onCloseTakeDrawerValues}) => {
+  onCloseTakeDrawerValues: (value: ICheckboxComponentProps) => void;
+}
+const OpenDrawer: FC<IOpenDrawerProps> = ({ onCloseTakeDrawerValues }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <>

@@ -5,7 +5,6 @@ const { Product } = require("../models/product");
 // const auth = require( "../middlware/auth");
 const { User } = require("../models/user");
 
-// Sevimli məhsulu əlavə et
 router.post("/", async (req, res) => {
   const { productId, userId } = req.body;
   const user = await User.findById(userId);
@@ -14,17 +13,14 @@ router.post("/", async (req, res) => {
   }
 
   try {
-    // Məhsulu tap
     const product = await Product.findById(productId);
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
     }
 
-    // İstifadəçini tap
     const wishList = await WishList.findOne({ user: userId });
 
     if (wishList) {
-      // Məhsul artıq varsa, onu sil
       const existingProductIndex = wishList.products.findIndex(
         (p) => p.productId.toString() === productId
       );
@@ -38,7 +34,6 @@ router.post("/", async (req, res) => {
         });
       }
     } else {
-      // WishList yaradın
       const newFavorite = new WishList({
         user: userId,
         products: [{ productId, isFavorite: true }],
@@ -56,7 +51,6 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Sevimli məhsulları əldə et
 router.get("/:userId",async (req, res) => {
   try {
     const wishList = await WishList.findOne({ user: req.params.userId })
@@ -73,7 +67,6 @@ router.get("/:userId",async (req, res) => {
   }
 });
 
-// Sevimli məhsulu sil
 router.delete("/", async (req, res) => {
   const { productId, userId } = req.body;
 

@@ -12,7 +12,6 @@ import { Content } from "antd/es/layout/layout";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import InputComponent from "../../../components/form-components/InputComponent";
 import { useRegisterUserMutation } from "../../../redux/api/user/user-api";
 import { useNavigate } from "react-router-dom";
 import { registerSchema } from "../../../validation/registerValidation";
@@ -21,6 +20,7 @@ import { isEmpty } from "lodash";
 import { useDispatch } from "react-redux";
 import { setRegister } from "../../../redux/features/authSlice";
 import { useTranslation } from "react-i18next";
+import InputComponent from "../../../shared/components/form-components/InputComponent";
 
 const { Title } = Typography;
 

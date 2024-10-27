@@ -12,7 +12,6 @@ const FILE_TYPE_MAP = {
   "image/jpg": "jpg",
 };
 
-// Multer storage ayarları
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, path.join(__dirname, "../public/images")); 
@@ -23,14 +22,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage, limits: { fileSize: 1024 * 1024 * 5 } });
-
-// Ürün listeleme
-// router.get("/", async (req, res) => {
-//   const products = await Product.find();
-//   res.status(200).send(products);
-// });
-//filterleme !! sayfalama limit() ile edilir select() ile ise data hisselerini select {} limit ise number qebul edir
-//Catagory gore filter price gore min,max  name gore, price asc desc
 
 router.get("/", async (req, res) => {
   try {
@@ -139,13 +130,22 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:id", async (req, res) => {
-  const product = await Product.findOne({ _id: req.params.id });
+  let relatedProducts = [];
+  const productList = await Product.find();
+  const product = await Product.findOne({ _id: req.params.id }).populate([
+    { path: "brand", select: "name" },
+    { path: "category", select: "name" }
+  ]);
 
   if (!product) {
     return res.status(404).send("Such product is not exsits...");
   }
 
-  res.status(200).send(product);
+   relatedProducts = productList
+    .filter((p) => p.category._id.toString() === product.category._id.toString() && p._id.toString() !==  req?.params?.id.toString())
+    .slice(0, 8);
+   
+  res.status(200).send({ product, relatedProducts});
 });
 
 router.post(
@@ -195,7 +195,6 @@ router.post(
       certification: req.body.certification,
       returnPolicy: req.body.returnPolicy,
       relatedProducts: req.body.relatedProducts,
-      // totalSales: req.body.totalSales,
       creationDate: req.body.creationDate,
       lastUpdated: req.body.lastUpdated,
       reviewsCount: req.body.reviewsCount,

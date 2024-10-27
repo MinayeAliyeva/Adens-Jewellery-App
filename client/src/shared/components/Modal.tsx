@@ -46,7 +46,7 @@ const ModalComponent: FC<IModalProps> = ({ setIsModalOpen, isModalOpen }) => {
             }}
           />
           <Typography.Title level={4} style={{ margin: 0 }}>
-            You need to log in first
+            You must be a member for this process.
           </Typography.Title>
         </div>
       }
@@ -55,7 +55,7 @@ const ModalComponent: FC<IModalProps> = ({ setIsModalOpen, isModalOpen }) => {
       footer={null}
       centered
       width={600}
-      bodyStyle={{ padding: "20px", textAlign: "center" }}
+      style={{ padding: "20px", textAlign: "center" }}
     >
       <Typography.Text style={{ fontSize: "16px", color: "#595959" }}>
         Please log in if you have an account or create a new one to continue.

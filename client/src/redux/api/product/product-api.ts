@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
-import { IProduct } from "./modules";
+import { IProduct, IProductDetailResponse } from "./modules";
 
 export const productApi = createApi({
   reducerPath: "productApi",
@@ -13,7 +13,7 @@ export const productApi = createApi({
     >({
       query: (params) => `/api/products?${params}`
     }),
-    getProducDetailById: builder.query<IProduct, string>({
+    getProducDetailById: builder.query<IProductDetailResponse, string>({
       query: (id) => `/api/products/${id}`,
     }),
   }),

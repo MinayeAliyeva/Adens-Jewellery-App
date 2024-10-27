@@ -47,7 +47,25 @@
 
   "If you have any questions, feel free to reach out to us by filling out the form below.": "Hər hansı bir sualınız varsa, aşağıdakı formu dolduraraq bizimlə əlaqə saxlamaqdan çekinmeyin.",
   "Name": "Ad",
-  "Email": "Email",
   "Phone": "Telefon",
-  "Address": "Ünvan"
+  "Address": "Ünvan",
+  "First Name": "Ad",
+  "Last Name": "Soyad",
+  "Send Message": "Mesajı göndər", 
+  "Clear": "Təmizlə", 
+  "Close": "Bagla",
+  "You must be a member for this process.": "Bu işləm üçün səlahiyyət olmalıdır.",
+  "Product added to basket": "Məhsul sebətə əlavə edildi",
+  "Product removed from basket": "Məhsul sebətdən silindi",
+  "Product count": "Məhsul sayı",
+  "Basket is empty": "Sebət bosdur",
+  "Your basket quantity updated successfully": "sebetedeki mehsulun miqdati yenilendi",
+  "Password": "Sifre",
+  "Enter password": "Sifreyi daxil edin",
+  "Password must be at least 6 characters!": "Sifre ən azı 6 simvoldan ibarət olmalıdır!",
+  "Password must contain at least one uppercase letter!": "Sifre ən azı bir üçün hərfdən ibarət olmalıdır!",
+  "Password must contain at least one lowercase letter!": "Sifre ən azı bir kicik hərfdən ibarət olmalıdır!",
+  "Password must contain at least one digit!": "Sifre ən azı bir rəqəmdən ibarət olmalıdır!",
+  "Password must contain at least one special character!": "Sifre ən azı bir xüsusi simvol olmalıdır!",
+  "Email":  "E-Poçt ünvanı"
 }

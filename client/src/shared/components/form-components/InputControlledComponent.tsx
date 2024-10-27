@@ -1,11 +1,6 @@
 import { FC } from "react";
-import {
-  Controller,
-  FieldErrors,
-  FieldValues,
-  Control,
-} from "react-hook-form";
-import { Input, InputProps } from "antd";
+import { Controller, FieldErrors, FieldValues, Control } from "react-hook-form";
+import { Divider, Input, InputProps } from "antd";
 import { Content } from "antd/es/layout/layout";
 
 interface IInputProps<T extends FieldValues> extends Omit<InputProps, "name"> {
@@ -16,7 +11,7 @@ interface IInputProps<T extends FieldValues> extends Omit<InputProps, "name"> {
   name: keyof T;
 }
 
-const InputComponent: FC<IInputProps<FieldValues>> = ({
+const InputControlledComponent: FC<IInputProps<FieldValues>> = ({
   name,
   placeholder,
   required,
@@ -25,6 +20,9 @@ const InputComponent: FC<IInputProps<FieldValues>> = ({
   control,
   size,
   defaultValue,
+  style,
+  suffix,
+  prefix,
 }) => {
   return (
     <>
@@ -35,9 +33,20 @@ const InputComponent: FC<IInputProps<FieldValues>> = ({
         defaultValue={defaultValue}
         rules={{ required }}
         render={({ field }) => (
-          <Input placeholder={placeholder} {...field} size={size} />
+          <Input
+            style={style}
+            suffix={suffix}
+            prefix={prefix}
+            placeholder={placeholder}
+            {...field}
+            size={size}
+            onChange={(e) => {
+              field.onChange(e.target.value);
+            }}
+          />
         )}
       />
+
       {errorMessage ? (
         <Content style={{ color: "red" }}>{errorMessage}</Content>
       ) : (
@@ -47,4 +56,4 @@ const InputComponent: FC<IInputProps<FieldValues>> = ({
   );
 };
 
-export default InputComponent;
+export default InputControlledComponent;

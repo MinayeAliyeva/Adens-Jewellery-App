@@ -1,16 +1,18 @@
 import { FC, memo, ReactElement } from "react";
-import { Input, InputProps } from "antd";
+import { Input } from "antd";
 import { Controller, Control } from "react-hook-form";
+import { PasswordProps } from "antd/es/input";
+import { LockOutlined } from "@ant-design/icons";
 
-interface IInputProps extends InputProps {
+interface IInputProps extends PasswordProps {
   name: string;
   control: Control<any>;
   errorMessage?: ReactElement;
   labelText?: string;
-  rules?: any; 
+  rules?: any;
 }
 
-const InputComponent: FC<IInputProps> = ({
+const PasswordInputComponent: FC<IInputProps> = ({
   name,
   control,
   placeholder,
@@ -28,11 +30,12 @@ const InputComponent: FC<IInputProps> = ({
         control={control}
         rules={rules}
         render={({ field }) => (
-          <Input
-            prefix={prefix}
+          <Input.Password
             placeholder={placeholder}
             {...field}
             {...rest}
+            size="large"
+            prefix={<LockOutlined />}
           />
         )}
       />
@@ -40,4 +43,4 @@ const InputComponent: FC<IInputProps> = ({
   );
 };
 
-export default memo(InputComponent);
+export default memo(PasswordInputComponent);

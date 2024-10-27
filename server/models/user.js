@@ -22,21 +22,12 @@ const userShema = mongoose.Schema(
       type: String,
       require: true,
     },
-    // orders:[{
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Order",
-    // }],
-    // basket:[{
-    //   type: mongoose.Schema.Types.ObjectId,
-    //   ref: "Basket",
-    // }],
     wishLists:[{
       type: mongoose.Schema.Types.ObjectId,
       ref: "WishList",
     }],
     profile: {
       type: String,
-      //   require: true,
     },
     isAdmin: Boolean,
   },

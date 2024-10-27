@@ -1,22 +1,31 @@
 import { useGetProductsQuery } from "../../redux/api/product/product-api";
-import ProductCard from "../../components/ProductCard";
-import { Layout, Typography } from "antd";
 import { IProduct } from "../../redux/api/product/modules";
+import { Row, Col, Typography, Layout } from "antd";
+import ProductCard from "../../shared/components/ProductCard";
+const { Content } = Layout;
 
 const Products = () => {
   const { data } = useGetProductsQuery<{ data: IProduct[] }>("");
- 
+
   return (
-    <>
-      <Typography className="text-center text-3xl font-bold my-8 font-dancing-script ">
+    <Content
+      style={{
+        paddingLeft: "140px",
+        margin: "auto",
+      }}
+    >
+      <Typography className="text-3xl font-bold my-8 font-dancing-script text-center">
         OUR COLLECTION
       </Typography>
-      <Layout className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-10 p-5">
+
+      <Row gutter={[30, 30]}>
         {data?.map?.((product: IProduct) => (
-          <ProductCard key={product?.productName} product={product} />
+          <Col key={product?.productName} xs={24} sm={12} md={6}>
+            <ProductCard product={product} />
+          </Col>
         ))}
-      </Layout>
-    </>
+      </Row>
+    </Content>
   );
 };
 

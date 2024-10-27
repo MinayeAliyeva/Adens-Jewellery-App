@@ -1,18 +1,18 @@
 import { FC } from "react";
 import { useDispatch } from "react-redux";
-import {  Image, Typography, Button } from "antd";
+import {  Image, Typography } from "antd";
 import { isEmpty } from "lodash";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import { FaMinus } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { FaTrashCan } from "react-icons/fa6";
 import { IProduct } from "../../redux/api/product/modules";
-import ButtonComponent from "../../components/form-components/ButtonComponent";
 import { getUserFromToken } from "../../shared/helpers/authStorage";
 import { useAddBasketMutation } from "../../redux/api/basket/basket-api";
 import { setFavoriteProductCount } from "../../redux/features/favoriteProductCount";
-import { showErrorToast, showSuccessToast } from "../../components/NotficationComponent";
 import { useDeleteProductFromFavoriteMutation } from "../../redux/api/favorite/favorite-api";
-import { useNavigate } from "react-router-dom";
+import { showErrorToast, showSuccessToast } from "../../shared/components/NotficationComponent";
+import ButtonComponent from "../../shared/components/form-components/ButtonComponent";
 
 interface IFavoriteListProps {
   product: IProduct;
@@ -108,7 +108,7 @@ const UserFavoriteProduct: FC<IFavoriteListProps> = ({ product }) => {
            
           <ButtonComponent buttonText="Detaylar"  style={{backgroundColor: "#ffc300"}} onClick={goProductDetail}/>
 
-          <FaMinus style={{ marginLeft: "10px", cursor: "pointer" }} onClick={onDeleteProductFromFavorite}/>
+          <FaTrashCan style={{ marginLeft: "10px", cursor: "pointer", fontSize: "30px", color: "red" }} onClick={onDeleteProductFromFavorite}/>
         </div>
       </Content>
     </Content>

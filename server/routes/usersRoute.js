@@ -9,7 +9,7 @@ const cors = require('cors');
 
 router.get("/",  async (req, res) => {
   
-  let users = await User.find();
+  let users = await User.find().select("-password -isAdmin");
   res.status(200).send(users);
 });
 

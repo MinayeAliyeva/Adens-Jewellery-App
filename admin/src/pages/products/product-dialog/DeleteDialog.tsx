@@ -45,7 +45,7 @@ const DeleteDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
       onOk={toggleOpen}
       onCancel={toggleOpen}
       width={"500px"}
-      bodyStyle={{
+      style={{
         backgroundColor: "#ffffff", 
         padding: "20px",
         borderRadius: "10px", 

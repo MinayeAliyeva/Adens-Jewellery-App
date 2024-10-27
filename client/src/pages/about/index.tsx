@@ -1,8 +1,8 @@
 import { Col, Layout, Row, Typography } from "antd";
 import { ButtonStyle, ColStyle, TypographyStyle } from "./style";
-import ButtonComponent from "../../components/form-components/ButtonComponent";
 import {  useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import ButtonComponent from "../../shared/components/form-components/ButtonComponent";
 const infoImg = "./assets/images/aboutbg.jpg";
 const infoImg2 = "./assets/images/aboutbg2.jpg";
 

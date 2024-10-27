@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import { Layout, Menu } from "antd";
+import { Layout } from "antd";
 import { HeaderMenu, Logo, ProfileMenuComponent } from "./components";
-import TranslateComponent from "../../components/TranslateComponent";
 import ShoppingCart from "./basket-panel/ShoppingCard";
 import FavoriteIcon from "./components/FavoriteIcon";
 import { getUserFromToken } from "../../shared/helpers/authStorage";
@@ -9,6 +8,7 @@ import { useSelector } from "react-redux";
 import { getUserDataSelector } from "../../redux/store";
 import { isEmpty } from "lodash";
 import { useTranslation } from "react-i18next";
+import TranslateComponent from "../../shared/components/TranslateComponent";
 
 const { Header: AntdHeader } = Layout;
 
@@ -16,7 +16,6 @@ const Header = () => {
   const userData = getUserFromToken();
   const authUser = useSelector(getUserDataSelector);
   const user = isEmpty(authUser) ? userData : authUser;
-
   const { t } = useTranslation();
   return (
     <AntdHeader
@@ -34,8 +33,7 @@ const Header = () => {
       <Logo />
       <HeaderMenu />
 
-      <Menu
-        mode="horizontal"
+      <div
         style={{
           display: "flex",
           gap: "20px",
@@ -54,7 +52,7 @@ const Header = () => {
         <FavoriteIcon />
         <ShoppingCart />
         <TranslateComponent />
-      </Menu>
+      </div>
     </AntdHeader>
   );
 };

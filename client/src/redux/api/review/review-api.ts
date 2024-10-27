@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
 import { IDecodedValue } from "../../../shared/modules";
+import { IReviewResponse } from "./modules";
 
 export const reviewApi = createApi({
   reducerPath: "reviewApi",
@@ -11,20 +12,18 @@ export const reviewApi = createApi({
     },
   }),
 
-  tagTypes: ['Review'],  // tag tipini ekliyoruz
+  tagTypes: ['Review'], 
 
   endpoints: (builder) => ({
-    // Ürün ID'ye göre yorumları getir
-    getReviewByProductId: builder.query<any, { productId: string }>({
+    getReviewByProductId: builder.query<IReviewResponse, { productId: string }>({
       query: ({ productId }) => ({
         url: `/api/reviews/${productId}`,
         method: "GET",
       }),
       providesTags: (result, error, { productId }) => 
-        result ? [{ type: 'Review', id: productId }] : [],  // Cache için Review tag'i sağlar
+        result ? [{ type: 'Review', id: productId }] : [],
     }),
 
-    // Ürüne yeni yorum ekle
     addReviewToProduct: builder.mutation<
       any,
       {
@@ -40,27 +39,25 @@ export const reviewApi = createApi({
         body,
       }),
       invalidatesTags: (result, error, { productId }) => 
-        [{ type: 'Review', id: productId }],  // Yorum eklendiğinde cache'i invalidate eder
+        [{ type: 'Review', id: productId }],
     }),
 
-    // Belirli bir kullanıcıdan, belirli bir ürüne ait bir yorumu sil
-    deleteCommentFromReviews: builder.mutation<any, { productId: string, userId: string, commentId: string }>({
+    deleteCommentFromReviews: builder.mutation<IReviewResponse, { productId: string, userId: string, commentId: string }>({
       query: ({ productId, userId, commentId }) => ({
         url: `/api/reviews/${productId}/${userId}/comment/${commentId}`,
         method: "DELETE",
       }),
       invalidatesTags: (result, error, { productId }) => 
-        [{ type: 'Review', id: productId }],  // Yorum silindiğinde cache'i invalidate eder
+        [{ type: 'Review', id: productId }], 
     }),
 
-    // Belirli bir üründen bir kullanıcının tüm yorumlarını sil
-    deleteAllCommentFromReviews: builder.mutation<any, { userId: string, productId: string }>({
+    deleteAllCommentFromReviews: builder.mutation<IReviewResponse, { userId: string, productId: string }>({
       query: ({ userId, productId }) => ({
         url: `/api/reviews/product/${productId}/user/${userId}`,
         method: "DELETE",
       }),
       invalidatesTags: (result, error, { productId }) => 
-        [{ type: 'Review', id: productId }],  // Tüm yorumlar silindiğinde cache'i invalidate eder
+        [{ type: 'Review', id: productId }], 
     }),
   }),
 });
