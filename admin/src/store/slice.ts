@@ -18,5 +18,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const {getToken} = authSlice?.actions;
+export const { getToken } = authSlice?.actions;
 export const counterReducer = authSlice.reducer;

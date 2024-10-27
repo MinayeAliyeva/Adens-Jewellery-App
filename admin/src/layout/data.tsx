@@ -10,23 +10,23 @@ export const menu = [
     icon: <CgProductHunt />,
     path: "products",
   },
-
   {
     title: "Categories",
     icon: <TbCategoryFilled />,
     path: "categories",
   },
   {
+    title: "Brands",
+    icon: <TbBrandBunpo />,
+    path: "brands",
+  },
+
+  {
     title: "Users",
     icon: <FaUsers />,
     path: "users",
   },
 
-  {
-    title: "Brands",
-    icon: <TbBrandBunpo />,
-    path: "brands",
-  },
   {
     title: "Analytics",
     icon: <SiSimpleanalytics />,
@@ -36,5 +36,5 @@ export const menu = [
     title: "Settings",
     icon: <IoMdSettings />,
     path: "settings",
-  }
+  },
 ];

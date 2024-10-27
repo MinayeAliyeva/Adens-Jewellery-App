@@ -15,7 +15,7 @@ import { TFunction } from "i18next";
 export interface IPaginationData {
   current: number;
   pageSize: number;
-};
+}
 
 export const defaultPaginationData: IPaginationData = {
   current: 1,
@@ -26,7 +26,7 @@ export const schema = yup.object().shape({
   name: yup.string().required("Brand Name is required"),
 });
 
-export interface IBrandsTableProps  {
+export interface IBrandsTableProps {
   handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
   control: Control<IFormField>;
   filteredInfo?: Record<string, FilterValue | null>;
@@ -42,8 +42,8 @@ export interface IBrandsTableProps  {
   onFinish: (values: IFormField) => void;
   onCancel: () => void;
   onDeleteBrandById: (id: string) => void;
-  t: TFunction<"translation", string>
-};
+  t: TFunction<"translation", string>;
+}
 
 export const columns = ({
   control,
@@ -61,18 +61,18 @@ export const columns = ({
   handleSubmit,
   onCancel,
   onDeleteBrandById,
-  t
+  t,
 }: IBrandsTableProps): TableColumnsType<ICatagoryResponse> => [
   {
     title: "№",
     dataIndex: "_id",
     key: "_id",
-    width: 170,
+    width: 270,
 
     render: (text, record, index) => index + 1,
   },
   {
-   title: t("Brand Name"),
+    title: t("Brand Name"),
     dataIndex: "name",
     key: "name",
     render: (name: string, record: ICatagoryResponse) => {
@@ -142,27 +142,34 @@ export const columns = ({
     title: "",
     dataIndex: "actions",
     key: "actions",
-    align: "right",
+    align: "left",
     render: (_, record: ICatagoryResponse) => {
       const isEdit =
-      (record?._id !== selectedId && !createBrand && !updateBrand) ||
-      (createBrand && record?._id !== selectedId && !updateBrand) ||
-      (updateBrand && record?._id !== selectedId);
+        (record?._id !== selectedId && !createBrand && !updateBrand) ||
+        (createBrand && record?._id !== selectedId && !updateBrand) ||
+        (updateBrand && record?._id !== selectedId);
       return (
         <div>
-          {isEdit? (
-            <Content style={{ display: "flex", gap: "20px" }}>
+          {isEdit ? (
+            <Content
+              style={{
+                display: "flex",
+                gap: "20px",
+              }}
+            >
               <Button
                 htmlType="button"
                 icon={<CiEdit />}
                 onClick={() => editBrand?.(record._id)}
                 color="primary"
+                disabled={createBrand || updateBrand}
                 variant="dashed"
               />
               <Button
                 onClick={() => onDeleteBrandById(record?._id)}
                 icon={<MdDelete />}
                 htmlType="button"
+                disabled={createBrand || updateBrand}
                 color="danger"
                 variant="dashed"
               />
@@ -173,10 +180,9 @@ export const columns = ({
                 type="primary"
                 htmlType="button"
                 icon={<FaSave />}
-                onClick={handleSubmit((values) =>{
-                  onFinish({ ...values, id: record?._id })
-                }
-                )}
+                onClick={handleSubmit((values) => {
+                  onFinish({ ...values, id: record?._id });
+                })}
               />
               <Button
                 icon={<MdOutlineCancel />}

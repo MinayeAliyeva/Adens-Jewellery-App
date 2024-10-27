@@ -9,7 +9,6 @@ import { usersApi } from "./api/users/users-api";
 import { basketApi } from "./api/basket/basket-api";
 import { settingApi } from "./api/setting/setting-api";
 
-// Create the Redux store
 export const store = configureStore({
   reducer: {
     auth: authSlice.reducer,
@@ -33,9 +32,7 @@ export const store = configureStore({
     ),
 });
 
-// Setup listeners for the query cache
 setupListeners(store.dispatch);
 
-// Export RootState and AppDispatch types
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
