@@ -17,9 +17,9 @@ export const menu = [
     path: "categories",
   },
   {
-    title: "Analytics",
-    icon: <SiSimpleanalytics />,
-    path: "analytics",
+    title: "Brands",
+    icon: <TbBrandBunpo />,
+    path: "brands",
   },
   {
     title: "Users",
@@ -28,11 +28,10 @@ export const menu = [
   },
 
   {
-    title: "Brands",
-    icon: <TbBrandBunpo />,
-    path: "brands",
+    title: "Analytics",
+    icon: <SiSimpleanalytics />,
+    path: "analytics",
   },
-
   {
     title: "Settings",
     icon: <IoMdSettings />,
