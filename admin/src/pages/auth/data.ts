@@ -62,16 +62,16 @@
 //     .required( i18next.t("Password is required!")),
 // });
 import { Rule } from "antd/es/form";
+import { TFunction } from "i18next";
 import * as yup from "yup";
-import { useTranslation } from "react-i18next";
 
 interface IRule {
   [key: string]: Rule[];
 }
 
-export const useRules = () => {
-  const { t } = useTranslation();
-
+export const ruleAuth = (t:TFunction<"translation", string>) => {
+  console.log({t});
+  
   const rule: IRule = {
     passwordRules: [
       { required: true, message: t("Enter password") },

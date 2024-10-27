@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
-import { User } from "./modules";
+import { IUser } from "./modules";
 
 export const usersApi = createApi({
   reducerPath: "userApi",
@@ -9,7 +9,7 @@ export const usersApi = createApi({
   }),
   tagTypes: ["Users"],
   endpoints: (builder) => ({
-    getUsers: builder.query<User[], void>({
+    getUsers: builder.query<IUser[], void>({
       query: () => `/api/users`,
       providesTags: ["Users"],
     }),

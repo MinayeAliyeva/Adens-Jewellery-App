@@ -20,13 +20,13 @@ import * as yup from "yup";
 import TranslateComponent from "../../utils/components/TranslateComponent";
 import { useTranslation } from "react-i18next";
 import { useGetLogoQuery } from "../../store/api/setting/setting-api";
-import { useRules } from "./data";
+import { ruleAuth } from "./data";
 const bg = "/assets/images/bg.png";
 const logo = "/assets/images/logo.png";
 
 const Login = () => {
   const { t } = useTranslation();
-  const { rule, schema } = useRules();
+  const { rule, schema } = ruleAuth(t);
   const [getAdmin, { isLoading }] = useLazyGetAdminLoginQuery();
   const { data: logoData, isLoading: isLoadingLogo } = useGetLogoQuery();
   const navigate = useNavigate();
@@ -110,7 +110,7 @@ const Login = () => {
               <Input.Password
                 size="large"
                 prefix={<LockOutlined />}
-                placeholder="Parola"
+                placeholder={t("Password")}
                 className="rounded-md border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200"
               />
             </Form.Item>

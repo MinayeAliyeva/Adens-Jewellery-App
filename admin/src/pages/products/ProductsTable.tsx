@@ -5,15 +5,15 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import { map } from "lodash";
-import { IProduct } from "../../store/api/product/modules";
+import { IProduct } from '../../store/api/product/modules';
 
 type DataIndex = keyof IProduct;
-
-const ProductsTable: FC<{
+interface IProductsTableProps {
   data: IProduct[];
   columns: TableColumnsType<IProduct>;
   loading: boolean;
-}> = ({ data, columns, loading}) => {
+}
+const ProductsTable: FC<IProductsTableProps> = ({ data, columns, loading}) => {
   const searchInput = useRef<InputRef>(null);
   const { t } = useTranslation();
   const handleSearch = (
@@ -121,7 +121,7 @@ const ProductsTable: FC<{
           ...getColumnSearchProps(column?.key as any),
         };
       }),
-    [columns]
+    [columns, t]
   );
   const tableDataSource = useMemo(() => map(data,item => ({ ...item, key: item._id })), [data]);
   return <Table loading={loading} columns={tableColumns} dataSource={tableDataSource}  />;
