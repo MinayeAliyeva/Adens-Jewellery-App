@@ -3,12 +3,12 @@ import type { FormProps } from "antd";
 import { Button, Checkbox, Col, Form, Input, Row, Space } from "antd";
 import Title from "antd/es/typography/Title";
 import { Content } from "antd/es/layout/layout";
-import TypographyComponent from "../../components/TypographyComponent";
 import { useGetCategoriesQuery } from "../../redux/api/catagory/catagory-api";
-import SelectBox from "../../components/form-components/SelectBox";
 import { useGetBrandsQuery } from "../../redux/api/brand/brand-api";
 import { ClearOutlined, SendOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
+import TypographyComponent from "../../shared/components/TypographyComponent";
+import SelectBox from "../../shared/components/form-components/SelectBox";
 
 export interface IFieldType {
   minPrice?: number;
@@ -83,8 +83,6 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
     clearFilterParams?.();
     onFilter?.(values!);
   };
-
-  //! Button style and side bar style editing  calback take loading and give submit button loading={loading} and disble={loading}
 
   const clearFilters = () => {
     form.resetFields();
@@ -164,12 +162,12 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
 
         <Row gutter={24} style={{ marginTop: "15px" }}>
           <Col span={12}>
+            <TypographyComponent
+              level={5}
+              style={{ marginBottom: "15px" }}
+              content={t("Category")}
+            />
             <Form.Item<IFieldType> name="categories">
-              <TypographyComponent
-                level={5}
-                style={{ marginBottom: "15px" }}
-                content={t("Category")}
-              />
               <SelectBox
                 name="categories"
                 placeholder={t("Select Category...")}
@@ -189,12 +187,12 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
+            <TypographyComponent
+              level={5}
+              style={{ marginBottom: "15px" }}
+              content={t("Rating")}
+            />
             <Form.Item<IFieldType> name="averageRating">
-              <TypographyComponent
-                level={5}
-                style={{ marginBottom: "15px" }}
-                content={t("Rating")}
-              />
               <SelectBox
                 name="averageRating"
                 placeholder={t("Select Raiting...")}
@@ -204,6 +202,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
                   form.setFieldsValue({ averageRating: value })
                 }
                 size="large"
+                allowClear
               />
             </Form.Item>
           </Col>
@@ -211,12 +210,12 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
         <hr />
         <Row gutter={24} style={{ marginTop: "15px" }}>
           <Col span={12}>
+            <TypographyComponent
+              level={5}
+              style={{ marginBottom: "15px" }}
+              content={t("Brand")}
+            />
             <Form.Item<IFieldType> name="brands">
-              <TypographyComponent
-                level={5}
-                style={{ marginBottom: "15px" }}
-                content={t("Brand")}
-              />
               <SelectBox
                 name="brands"
                 placeholder={t("Select Brand...")}
@@ -232,12 +231,12 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
             </Form.Item>
           </Col>
           <Col span={12}>
+            <TypographyComponent
+              level={5}
+              style={{ marginBottom: "15px" }}
+              content={t("Size Options...")}
+            />
             <Form.Item name="size" valuePropName="checked">
-              <TypographyComponent
-                level={5}
-                style={{ marginBottom: "15px" }}
-                content={t("Size Options...")}
-              />
               <Row gutter={[8, 8]} justify="start">
                 <Checkbox.Group
                   onChange={(value: string[]) => {

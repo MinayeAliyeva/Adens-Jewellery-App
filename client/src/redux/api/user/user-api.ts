@@ -1,7 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
 import { saveToLocalStorage } from "../../../shared/helpers/localStorageUtil";
-import { useDispatch } from "react-redux";
 
 export const userApi = createApi({
   reducerPath: "userApi",
@@ -47,23 +46,6 @@ export const userApi = createApi({
       extraOptions: {
         meta: true,
       },
-      // async onQueryStarted(arg, { queryFulfilled }) {
-      //   try {
-      //     const { meta } = await queryFulfilled;
-      //     console.log({ meta, body: meta?.response?.body });
-
-      //     let token = meta?.response?.headers.get("Authorization");
-
-      //     if (token) {
-      //       if (token.startsWith("Bearer ")) {
-      //         token = token.slice(7, token.length).trim();
-      //       }
-      //       saveToLocalStorage("token", token);
-      //     }
-      //   } catch (err) {
-      //     console.error("Error fetching token:", err);
-      //   }
-      // },
     }),
   }),
 });

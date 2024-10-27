@@ -1,6 +1,7 @@
 import ProductChart from "./components/ProductChart";
 import ProfitChart from "./components/ProfitChart";
 import SalesChart from "./components/SalesChart";
+import UsersChart from "./components/UsersChart";
 
 export const salesData = [
   { name: "Jan", sales: 4000, profit: 2400 },
@@ -20,11 +21,16 @@ export const tabsData = [
     },
     {
         key: '2',
+        label: 'Users Chart',
+        children:  <UsersChart />,
+    },
+    {
+        key: '3',
         label: 'Sales Chart',
         children: <SalesChart />,
     },
     {
-        key: '3',
+        key: '4',
         label: 'Profit Chart',
         children:  <ProfitChart />,
     },

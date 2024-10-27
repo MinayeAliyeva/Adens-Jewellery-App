@@ -2,13 +2,13 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useState } from "react";
 import { iconStyle } from "../constants";
 import ShoppingPanel from "./ShoppingPanel";
-import BadgeComponent from "../../../components/BadgeComponent";
 import { getUserFromToken } from "../../../shared/helpers/authStorage";
 import { useSelector } from "react-redux";
 import { getUserBasketProductCountSelector } from "../../../redux/store";
 import { useGetBasketByUserIdQuery } from "../../../redux/api/basket/basket-api";
 import { isEmpty } from "lodash";
-import ModalComponent from "../../../components/Modal";
+import ModalComponent from "../../../shared/components/Modal";
+import BadgeComponent from "../../../shared/components/BadgeComponent";
 
 const ShoppingCart = () => {
   const userData = getUserFromToken();

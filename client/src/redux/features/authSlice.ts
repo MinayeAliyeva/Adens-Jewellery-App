@@ -1,4 +1,3 @@
-// authSlice.ts
 import { createSlice } from "@reduxjs/toolkit";
 import {
   getLocalStorage,
@@ -49,6 +48,5 @@ export const authSlice = createSlice({
   },
 });
 
-// Eksporu
 export const { setLogin, setLogout, setRegister, setReloadUserFromStorage } =
   authSlice.actions;

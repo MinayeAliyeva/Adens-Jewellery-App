@@ -98,10 +98,10 @@ const ProductsTable: FC<IProductsTableProps> = ({ data, columns, loading}) => {
       <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
     ),
     onFilter: (value, record) => {
-      return record?.[dataIndex!]
-        ?.toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase())!;
+      if (dataIndex === "category" || dataIndex === "brand") {
+        return record[dataIndex]?.name?.toLowerCase().includes((value as string).toLowerCase());
+      }
+      return record[dataIndex]?.toString().toLowerCase().includes((value as string).toLowerCase());
     },
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {

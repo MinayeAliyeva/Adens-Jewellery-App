@@ -27,10 +27,10 @@ const ProductModal: FC<IProductModalProps> = ({
           {selectedProduct?.productName}
         </Typography.Title>
       }
-      visible={isModalVisible}
+      open={isModalVisible}
       onCancel={handleModalClose}
       footer={null}
-      bodyStyle={{
+      style={{
         padding: "20px",
         textAlign: "center",
         backgroundColor: "#f9f9f9",

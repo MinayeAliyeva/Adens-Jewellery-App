@@ -1,5 +1,3 @@
-// import { useTranslation } from "react-i18next";
-// const { t } = useTranslation();
 export interface InavLinksData {
   path: string;
   label: string;

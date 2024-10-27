@@ -3,8 +3,7 @@ import { Content } from "antd/es/layout/layout";
 import { FC, memo, useEffect } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { useAddBasketMutation } from "../redux/api/basket/basket-api";
-import { IProduct } from "../redux/api/product/modules";
+import { useTranslation } from "react-i18next";
 
 import {
   HeartFilled,
@@ -14,15 +13,15 @@ import {
   SwapOutlined,
 } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
-import { setBasketProductCount } from "../redux/features/basketProductCountSlice";
 import { isEmpty } from "lodash";
 import { showErrorToast, showSuccessToast } from "./NotficationComponent";
-import {
-  useAddProductToFavoriteMutation,
-  useLazyGetFavoriteByUserIdQuery,
-} from "../redux/api/favorite/favorite-api";
-import { setFavoriteProductCount } from "../redux/features/favoriteProductCount";
-import { getUserFromToken } from "../shared/helpers/authStorage";
+import { IProduct } from "../../redux/api/product/modules";
+import { getUserFromToken } from "../helpers/authStorage";
+import { useAddBasketMutation } from "../../redux/api/basket/basket-api";
+import { useAddProductToFavoriteMutation, useLazyGetFavoriteByUserIdQuery } from "../../redux/api/favorite/favorite-api";
+import { setBasketProductCount } from "../../redux/features/basketProductCountSlice";
+import { setFavoriteProductCount } from "../../redux/features/favoriteProductCount";
+
 
 interface IProps {
   product: IProduct;
@@ -30,7 +29,7 @@ interface IProps {
 
 const ProductCard: FC<IProps> = ({ product }) => {
   const userData = getUserFromToken()!;
-
+  const { t } = useTranslation();
   const dispatch = useDispatch();
 
   const [addBasket] = useAddBasketMutation();
@@ -46,12 +45,12 @@ const ProductCard: FC<IProps> = ({ product }) => {
   }, [userData?._id, isLoadingUserFavoriteData]);
 
   const isActiveFavorite =
-    userFavoriteDate?.products?.find((p) => p.productId._id === product?._id)
+    userFavoriteDate?.products?.find((p) => p.productId?._id === product?._id)
       ?.isFavorite ?? false;
 
   const onCreateOrder = () => {
     if (!userData?._id) {
-      showErrorToast("Bu ishlem ichin Uye olmaniz lazim");
+      showErrorToast(t("You must be a member for this process."));
       return;
     }
     addBasket({
@@ -62,31 +61,45 @@ const ProductCard: FC<IProps> = ({ product }) => {
       if (isEmpty(res?.data)) return;
       dispatch(setBasketProductCount(res?.data.basket?.products.length));
       if (res?.data.basket?.products.find((p) => p.quantity === 1)) {
-        showSuccessToast("product sebete elave edildi");
-      } else showSuccessToast("sebetedeki mehsulun miqdati  yenilendi");
+        showSuccessToast(t("Product added to basket"));
+      } else showSuccessToast(t("Your basket quantity updated successfully"));
     });
   };
-
-  const onCreateWishList = () => {
-    if (!userData?._id) {
-      showErrorToast("Bu ishlem ichin Uye olmaniz lazim");
-      return;
-    }
+  const uptadedWithList = () => {
     addFavorite({
       productId: product?._id,
-      userId: userData?._id,
+      userId: userData?._id ?? ""
     }).then((res) => {
       if (isEmpty(res?.data)) return;
       dispatch(
         setFavoriteProductCount(res.data?.wishList?.products?.length ?? 0)
       );
     });
+  }
+
+
+  const onCreateWishList = () => {
+    if (!userData?._id) {
+      showErrorToast(t("You must be a member for this process."));
+      return;
+    }
+    showSuccessToast(t("Product Add to Wishlist"));
+    uptadedWithList();
+  };
+
+  const onRemoveWishList = () => {
+    if (!userData?._id) {
+      showErrorToast(t("You must be a member for this process."));
+      return;
+    }
+    showSuccessToast(t("Product Remove to Wishlist"));
+    uptadedWithList();
   };
 
   return (
     <Content
       className="w-full max-w-md transition-transform hover:scale-105 relative group"
-      style={{ height: "600px", width: "400px", padding: "20px" }}
+      style={{ height: "600px", width: "400px", padding: "20px", marginBottom: "120px" }}
     >
       <Content className="relative w-full h-2/3 overflow-hidden">
         <img
@@ -111,12 +124,12 @@ const ProductCard: FC<IProps> = ({ product }) => {
           />
 
           <Button
-            onClick={onCreateWishList}
+            onClick={isActiveFavorite ? onRemoveWishList : onCreateWishList}
             style={{ border: "none" }}
             shape="circle"
             icon={
               isActiveFavorite ? (
-                <HeartFilled className="text-lg cursor-pointer transition-colors duration-300" />
+                <HeartFilled className="text-lg cursor-pointer transition-colors duration-300 text-red-600" />
               ) : (
                 <HeartOutlined className="text-lg cursor-pointer transition-colors duration-300" />
               )
@@ -124,7 +137,7 @@ const ProductCard: FC<IProps> = ({ product }) => {
           />
 
           <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
-            <Link to={`/product/detail/${product._id}`}>
+            <Link to={`/product/detail/${product?._id}`}>
               <InfoCircleOutlined className="text-lg cursor-pointer transition-colors duration-300" />
             </Link>
           </Content>
@@ -147,9 +160,8 @@ const ProductCard: FC<IProps> = ({ product }) => {
               </Typography>
             ))}
           </Content>
-          {product?.averageRating && (
-            <Rate defaultValue={product?.averageRating} disabled />
-          )}
+
+          <Rate defaultValue={product?.averageRating} disabled />
         </Content>
       </Content>
 
@@ -169,9 +181,6 @@ const ProductCard: FC<IProps> = ({ product }) => {
 
         <Typography className="text-[16px] font-semibold text-gray-800">
           Weight: {product?.weight}
-        </Typography>
-        <Typography className="text-[16px] font-semibold text-gray-800">
-          Creation Date: {product?.creationDate}
         </Typography>
         <Typography className="text-[16px] font-semibold text-gray-800">
           Dimensions: {product?.dimensions}
@@ -195,4 +204,4 @@ const ProductCard: FC<IProps> = ({ product }) => {
   );
 };
 
-export default  memo(ProductCard);
+export default memo(ProductCard);

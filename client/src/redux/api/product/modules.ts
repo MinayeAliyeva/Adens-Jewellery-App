@@ -1,8 +1,8 @@
 export interface IComment {
-  body: Array<{
+  body: {
     content: string;
     rating: number;
-  }>;
+  }[];
   username: string;
   userId: string;
 }
@@ -40,5 +40,9 @@ export interface IProduct {
   __v: number;
   lastUpdated?: string;
   averageRating?: number;
-  
 }
+
+export interface IProductDetailResponse {
+  product: IProduct;
+    relatedProducts: IProduct[];
+};

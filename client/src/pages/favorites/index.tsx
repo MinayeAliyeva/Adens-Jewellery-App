@@ -7,7 +7,7 @@ import { Content } from "antd/es/layout/layout";
 import UserFavoriteProduct from "./UserFavoriteProduct";
 import { useLazyGetFavoriteByUserIdQuery } from "../../redux/api/favorite/favorite-api";
 import { getUserFavoriteProductCountSelector } from "../../redux/store";
-import { SpinComponent } from "../../components/SpinComponent";
+import { SpinComponent } from "../../shared/components/SpinComponent";
 const backgroundFavorite = "/assets/images/bg-favorite.jpg";
 
 const Favorite = () => {

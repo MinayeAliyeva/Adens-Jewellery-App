@@ -1,5 +1,5 @@
 
-import i18n from "../utils/i18n";
+import i18n from "../../utils/i18n";
 import ButtonComponent from "./form-components/ButtonComponent";
 
 const az = "/assets/images/az.svg";
@@ -11,19 +11,20 @@ const changeLanguage = (lng: string) => {
 
 const TranslateComponent = () => {
   return (
-    <>
+     <>
       <ButtonComponent
         type="text"
         onClick={() => changeLanguage("az")}
         style={{
           fontSize: "16px",
-          width: 44,
-          height: 44,
+          width: 34,
+          height: 34,
           marginLeft: "20px",
           backgroundImage: `url(${az})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
+          borderRadius: "50%",
         }}
       />
       <ButtonComponent
@@ -31,13 +32,13 @@ const TranslateComponent = () => {
         onClick={() => changeLanguage("en")}
         style={{
           fontSize: "16px",
-          width: 44,
-          height: 44,
-          marginLeft: "20px",
+          width: 34,
+          height: 34,
           backgroundImage: `url(${en})`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "cover",
+          borderRadius: "50%",
         }}
       />
     </>

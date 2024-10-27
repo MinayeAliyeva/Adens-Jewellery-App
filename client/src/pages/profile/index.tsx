@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+import { useDispatch} from "react-redux";
 import {
   Layout,
   Avatar,
@@ -7,52 +9,24 @@ import {
   Card,
   Button,
   Divider,
-  List,
 } from "antd";
 import { getUserFromToken } from "../../shared/helpers/authStorage";
-import { useEffect } from "react";
-import { useLazyGetFavoriteByUserIdQuery } from "../../redux/api/favorite/favorite-api";
-import { useSelector } from "react-redux";
-import { getUserFavoriteProductCountSelector } from "../../redux/store";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
-import { useLazyGetBasketByUserIdQuery } from "../../redux/api/basket/basket-api";
-import { IBasketResponse } from "../../redux/api/basket/modules";
+import { setLogout } from "../../redux/features/authSlice";
+import { IDecodedValue } from "../../shared/modules";
 
 const { Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
 
-interface IDecodedValue {
-  isAdmin: boolean;
-  _id: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  email: string;
-}
-
 const UserProfile = () => {
   const userData: IDecodedValue | null = getUserFromToken();
-  const favoriteCount = useSelector(getUserFavoriteProductCountSelector);
-  const [
-    getUserFavoriteData,
-    { data: userFavoriteDate, isFetching: isFetchingUserFavorite },
-  ] = useLazyGetFavoriteByUserIdQuery();
-  const [getBasket, { data: basketData, isLoading: isLoadingBasket }] =
-    useLazyGetBasketByUserIdQuery<{
-      data: IBasketResponse;
-      isLoading: boolean;
-    }>();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    if (userData?._id) {
-      getUserFavoriteData({ userId: userData?._id ?? "" });
-    }
-  }, [userData?._id, favoriteCount]);
-  useEffect(() => {
-    if (userData?._id) {
-      getBasket({ id: userData?._id ?? "" });
-    }
-  }, [userData?._id]);
+  const handleLogout = () => {
+    dispatch(setLogout());
+    navigate("/");
+  };
 
   return (
     <Layout style={{ minHeight: "100vh", padding: "25px" }}>
@@ -97,61 +71,10 @@ const UserProfile = () => {
                       backgroundColor: "#3e160f",
                       borderColor: "#3e160f",
                     }}
+                    onClick={handleLogout}
                   >
                     Log Out
                   </Button>
-                </Col>
-              </Row>
-              <Divider />
-              <Row>
-                <Col span={24}>
-                  <Title level={4}>
-                    Favore Products Caunt :{favoriteCount}
-                  </Title>
-                  <List
-                    grid={{ gutter: 16, column: 4 }}
-                    dataSource={userFavoriteDate?.products || []}
-                    renderItem={(product) => (
-                      <List.Item>
-                        <img
-                          style={{
-                            borderRadius: "50%",
-                            width: "150px",
-                            height: "150px",
-                          }}
-                          alt={product?.productId?.productName}
-                          src={product?.productId?.mainImageUrl}
-                        />
-                        <Card.Meta title={product?.productId?.productName} />
-                      </List.Item>
-                    )}
-                  />
-                </Col>
-              </Row>
-              <Divider />
-              <Row>
-                <Col span={24}>
-                  <Title level={4}>
-                    Basket Products count {basketData?.products?.length}
-                  </Title>
-                  <List
-                    grid={{ gutter: 16, column: 4 }}
-                    dataSource={basketData?.products || []}
-                    renderItem={(product) => (
-                      <List.Item>
-                        <img
-                          style={{
-                            borderRadius: "50%",
-                            width: "150px",
-                            height: "150px",
-                          }}
-                          alt={product?.productId?.productName}
-                          src={product?.productId?.mainImageUrl}
-                        />
-                        <Card.Meta title={product?.productId?.productName} />
-                      </List.Item>
-                    )}
-                  />
                 </Col>
               </Row>
             </Card>

@@ -90,8 +90,6 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
     async (values: any) => {
       const isUpdateProduct = isEqual(transformedData, values);
       const formData = new FormData();
-
-      //const date
       const formattedDate = dayjs(
         values.creationDate ?? product?.creationDate
       ).format(dateFormat);

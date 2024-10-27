@@ -1,26 +1,23 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { Col, Row, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { IFieldType, SideBar } from "./SideBar";
 import CatagoriesSlider from "./CatagoriesSlider";
 import { useDebounce } from "../../hooks/useDebounce";
-import { IProduct } from "../../redux/api/product/modules";
 import { useLazyGetProductsQuery } from "../../redux/api/product/product-api";
-import InputComponent from "../../shared/components/form-components/InputComponent";
-import ProductCard from "../../components/ProductCard";
-import { ICheckboxComponentProps } from "../../components/Drawer";
+import InputComponent from "../../shared/components/form-components/InputControlledComponent";
 import OpenDrawer from "./OpenDrawer";
 import { useTranslation } from "react-i18next";
+import { IProduct } from "../../redux/api/product/modules";
+import { ICheckboxComponentProps } from "../../shared/components/Drawer";
+import ProductCard from "../../shared/components/ProductCard";
 
 const Shop = () => {
- 
-  const params = useMemo(() => new URLSearchParams(), []) as  URLSearchParams;
-  
-  const [getPrducts, { data: productsData }] = useLazyGetProductsQuery<{
-    data: IProduct[];
-  }>();
+  const [productsData, setProductsData] = useState<IProduct[]>([]);
+  const params = useMemo(() => new URLSearchParams(), []) as URLSearchParams;
+  const [getPrducts] = useLazyGetProductsQuery();
 
   const {
     control,
@@ -43,11 +40,15 @@ const Shop = () => {
       setError("productName", { type: "manual", message: "" });
     }
 
-   if (!productName) params.delete("productName");
+    params.delete("productName");
     if (!productName || productName.length >= 3) {
       if (productName) params.append("productName", productName!);
-      
-      getPrducts(params.toString());
+
+      getPrducts(params.toString(), params.toString().length > 0).then(
+        (res) => {
+          setProductsData(res.data!);
+        }
+      );
     }
   }, [productName]);
 
@@ -62,7 +63,9 @@ const Shop = () => {
     params.delete("maxWeight");
     params.delete("duration");
     params.delete("dimention");
-    getPrducts(params.toString(), true);
+    getPrducts(params.toString(), true).then((res) => {
+      setProductsData(res.data!);
+    });
   };
 
   const clearSortingParams = () => {
@@ -109,26 +112,29 @@ const Shop = () => {
     if (duration) params.append("duration", duration.toString());
     if (dimention) params.append("dimention", dimention.toString());
 
-    getPrducts(params.toString(), true);
+    getPrducts(params.toString(), true).then((res) => {
+      setProductsData(res.data!);
+    });
   };
 
   const onSortong = (value: ICheckboxComponentProps) => {
-    if(!value?.option || !value.sort)return;
+    if (!value?.option || !value.sort) return;
     clearSortingParams();
     params.append(`${value?.option}`, value?.sort);
-    getPrducts(params.toString(), true); 
-  }
+    getPrducts(params.toString(), true).then((res) => {
+      setProductsData(res.data!);
+    });
+  };
   const { t } = useTranslation();
   return (
     <>
       <CatagoriesSlider />
+
       <Content style={{ minHeight: "100vh", marginTop: "30px" }}>
         <Row>
           <Col
-            span={5}
+            span={6}
             style={{
-              // width: "400px",
-              // height: "100vh",
               padding: "0 24px",
               backgroundColor: "#f7f7f7",
               borderRight: "1px solid #ddd",
@@ -136,10 +142,13 @@ const Shop = () => {
               minHeight: "100vh",
             }}
           >
-            <SideBar onFilter={onFilter} clearFilterParams={clearFilterParams} />
+            <SideBar
+              onFilter={onFilter}
+              clearFilterParams={clearFilterParams}
+            />
           </Col>
 
-          <Col span={19}>
+          <Col span={18}>
             <Content
               style={{
                 display: "flex",
@@ -150,10 +159,18 @@ const Shop = () => {
                 marginBottom: "40px",
               }}
             >
-              <div style={{ display: "flex", gap: "10px" }}>
-                <div style={{ width: "450px" }}>
+              <Content
+                style={{
+                  display: "flex",
+                  gap: "10px",
+                  flexDirection: "row",
+                  width: "550px",
+                }}
+              >
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  {" "}
                   <InputComponent
-                    style={{ padding: "7px 10px" }}
+                    style={{ padding: "7px 10px", width: "480px" }}
                     size="large"
                     name="productName"
                     suffix={<SearchOutlined style={{ fontSize: "30px" }} />}
@@ -166,25 +183,18 @@ const Shop = () => {
                     </Typography.Text>
                   )}
                 </div>
-       
-                <OpenDrawer onCloseTakeDrawerValues={onSortong}/>
-                {/* <TbArrowsDownUp
-                  style={{ fontSize: "30px" }}
-                  onClick={() => setDrawerOpen(true)}
-                /> */}
-              </div>
+                <OpenDrawer onCloseTakeDrawerValues={onSortong} />
+              </Content>
             </Content>
             <Content
               style={{
                 display: "flex",
                 flexWrap: "wrap",
-                gap: "20px",
-                justifyContent: "space-between",
-                padding: " 0 20px",
+                gap: "30px",
               }}
             >
               {productsData?.map((product) => (
-                <ProductCard product={product} />
+                <ProductCard product={product} key={product?._id} />
               ))}
             </Content>
           </Col>

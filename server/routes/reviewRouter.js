@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { Product } = require("../models/product");
 const { Review } = require("../models/review");
-// const auth = require("../middlware/auth");
 
 router.get('/:productId', async (req, res) => {
     try {
@@ -60,12 +59,10 @@ router.get('/:productId', async (req, res) => {
       let averageRating;
   
       if (existingReview) {
-        // Mövcud rəyi yeniləyirik
         existingReview.rating = rating; 
         existingReview.comments.push({ comment, rating });
         await existingReview.save();
       } else {
-        // Yeni rəy əlavə edirik
         const newReview = new Review({ 
           productId, 
           user, 
@@ -146,39 +143,38 @@ router.delete('/:productId/:userId/comment/:commentId', async (req, res) => {
     
     const commentIndex = review.comments.findIndex(c => c._id.toString() === commentId);
    
-    if (commentIndex !== -1) {
-      review.comments.splice(commentIndex, 1);
-      await review.save();
-
-      if (review.comments.length === 0) {
-        await Review.deleteOne({ _id: review._id });
-      }
-
-      const reviews = await Review.find({ productId });
-      
-      if (reviews.length > 0) {
-        let totalRating = 0;
-        let totalComments = 0;
-        
-        reviews.forEach(user => {
-          user?.comments?.forEach(comment => {
-            if(comment.rating){
-              totalRating += comment.rating;
-              totalComments++;
-            }
-          });
-        });
-        averageRating = totalComments > 0 ? Math.floor(totalRating / totalComments) : 0;
-        product.averageRating = averageRating;
-       
-        
-        await product.save();
-      }
-
-      return res.status(200).send({ message: 'Yorum silindi', review, averageRating });
-    } else {
+    if (commentIndex === -1) {
       return res.status(404).json({ message: 'Silinmek istenen yorum bulunamadı.' });
     }
+    review.comments.splice(commentIndex, 1);
+    await review.save();
+
+    if (review.comments.length === 0) {
+      await Review.deleteOne({ _id: review._id });
+    }
+
+    const reviews = await Review.find({ productId });
+      
+    if (reviews.length > 0) {
+      let totalRating = 0;
+      let totalComments = 0;
+        
+      reviews.forEach(user => {
+        user?.comments?.forEach(comment => {
+          if(comment.rating){
+            totalRating += comment.rating;
+            totalComments++;
+          }
+        });
+      });
+      averageRating = totalComments > 0 ? Math.floor(totalRating / totalComments) : 0;
+      product.averageRating = averageRating;
+       
+        
+      await product.save();
+    }
+
+    return res.status(200).send({ message: 'Yorum silindi', review, averageRating });
   } catch (err) {
     res.status(500).json({ error: 'Yorum silinemedi: ' + err.message });
   }

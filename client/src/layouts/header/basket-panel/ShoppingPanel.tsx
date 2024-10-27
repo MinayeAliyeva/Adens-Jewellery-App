@@ -19,7 +19,6 @@ import {
   useDeleteProductFromBasketMutation,
   useLazyGetBasketByUserIdQuery,
 } from "../../../redux/api/basket/basket-api";
-import { SpinComponent } from "../../../components/SpinComponent";
 import {
   IBasketResponse,
   IProductInBasket,
@@ -27,6 +26,7 @@ import {
 import { IProduct } from "../../../redux/api/product/modules";
 import { useDispatch } from "react-redux";
 import { setBasketProductCount } from "../../../redux/features/basketProductCountSlice";
+import { SpinComponent } from "../../../shared/components/SpinComponent";
 
 interface IDrawerComponentProps {
   onClose: () => void;
@@ -113,9 +113,9 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
         }
         placement="right"
         onClose={onClose}
-        visible={isDrawerVisible}
+        open={isDrawerVisible}
         width={650}
-        bodyStyle={{ paddingBottom: 80, paddingTop: 20 }}
+        style={{ paddingBottom: 80, paddingTop: 20 }}
         footer={
           <div style={{ textAlign: "right" }}>
             <Typography.Title level={4}>
@@ -148,31 +148,31 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                 <List.Item.Meta
                   avatar={
                     <Avatar
-                      src={product?.productId.mainImageUrl}
+                      src={product?.productId?.mainImageUrl}
                       shape="square"
                       size={64}
                     />
                   }
                   title={
                     <Typography.Text strong>
-                      {product.productId.productName}
+                      {product?.productId?.productName}
                     </Typography.Text>
                   }
                   description={
                     <>
                       <Typography.Text>
-                        Fiyat: ${product.productId.price}
+                        Fiyat: ${product?.productId?.price}
                       </Typography.Text>
                       <br />
                       <Typography.Text>
-                        Renk: {product.productId.color}
+                        Renk: {product?.productId?.color}
                       </Typography.Text>
 
                       <Typography.Text>
-                        Category: {product.productId.catetogy}
+                        Category: {product?.productId?.catetogy}
                       </Typography.Text>
                       <Typography.Text>
-                        Size: {product.productId.catetogy}
+                        Size: {product?.productId?.catetogy}
                       </Typography.Text>
                     </>
                   }
@@ -182,7 +182,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                     type="default"
                     shape="circle"
                     disabled={product?.quantity === 1}
-                    onClick={() => setQuantity(product.productId._id, -1)}
+                    onClick={() => setQuantity(product?.productId?._id, -1)}
                     style={{ margin: "0 5px" }}
                   >
                     -
@@ -193,7 +193,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                   <Button
                     type="default"
                     shape="circle"
-                    onClick={() => setQuantity(product.productId._id, 1)}
+                    onClick={() => setQuantity(product?.productId?._id, 1)}
                     style={{ margin: "0 5px" }}
                   >
                     +
@@ -203,7 +203,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                       shape="circle"
                       icon={<IoMdEye />}
                       onClick={() =>
-                        showSelectedProductInfoModal(product.productId)
+                        showSelectedProductInfoModal(product?.productId)
                       }
                       style={{ margin: "0 5px" }}
                     />
@@ -212,7 +212,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                       description="Bu ürünü silmek istediğinize emin misiniz?"
                       icon={<QuestionCircleOutlined style={{ color: "red" }} />}
                       onConfirm={() =>
-                        onDeleteProductFromBasket(product.productId._id)
+                        onDeleteProductFromBasket(product?.productId?._id)
                       }
                     >
                       <Button shape="circle" icon={<DeleteOutlined />} danger />
@@ -229,13 +229,13 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
         height={500}
         onClose={onCloseSelectedProductInfoModal}
         onCancel={onCloseSelectedProductInfoModal}
-        visible={isModalVisible}
+        open={isModalVisible}
         footer={null}
       >
         {selectedProduct && (
           <>
             <Avatar
-              src={selectedProduct.mainImageUrl}
+              src={selectedProduct?.mainImageUrl}
               size={400}
               shape="square"
               style={{
@@ -255,13 +255,13 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                 Product Name: {selectedProduct?.productName}
               </Typography.Text>
               <Typography.Text strong>
-                Description: {selectedProduct.description}
+                Description: {selectedProduct?.description}
               </Typography.Text>{" "}
               <Typography.Text strong>
-                Color: {selectedProduct.color}
+                Color: {selectedProduct?.color}
               </Typography.Text>
               <Typography.Text strong>
-                Price: ${selectedProduct.price}
+                Price: ${selectedProduct?.price}
               </Typography.Text>
               <Typography.Text strong>
                 Category: {selectedProduct?.category?.name}
@@ -271,8 +271,8 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
               </Typography.Text>
               <Typography.Text strong>
                 size:{" "}
-                {selectedProduct.size?.map((size) =>
-                  Array.isArray(size) ? size.split(",") : size
+                {selectedProduct?.size?.map((size) =>
+                  Array.isArray(size) ? size?.split(",") : size
                 )}
               </Typography.Text>
             </Space>
