@@ -108,7 +108,7 @@ const Brand: FC = () => {
   });
 
   useEffect(() => {
-    if(!errors?.name?.message) return;
+    if (!errors?.name?.message) return;
     message.error(errors?.name?.message);
   }, [errors?.name?.message]);
 
@@ -135,9 +135,16 @@ const Brand: FC = () => {
 
   const onFinish = (brand: IFormField) => {
     if (state.selectedId) {
+      if (
+        brand.id === state.selectedId &&
+        brandData?.find((item) => item.name === brand.name)
+      ) {
+        message.error("Such brand exsits don't be updated!!!");
+        return;
+      }
       updateBrandById({ name: brand?.name, id: brand?.id! })
         .then(() => {
-          message.success("Ugurla yenilendi");
+          message.success("Sucsesuflly updated!!!");
         })
         .finally(() => {
           setState((prev) => ({
@@ -151,7 +158,7 @@ const Brand: FC = () => {
       craeteBrand({ name: brand?.name })
         .then((res: any) => {
           if (res?.error?.data) {
-            message.error(res?.error?.data);  
+            message.error(res?.error?.data);
           } else {
             setState((prev) => ({
               ...prev,
@@ -192,7 +199,7 @@ const Brand: FC = () => {
   };
   const onDeleteBrandById = (id: string) => {
     deleteBrandById(id);
-    message.success("Brand Delete!!!")
+    message.success("Brand Delete!!!");
   };
 
   const memorizedColumns = useMemo(
@@ -252,6 +259,7 @@ const Brand: FC = () => {
           variant="outlined"
           buttonText="Create New Brand"
           onClick={onCreateBrand}
+          disabled={state.createBrand || state.updateBrand}
         />
       </Space>
       <Form>

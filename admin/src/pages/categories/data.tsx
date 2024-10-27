@@ -71,7 +71,7 @@ export const columns = ({
     title: t("Category name"),
     dataIndex: "name",
     key: "name",
-    width: 320,
+    width: 420,
     render: (name: string, record: ICatagoryResponse) => {
       return (
         <>
@@ -83,7 +83,7 @@ export const columns = ({
               name="name"
               control={control as any}
               placeholder="Category Name"
-              errorMessage={errors?.name?.message}
+              size="large"
             />
           )}
         </>

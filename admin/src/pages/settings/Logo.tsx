@@ -17,6 +17,9 @@ import {
 import { ILogos } from "../../store/api/setting/modules";
 import { MdDelete } from "react-icons/md";
 import { GrUpdate } from "react-icons/gr";
+const defaultLogo =
+  "http://localhost:8080/public/logoImg/1729960022891_adenaLogo.png";
+
 const Logo: React.FC = () => {
   const { data: logoData } = useGetLogoQuery();
   const [createLogo] = useCreateLogoMutation();
@@ -63,8 +66,8 @@ const Logo: React.FC = () => {
 
   return (
     <div>
-      <ImgCrop rotationSlider >
-        <Upload  listType="picture-card" fileList={[]} onChange={onChange}>
+      <ImgCrop rotationSlider>
+        <Upload listType="picture-card" fileList={[]} onChange={onChange}>
           '+ Upload'
         </Upload>
       </ImgCrop>
@@ -87,7 +90,11 @@ const Logo: React.FC = () => {
               <Button onClick={() => handleUpdate(logo._id)} type="default">
                 <GrUpdate />
               </Button>
-              <Button onClick={() => handleDelete(logo._id)} type="dashed">
+              <Button
+                onClick={() => handleDelete(logo._id)}
+                type="dashed"
+                disabled={logo.url === defaultLogo}
+              >
                 <MdDelete />
               </Button>
             </div>

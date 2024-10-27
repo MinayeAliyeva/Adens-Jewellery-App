@@ -34,7 +34,7 @@ const routes: TypeRouteObject[] = [
 ] as TypeRouteObject[];
 
 const authMap = (routes: TypeRouteObject[]) => {
-  return routes.map((route: TypeRouteObject) => {
+  return routes?.map((route: TypeRouteObject) => {
     if (route.auth) {
       route.element = <PrivateRouting>{route.element}</PrivateRouting>;
     }

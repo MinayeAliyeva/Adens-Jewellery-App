@@ -1,5 +1,4 @@
 import { Navigate, useLocation } from "react-router-dom";
-// import { useAuthStateContext } from "../context-api/AuthContext";
 import { jwtDecode } from "jwt-decode";
 import { LocationState, Location } from "../utils/models";
 import { FC } from "react";
@@ -15,10 +14,8 @@ interface IDecodedValue {
   phone?: string;
 }
 const PrivateRouting: FC<IPrivateRouting> = ({ children }) => {
-  
-  const token = localStorage.getItem("token") ?? ""
-  const decoded: IDecodedValue = token? jwtDecode(token) : {isAdmin: false};
-
+  const token = localStorage.getItem("token") ?? "";
+  const decoded: IDecodedValue = token ? jwtDecode(token) : { isAdmin: false };
   const location = useLocation() as Location<LocationState>;
 
   if (!decoded?.isAdmin) {

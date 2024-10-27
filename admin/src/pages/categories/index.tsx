@@ -156,8 +156,7 @@ const Category: FC = () => {
       } else {
         craeteCategory({ name: category?.name, brand: category.brand! })
           .then((res: any) => {
-            if (res?.error?.data)
-            message.error(res?.error?.data);  
+            if (res?.error?.data) message.error(res?.error?.data);
             else {
               setState((prev) => ({
                 ...prev,
@@ -219,7 +218,7 @@ const Category: FC = () => {
         onCancel,
         onDeleteCategoryById,
         brandData: brandData,
-        t
+        t,
       }),
     [
       errors,
@@ -228,7 +227,7 @@ const Category: FC = () => {
       state.createCategory,
       state.selectedId,
       state.updateCategory,
-      t
+      t,
     ]
   );
   const tableDataSource = useMemo(
@@ -255,7 +254,7 @@ const Category: FC = () => {
           variant="outlined"
           buttonText="Create New Category"
           onClick={onCreateCategory}
-          disabled={state.updateCategory}
+          disabled={state.updateCategory || state.createCategory}
         />
       </Space>
       <Form>

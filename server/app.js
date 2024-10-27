@@ -24,7 +24,6 @@ app.use(
 );
 
 app.use("/api/products", productsRouter);
-//middleware
 app.use("/api/users", usersRouter);
 app.use("/api/catagories", catagoryRouter);
 app.use("/api/brands", brandRouter);
