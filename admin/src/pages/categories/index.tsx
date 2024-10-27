@@ -228,6 +228,7 @@ const Category: FC = () => {
       state.createCategory,
       state.selectedId,
       state.updateCategory,
+      t
     ]
   );
   const tableDataSource = useMemo(

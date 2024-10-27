@@ -36,26 +36,7 @@ const brandOptions = (brands?: IBrandsResponse[]) =>
     value: item._id,
   }));
 
-export const columns = ({
-  control,
-  filteredInfo,
-  setAgeSort,
-  sortedInfo,
-  editTable,
-  isEdit,
-  isCreate,
-  brandData,
-  editCategory,
-  selectedId,
-  createCategory,
-  updateCategory,
-  errors,
-  onFinish,
-  handleSubmit,
-  onCancel,
-  onDeleteCategoryById,
-  t,
-}: {
+export interface ICatagoryTableProps {
   handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
   control: Control<IFormField>;
   filteredInfo?: Record<string, FilterValue | null>;
@@ -74,7 +55,10 @@ export const columns = ({
   brandData?: IBrandsResponse[];
   createCategory: boolean;
   t: TFunction;
-}): TableColumnsType<ICatagoryResponse> => [
+}
+export const columns = ({
+  control, filteredInfo, setAgeSort, sortedInfo, editTable, isEdit, isCreate, brandData, editCategory, selectedId, createCategory, updateCategory, errors, onFinish, handleSubmit, onCancel, onDeleteCategoryById, t,
+}: ICatagoryTableProps): TableColumnsType<ICatagoryResponse> => [
   {
     title: "№",
     dataIndex: "_id",
@@ -84,7 +68,7 @@ export const columns = ({
     render: (_, __, index) => index + 1,
   },
   {
-    title:t("Category name"),
+    title: t("Category name"),
     dataIndex: "name",
     key: "name",
     width: 320,

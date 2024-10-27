@@ -26,6 +26,25 @@ export const schema = yup.object().shape({
   name: yup.string().required("Brand Name is required"),
 });
 
+export interface IBrandsTableProps  {
+  handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
+  control: Control<IFormField>;
+  filteredInfo?: Record<string, FilterValue | null>;
+  setAgeSort?: () => void;
+  sortedInfo?: SorterResult<ICatagoryResponse>;
+  editTable?: (isEdit: boolean) => void;
+  isEdit?: boolean;
+  isCreate?: boolean;
+  createBrand?: boolean;
+  updateBrand?: boolean;
+  editBrand?: (id: string) => void;
+  selectedId?: string | null;
+  onFinish: (values: IFormField) => void;
+  onCancel: () => void;
+  onDeleteBrandById: (id: string) => void;
+  t: TFunction<"translation", string>
+};
+
 export const columns = ({
   control,
   filteredInfo,
@@ -43,24 +62,7 @@ export const columns = ({
   onCancel,
   onDeleteBrandById,
   t
-}: {
-  handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
-  control: Control<IFormField>;
-  filteredInfo?: Record<string, FilterValue | null>;
-  setAgeSort?: () => void;
-  sortedInfo?: SorterResult<ICatagoryResponse>;
-  editTable?: (isEdit: boolean) => void;
-  isEdit?: boolean;
-  isCreate?: boolean;
-  createBrand?: boolean;
-  updateBrand?: boolean;
-  editBrand?: (id: string) => void;
-  selectedId?: string | null;
-  onFinish: (values: IFormField) => void;
-  onCancel: () => void;
-  onDeleteBrandById: (id: string) => void;
-  t: TFunction<"translation", string>
-}): TableColumnsType<ICatagoryResponse> => [
+}: IBrandsTableProps): TableColumnsType<ICatagoryResponse> => [
   {
     title: "№",
     dataIndex: "_id",

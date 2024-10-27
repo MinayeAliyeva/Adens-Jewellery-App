@@ -9,6 +9,7 @@ import Category from "../pages/categories";
 import Brand from "../pages/brands";
 import SettingsPage from "../pages/settings";
 import Users from "../pages/users";
+import Analytics from "../pages/analytics";
 
 const routes: TypeRouteObject[] = [
   {
@@ -22,6 +23,7 @@ const routes: TypeRouteObject[] = [
       { path: "/brands", element: <Brand />, auth: true },
       { path: "/users", element: <Users />, auth: true },
       { path: "/settings", element: <SettingsPage />, auth: true },
+      { path: "/analytics", element: <Analytics />, auth: true },
     ],
   },
   {

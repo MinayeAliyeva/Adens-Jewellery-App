@@ -63,7 +63,7 @@ const Logo: React.FC = () => {
 
   return (
     <div>
-      <ImgCrop rotationSlider>
+      <ImgCrop rotationSlider >
         <Upload  listType="picture-card" fileList={[]} onChange={onChange}>
           '+ Upload'
         </Upload>
@@ -72,9 +72,8 @@ const Logo: React.FC = () => {
       <Row style={{ gap: "20px" }}>
         {" "}
         {logoData?.[0]?.logos?.map((logo: ILogos) => (
-          <Col>
-            {" "}
-            <div key={logo._id}>
+          <Col key={logo._id}>
+            <div>
               <img
                 src={logo.url}
                 alt={logo._id}
