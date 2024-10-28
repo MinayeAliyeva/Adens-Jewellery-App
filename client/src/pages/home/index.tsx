@@ -7,6 +7,8 @@ import Products from "./Products";
 import Testiminal from "./testiminal/Testiminal";
 
 const Home = () => {
+    //! SHOW ERRORS
+  // throw Error("")
   return (
     <>
       <CaruselComponent />

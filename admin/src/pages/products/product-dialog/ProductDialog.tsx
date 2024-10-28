@@ -383,8 +383,8 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                 listType="picture"
                 defaultFileList={
                   product
-                    ? Array.from({
-                        length: product?.additionalImages.length,
+                    ? Array?.from({
+                        length: product?.additionalImages?.length!,
                       }).map((_, i) => {
                         return {
                           uid: `${product?._id}#${i}`,
