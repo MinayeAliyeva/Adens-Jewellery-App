@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Controller, FieldErrors, FieldValues, Control } from "react-hook-form";
-import { Divider, Input, InputProps } from "antd";
+import {  Input, InputProps } from "antd";
 import { Content } from "antd/es/layout/layout";
 
 interface IInputProps<T extends FieldValues> extends Omit<InputProps, "name"> {
