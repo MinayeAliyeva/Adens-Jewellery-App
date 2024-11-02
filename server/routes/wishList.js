@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { WishList } = require("../models/wishList");
 const { Product } = require("../models/product");
-// const auth = require( "../middlware/auth");
 const { User } = require("../models/user");
 
 router.post("/", async (req, res) => {

@@ -1,54 +1,47 @@
-// import { FC } from "react";
-// import { Slider } from "antd";
-// import Typography from "antd/es/typography/Typography";
-// interface ISliderComponentProps {
-//   totalPrice: number;
-// }
-// const SliderComponent: FC<ISliderComponentProps> = ({ totalPrice }) => (
-//   <>
-//     {" "}
-//     <Typography style={{ fontSize: "25px" }}>
-//       {totalPrice > 500
-//         ? "Congratulations! You have free shipping!"
-//         : `Spend ${500 - totalPrice}more and get free shipping!`}
-//     </Typography>
-//     <Slider defaultValue={500 - totalPrice} tooltip={{ open: true }} />
-//   </>
-// );
-
-// export default SliderComponent;
-import { FC } from "react";
+import { Dispatch, FC, SetStateAction, useEffect } from "react";
 import { Slider } from "antd";
 import Typography from "antd/es/typography/Typography";
 import { LuCar } from "react-icons/lu";
 
 interface ISliderComponentProps {
   totalPrice: number;
+  setShippingFee?: Dispatch<SetStateAction<number>>;
 }
 
-const SliderComponent: FC<ISliderComponentProps> = ({ totalPrice }) => {
-  const remainingAmount = 500 - totalPrice;
+const taxRate = 6;
+const freeShippingThreshold = 2500;
+
+const SliderComponent: FC<ISliderComponentProps> = ({ totalPrice, setShippingFee }) => {
+  const taxAmount = (totalPrice * taxRate) / 100;
+  const remainingAmount = totalPrice >= freeShippingThreshold ? 0 : taxAmount;
+
+  useEffect(() => {
+    if(remainingAmount === 0) return;
+    setShippingFee?.(remainingAmount);
+  }, [remainingAmount]);
 
   return (
     <>
       <Typography style={{ fontSize: "25px" }}>
-        {totalPrice >= 500
+        {totalPrice >= freeShippingThreshold
           ? "Congratulations! You have free shipping!"
-          : `Spend ${remainingAmount} more and get free shipping!`}
+          : `Spend $${remainingAmount.toFixed(2)} more to get free shipping!`}
       </Typography>
       <div style={{ position: "relative", marginBottom: "20px" }}>
         <Slider
-          defaultValue={remainingAmount > 0 ? remainingAmount : 0}
-          disabled={totalPrice >= 500}
+          value={totalPrice}
+          max={freeShippingThreshold}
+          disabled={totalPrice >= freeShippingThreshold}
           min={0}
+          style={{ width: "100%" }}
         />
-        {remainingAmount > 0 && (
+        {totalPrice < freeShippingThreshold && (
           <div
             style={{
               position: "absolute",
               top: "-25px",
-              right: `${(remainingAmount / 500) * 100}%`,
-              transform: "translateX(-50%)",
+              right: `${(1 - totalPrice / freeShippingThreshold) * 100}%`,
+              transform: "translateX(50%)",
               display: "flex",
               alignItems: "center",
             }}
@@ -56,7 +49,7 @@ const SliderComponent: FC<ISliderComponentProps> = ({ totalPrice }) => {
             <LuCar
               style={{ color: "#1890ff", marginRight: "5px", fontSize: "40px" }}
             />
-            <span>{remainingAmount}</span>
+            <span>${remainingAmount.toFixed(2)}</span>
           </div>
         )}
       </div>

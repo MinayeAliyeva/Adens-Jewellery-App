@@ -20,7 +20,6 @@ export const menu = [
     icon: <TbBrandBunpo />,
     path: "brands",
   },
-
   {
     title: "Users",
     icon: <FaUsers />,

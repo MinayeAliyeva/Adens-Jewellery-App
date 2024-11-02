@@ -20,7 +20,7 @@ const Products = () => {
 
       <Row gutter={[30, 30]}>
         {data?.map?.((product: IProduct) => (
-          <Col key={product?.productName} xs={24} sm={12} md={6}>
+          <Col key={product?._id}  xs={24} sm={12} md={6}>
             <ProductCard product={product} />
           </Col>
         ))}

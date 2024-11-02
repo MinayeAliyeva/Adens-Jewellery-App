@@ -8,6 +8,7 @@ import { brandApi } from "./api/brand/brand-api";
 import { usersApi } from "./api/users/users-api";
 import { basketApi } from "./api/basket/basket-api";
 import { settingApi } from "./api/setting/setting-api";
+import { orderApi } from "./api/order/order-api";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     [usersApi.reducerPath]: usersApi.reducer,
     [basketApi.reducerPath]: basketApi.reducer,
     [settingApi.reducerPath]: settingApi.reducer,
+    [orderApi.reducerPath]: orderApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -28,7 +30,8 @@ export const store = configureStore({
       brandApi.middleware,
       usersApi.middleware,
       basketApi.middleware,
-      settingApi.middleware
+      settingApi.middleware,
+      orderApi.middleware
     ),
 });
 

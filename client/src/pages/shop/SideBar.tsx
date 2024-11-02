@@ -79,9 +79,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
   const { data: brandData } = useGetBrandsQuery();
   const [form] = Form.useForm();
 
-  const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {
-    console.log("side bar", values);
-    
+  const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {    
     clearFilterParams?.();
     onFilter?.(values!);
   };

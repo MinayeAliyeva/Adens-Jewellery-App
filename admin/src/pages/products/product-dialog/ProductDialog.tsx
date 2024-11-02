@@ -141,7 +141,7 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
   };
 
   //! SHOW ERRORS
-  // throw Error("")
+  // throw Error("");
 
   return (
     <Modal

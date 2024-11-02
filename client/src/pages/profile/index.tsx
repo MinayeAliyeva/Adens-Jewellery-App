@@ -24,7 +24,6 @@ const UserProfile = () => {
   const userData: IDecodedValue | null = getUserFromToken();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log("userData", userData);
 
   const handleLogout = () => {
     dispatch(setLogout());
@@ -35,7 +34,6 @@ const UserProfile = () => {
     isLoading,
     error,
   } = useGetOrderByUserIdQuery(userData?._id!);
-  console.log("userOrders", userOrders);
 
   return (
     <Layout style={{ minHeight: "100vh", padding: "25px" }}>
@@ -91,9 +89,12 @@ const UserProfile = () => {
             <Divider />
           </Col>
         </Row>
-        <Row>
+        <Row justify="center">
           <Col span={16}>
-            <OrderComponent />
+            <Card bordered={false} style={{ borderRadius: "12px" }}>
+                  <OrderComponent userOrders={userOrders} />
+            </Card>
+            <Divider />
           </Col>
         </Row>
       </Content>

@@ -131,7 +131,8 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   let relatedProducts = [];
-  const productList = await Product.find();
+  const productList = await Product.find().populate("category")
+  .populate("brand");
   const product = await Product.findOne({ _id: req.params.id }).populate([
     { path: "brand", select: "name" },
     { path: "category", select: "name" }
@@ -140,11 +141,9 @@ router.get("/:id", async (req, res) => {
   if (!product) {
     return res.status(404).send("Such product is not exsits...");
   }
-
    relatedProducts = productList
     .filter((p) => p.category._id.toString() === product.category._id.toString() && p._id.toString() !==  req?.params?.id.toString())
     .slice(0, 8);
-   
   res.status(200).send({ product, relatedProducts});
 });
 
