@@ -6,8 +6,6 @@ import {
   Button,
   Typography,
   Avatar,
-
-  Modal,
   Space,
   Popconfirm,
 } from "antd";
@@ -27,6 +25,10 @@ import { IProduct } from "../../../redux/api/product/modules";
 import { useDispatch } from "react-redux";
 import { setBasketProductCount } from "../../../redux/features/basketProductCountSlice";
 import { SpinComponent } from "../../../shared/components/SpinComponent";
+import OrderModal from "../../../shared/components/OrderModal";
+import { useCreateOrderMutation } from "../../../redux/api/order/order-api";
+import SliderComponent from "../components/SliderComponent";
+import WievModal from "../components/WievModal";
 
 interface IDrawerComponentProps {
   onClose: () => void;
@@ -39,6 +41,8 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
 }) => {
   const dispatch = useDispatch();
   const userData = getUserFromToken();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+ 
 
   const [getBasket, { data: basketData, isLoading: isLoadingBasket }] =
     useLazyGetBasketByUserIdQuery<{
@@ -99,6 +103,13 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
       }
     );
   };
+  console.log("userData", userData?._id);
+  console.log("basketData?.products", basketData?.products);
+
+  const doOrder = () => {
+
+    setIsModalOpen(true);
+  };
 
   const isLoading =
     isLoadingBasket ||
@@ -108,19 +119,18 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
   return (
     <>
       <Drawer
-        title={
-          <Typography.Title level={3}>🛒 Alışveriş Sepeti</Typography.Title>
-        }
+        title={<Typography.Title level={3}>🛒 Shopping Card</Typography.Title>}
         placement="right"
         onClose={onClose}
         open={isDrawerVisible}
         width={650}
-        style={{ paddingBottom: 80, paddingTop: 20 }}
+        style={{ paddingBottom: 10, paddingTop: 20 }}
         footer={
           <div style={{ textAlign: "right" }}>
+            <SliderComponent totalPrice={basketData?.totalPrice} />
             <Typography.Title level={4}>
-              Toplam:{" "}
-              <span style={{ color: "#1890ff" }}>
+              Total Amount:{" "}
+              <span style={{ color: "rgb(64, 51, 29)" }}>
                 ${basketData?.totalPrice}
               </span>
             </Typography.Title>
@@ -129,13 +139,13 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
               size="large"
               icon={<IoIosSend />}
               block
+              onClick={doOrder}
               style={{
-                backgroundColor: "#52c41a",
-                borderColor: "#52c41a",
+                backgroundColor: "rgb(64, 51, 29)",
                 borderRadius: "5px",
               }}
             >
-              Siparişi Ver
+              Send Order
             </Button>
           </div>
         }
@@ -161,11 +171,11 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
                   description={
                     <>
                       <Typography.Text>
-                        Fiyat: ${product?.productId?.price}
+                        Price: ${product?.productId?.price}
                       </Typography.Text>
                       <br />
                       <Typography.Text>
-                        Renk: {product?.productId?.color}
+                        Color: {product?.productId?.color}
                       </Typography.Text>
 
                       <Typography.Text>
@@ -224,61 +234,12 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
           />
         </SpinComponent>
       </Drawer>
-      <Modal
-        width={750}
-        height={500}
-        onClose={onCloseSelectedProductInfoModal}
-        onCancel={onCloseSelectedProductInfoModal}
-        open={isModalVisible}
-        footer={null}
-      >
-        {selectedProduct && (
-          <>
-            <Avatar
-              src={selectedProduct?.mainImageUrl}
-              size={400}
-              shape="square"
-              style={{
-                marginBottom: "20px",
-                borderRadius: "10px",
-                border: "2px solid #1890ff",
-                width: "100%",
-                objectFit: "cover",
-              }}
-            />
-            {/* <Space>
-            
-            </Space> */}
-
-            <Space size="middle" direction="vertical">
-              <Typography.Text strong>
-                Product Name: {selectedProduct?.productName}
-              </Typography.Text>
-              <Typography.Text strong>
-                Description: {selectedProduct?.description}
-              </Typography.Text>{" "}
-              <Typography.Text strong>
-                Color: {selectedProduct?.color}
-              </Typography.Text>
-              <Typography.Text strong>
-                Price: ${selectedProduct?.price}
-              </Typography.Text>
-              <Typography.Text strong>
-                Category: {selectedProduct?.category?.name}
-              </Typography.Text>
-              <Typography.Text strong>
-                Brand: {selectedProduct?.brand?.name}
-              </Typography.Text>
-              <Typography.Text strong>
-                size:{" "}
-                {selectedProduct?.size?.map((size) =>
-                  Array.isArray(size) ? size?.split(",") : size
-                )}
-              </Typography.Text>
-            </Space>
-          </>
-        )}
-      </Modal>
+      <WievModal
+        onCloseSelectedProductInfoModal={onCloseSelectedProductInfoModal}
+        isModalVisible={isModalVisible}
+        selectedProduct={selectedProduct}
+      />
+      <OrderModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} basketData={basketData}  />
     </>
   );
 };

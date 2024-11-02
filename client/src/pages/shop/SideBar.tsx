@@ -80,6 +80,8 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
   const [form] = Form.useForm();
 
   const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {
+    console.log("side bar", values);
+    
     clearFilterParams?.();
     onFilter?.(values!);
   };
@@ -237,19 +239,17 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
               content={t("Size Options...")}
             />
             <Form.Item name="size" valuePropName="checked">
-              <Row gutter={[8, 8]} justify="start">
                 <Checkbox.Group
                   onChange={(value: string[]) => {
                     form.setFieldsValue({ size: value });
                   }}
                 >
-                  {sizes?.map((option, idx) => (
-                    <Checkbox key={idx} value={option.value}>
+                  {sizes?.map((option, idx) => {
+                    return <Checkbox key={idx} value={option.value}>
                       {option?.label}
-                    </Checkbox>
-                  ))}
+                    </Checkbox>;
+                  })}
                 </Checkbox.Group>
-              </Row>
             </Form.Item>
           </Col>
         </Row>

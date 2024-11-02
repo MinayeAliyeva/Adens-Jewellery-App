@@ -18,7 +18,6 @@ const Shop = () => {
   const [productsData, setProductsData] = useState<IProduct[]>([]);
   const params = useMemo(() => new URLSearchParams(), []) as URLSearchParams;
   const [getPrducts] = useLazyGetProductsQuery();
-
   const {
     control,
     formState: { errors },
@@ -90,7 +89,6 @@ const Shop = () => {
       dimention,
       duration,
     } = values;
-
     if (categories && categories?.length > 0) {
       categories.forEach((category) => params.append("category", category));
     }
@@ -99,6 +97,7 @@ const Shop = () => {
       brands.forEach((brand) => params.append("brand", brand));
     }
     if (size && size.length > 0) {
+
       size.forEach((value) => params.append("size", value));
     }
     if (productName) params.append("productName", productName);

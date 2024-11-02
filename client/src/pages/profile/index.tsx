@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   Layout,
   Avatar,
@@ -14,6 +14,8 @@ import { getUserFromToken } from "../../shared/helpers/authStorage";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { setLogout } from "../../redux/features/authSlice";
 import { IDecodedValue } from "../../shared/modules";
+import { OrderComponent } from "../order";
+import { useGetOrderByUserIdQuery } from "../../redux/api/order/order-api";
 
 const { Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
@@ -22,11 +24,18 @@ const UserProfile = () => {
   const userData: IDecodedValue | null = getUserFromToken();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  console.log("userData", userData);
 
   const handleLogout = () => {
     dispatch(setLogout());
     navigate("/");
   };
+  const {
+    data: userOrders,
+    isLoading,
+    error,
+  } = useGetOrderByUserIdQuery(userData?._id!);
+  console.log("userOrders", userOrders);
 
   return (
     <Layout style={{ minHeight: "100vh", padding: "25px" }}>
@@ -80,6 +89,11 @@ const UserProfile = () => {
             </Card>
 
             <Divider />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={16}>
+            <OrderComponent />
           </Col>
         </Row>
       </Content>

@@ -16,8 +16,6 @@ import Products from "../pages/products";
 import PrivateRouting from "../layouts/PrivateRouting";
 export type MyRouterObject = RouteObject;
 
-
-
 export type TypeRouteObject = MyRouterObject & { auth?: boolean };
 
 export enum RoutePaths {
@@ -80,7 +78,7 @@ export const routes: TypeRouteObject[] = [
       },
       {
         path: RoutePaths.PRODUCTS,
-        element:<Products/>,
+        element: <Products />,
       },
       {
         path: RoutePaths.FAG,
