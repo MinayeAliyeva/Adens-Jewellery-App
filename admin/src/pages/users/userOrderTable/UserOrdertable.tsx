@@ -6,24 +6,22 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { MdClearAll } from "react-icons/md";
-import { ICatagoryResponse } from "../../store/api/catagory/modules";
-import { ButtonComponent } from "../../utils/components/ButtonComponent";
+import { isEmpty, map } from "lodash";
+import { ICatagoryResponse } from "../../../store/api/catagory/modules";
 import {
-  columns,
   defaultPaginationData,
   IPaginationData,
   schema,
-} from "./data";
-
+} from "../../categories/data";
+import { IBrandsResponse } from "../../../store/api/brand/modules";
 import {
   useCreateBrandMutation,
   useDeleteBrandByIdMutation,
   useGetBrandsQuery,
   useUpdateBrandByIdMutation,
-} from "../../store/api/brand/brand-api";
-import { isEmpty, map } from "lodash";
-import { IBrandsResponse } from "../../store/api/brand/modules";
-
+} from "../../../store/api/brand/brand-api";
+import { ButtonComponent } from "../../../utils/components/ButtonComponent";
+import { columns } from "./data";
 type OnChange = NonNullable<TableProps<ICatagoryResponse>["onChange"]>;
 type Filters = Parameters<OnChange>[1];
 type GetSingle<T> = T extends (infer U)[] ? U : never;
@@ -48,7 +46,7 @@ const initialValue: IState = {
   Brand: [],
 };
 
-const Brand: FC = () => {
+const UserOrdertable: FC = () => {
   const { t } = useTranslation();
   const [state, setState] = useState(initialValue);
 
@@ -82,14 +80,7 @@ const Brand: FC = () => {
     setSortedInfo(sorter as Sorts);
   };
 
-  const clearFilters = () => {
-    setFilteredInfo({});
-  };
 
-  const clearAll = () => {
-    setFilteredInfo({});
-    setSortedInfo({});
-  };
 
   const setAgeSort = () => {
     setSortedInfo({
@@ -112,26 +103,6 @@ const Brand: FC = () => {
     message.error(errors?.name?.message);
   }, [errors?.name?.message]);
 
-  const onCreateBrand = useCallback(() => {
-    state.paginationData = defaultPaginationData;
-    reset();
-    setState((prev) => ({
-      ...(prev ?? {}),
-      selectedId: "",
-      createBrand: true,
-      updateBrand: false,
-    }));
-
-    const findedId = state.Brand?.find((data) => data?._id === "");
-
-    if (findedId) return;
-    setState((prev) => ({
-      ...(prev ?? {}),
-      Brand: [{ name: "", _id: "" }, ...prev.Brand],
-      paginationData: defaultPaginationData,
-      createBrand: true,
-    }));
-  }, [state.Brand]);
 
   const onFinish = (brand: IFormField) => {
     if (state.selectedId) {
@@ -241,29 +212,9 @@ const Brand: FC = () => {
 
   return (
     <>
-      <Space style={{ marginBottom: 16 }}>
-        <ButtonComponent
-          variant="outlined"
-          icon={<MdClearAll />}
-          onClick={clearFilters}
-          buttonText="Clear filters"
-        />
-        <ButtonComponent
-          variant="outlined"
-          icon={<MdClearAll />}
-          onClick={clearAll}
-          buttonText="Clear filters and sorters"
-        />
-        <ButtonComponent
-          icon={<IoIosAddCircleOutline />}
-          variant="outlined"
-          buttonText="Create New Brand"
-          onClick={onCreateBrand}
-          disabled={state.createBrand || state.updateBrand}
-        />
-      </Space>
+
       <Form>
-        <Table<IBrandsResponse>
+        <Table<ICatagoryResponse>
           columns={memorizedColumns}
           bordered={true}
           loading={isLoadingBrand || isLoading}
@@ -300,4 +251,4 @@ const Brand: FC = () => {
   );
 };
 
-export default Brand;
+export default UserOrdertable;

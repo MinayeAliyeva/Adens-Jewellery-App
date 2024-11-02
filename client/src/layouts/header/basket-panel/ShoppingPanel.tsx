@@ -26,7 +26,6 @@ import { useDispatch } from "react-redux";
 import { setBasketProductCount } from "../../../redux/features/basketProductCountSlice";
 import { SpinComponent } from "../../../shared/components/SpinComponent";
 import OrderModal from "../../../shared/components/OrderModal";
-import { useCreateOrderMutation } from "../../../redux/api/order/order-api";
 import SliderComponent from "../components/SliderComponent";
 import WievModal from "../components/WievModal";
 
@@ -41,7 +40,13 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
 }) => {
   const dispatch = useDispatch();
   const userData = getUserFromToken();
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+  const [shippingFee, setShippingFee] = useState<number>(0);
+
  
 
   const [getBasket, { data: basketData, isLoading: isLoadingBasket }] =
@@ -63,10 +68,6 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
       getBasket({ id: userData?._id ?? "" });
     }
   }, [userData?._id, isDrawerVisible]);
-
-  const [selectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const data = basketData?.products?.map(
     (product: IProductInBasket) => product
@@ -103,11 +104,9 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
       }
     );
   };
-  console.log("userData", userData?._id);
-  console.log("basketData?.products", basketData?.products);
+
 
   const doOrder = () => {
-
     setIsModalOpen(true);
   };
 
@@ -127,7 +126,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
         style={{ paddingBottom: 10, paddingTop: 20 }}
         footer={
           <div style={{ textAlign: "right" }}>
-            <SliderComponent totalPrice={basketData?.totalPrice} />
+            <SliderComponent totalPrice={basketData?.totalPrice} setShippingFee={setShippingFee} />
             <Typography.Title level={4}>
               Total Amount:{" "}
               <span style={{ color: "rgb(64, 51, 29)" }}>
@@ -239,7 +238,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
         isModalVisible={isModalVisible}
         selectedProduct={selectedProduct}
       />
-      <OrderModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} basketData={basketData}  />
+      <OrderModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} basketData={basketData} shippingFee={shippingFee} onClose={onClose} />
     </>
   );
 };

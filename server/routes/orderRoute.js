@@ -1,166 +1,191 @@
-// const express = require("express");
-// const auth = require("../middlware/auth");
-// const router = express.Router();
-// const { Order } = require("../models/order");
-// const { User } = require("../models/user");
-// const { Product } = require("../models/product");
-
-// router.get("/", auth, async (req, res) => {
-//   const orders = await Order.find({}).populate("user", "-password");
-//   res.status(200).send(orders);
-// });
-
-// router.get("/:id", auth, async (req, res) => {
-//   const order = await Order.findById(req.params.id).populate("user", "-password");
-//   res.status(200).send({ success: true, message: "Single Order", order });
-// });
-
-// router.post("/", auth, async (req, res) => {
-//   const { orderItems, shippingAddress } = req.body;
-
-//   // Kullanıcıyı bul
-//   const user = await User.findOne({ email: req.body.user.email });
-//   if (!user) {
-//     return res.status(404).send("Kullanıcı bulunamadı.");
-//   }
-
-//   // Eğer hiç ürün yoksa hata döndür
-//   if (!orderItems || orderItems.length === 0) {
-//     return res.status(400).send("Ürün yok!!!");
-//   }
-
-//   // Gelen ürünleri bul
-//   const products = await Product.find({ _id: { $in: orderItems.map(item => item._id) } });
-
-//   // Var olan siparişi bul
-//   let existingOrder = await Order.findOne({ user: user._id });
-
-//   // Toplam fiyatı hesapla
-//   let totalPrice = 0;
-
-//   // Eğer sipariş zaten varsa, ürün miktarlarını ve toplam fiyatı güncelle
-//   if (existingOrder) {
-//     orderItems.forEach(async (orderItem) => {
-//       const product = products.find(p => p._id.toString() === orderItem._id.toString());
-
-//       if (product) {
-//         // Eğer ürün zaten siparişte varsa, sipariş miktarını artır
-//         const existingProductInOrder = existingOrder?.orderItems?.find(item => item._id.toString() === product._id.toString());
-
-//         const orderQuantity = orderItem.quantity || 1; // Miktar yoksa 1 olarak varsay
-
-//         if (existingProductInOrder) {
-//           existingProductInOrder.totalQualityBuying = (existingProductInOrder.totalQualityBuying || 0) + orderQuantity;
-//         } else {
-//           // Eğer ürün siparişte yoksa, siparişe yeni ürün ekle ve miktarı ayarla
-//           existingOrder.orderItems.push({
-//             product, // Ürün ID'sini kaydet
-//             totalQualityBuying: orderQuantity
-//           });
-//         }
-
-//         // Toplam fiyatı güncelle
-//         totalPrice += Number(product.price) * orderQuantity;
-
-//         // Ürünün toplam satın alma miktarını artır
-//         product.totalQualityBuying = (product.totalQualityBuying || 0) + orderQuantity;
-//         await product.save();
-//       }
-//     });
-
-//     // Toplam fiyatı güncelle
-//     existingOrder.totalPrice += totalPrice;
-//     await existingOrder.save();
-
-//     res.status(200).send({ success: true, message: "Sipariş güncellendi", order: existingOrder });
-//   } else {
-//     // Eğer sipariş yoksa yeni sipariş oluştur
-//     orderItems.forEach(orderItem => {
-//       const product = products.find(p => p._id.toString() === orderItem._id.toString());
-//       const orderQuantity = orderItem.quantity || 1; // Miktar yoksa 1 olarak varsay
-//       totalPrice += Number(product.price) * orderQuantity; // Toplam fiyatı hesapla
-//     });
-
-//     let newOrder = await Order.create({
-//       user: user._id,
-//       orderItems: orderItems.map(orderItem => {
-//         const product = products.find(p => p._id.toString() === orderItem._id.toString());
-//         return {
-//           ...product,
-//           totalQualityBuying: orderItem.quantity || 1 // Miktar yoksa 1 olarak varsay
-//         }
-//       }),
-//       shippingAddress,
-//       totalPrice
-//     });
-
-//     user.orders.push(newOrder._id);
-//     await user.save();
-
-//     res.status(200).send({ success: true, message: "Sipariş oluşturuldu", order: newOrder });
-//   }
-// });
-
-// module.exports = router;
-
 const express = require("express");
-const auth = require("../middlware/auth");
 const router = express.Router();
 const { Order } = require("../models/order");
 const { User } = require("../models/user");
 const { Product } = require("../models/product");
-// const bcrypt = require("bcrypt");
-// const auth = require("../middlware/auth");
-// const isAdmin = require("../middlware/isAdmin");
-// const cors = require("cors");
 
-router.get("/", auth, async (req, res) => {
-  const orders = await Order.find({}).populate("user", "-password");
-  //const product = await Product.find({_id: })
-  res.status(200).send(orders);
-});
+router.post("/", async (req, res) => {
+  const { productItems, userId, shippingAddress, shippingFee, payment } =
+    req.body;
 
-router.get("/:id", auth, async (req, res) => {
-  const order = await Order.findById({_id: req.params.id}).populate("user", "-password");
-
-  res.status(200).send({success: true, message:"Single Order", order});
-});
-
-router.post("/", auth, async (req, res) => {
-  const { orderItems, shippingAddress, totalPrice } = req.body;
-  const user = await User.findOne({ email: req.body.user.email });
-  //   const user = await User.findById({ req.body.userId });
-  if (orderItems?.length <= 0) {
-    res?.send("Urun yok!!!");
+  if (!productItems || productItems.length === 0) {
+    return res.status(400).send({ message: "Ürün yok!!!" });
   }
-  const products = await Product.find({ _id: { $in: orderItems } });
 
-  orderItems.map(async (order) => {
-    const product = products.find(
-      (p) => p._id.toString() === order._id.toString()
+  const user = await User.findById(userId);
+  if (!user) {
+    return res.status(404).send({ message: "Kullanıcı bulunamadı" });
+  }
+
+  try {
+    const products = await Product.find({
+      _id: { $in: productItems.map((item) => item.productId) },
+    });
+
+    const orderProducts = productItems.map((item) => {
+      const product = products.find((p) => p._id.toString() === item.productId);
+      return {
+        productId: item.productId,
+        quantity: item.quantity,
+        price: product ? product.price : 0,
+      };
+    });
+
+    const productsTotal = orderProducts.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0
     );
-    if(product){
-      product.totalQty +=1;
+    const totalAmount = productsTotal + shippingFee;
+
+    const newOrder = new Order({
+      userId,
+      productItems: orderProducts.map(({ productId, quantity }) => ({
+        productId,
+        quantity,
+      })),
+      totalAmount,
+      shippingAddress,
+      payment,
+      status: "pending",
+      shippingFee,
+    });
+
+    const savedOrder = await newOrder.save();
+
+    const populatedOrder = await Order.findById(savedOrder._id)
+      .populate("userId", "-password")
+      .populate("productItems.productId");
+
+    res.status(201).json({
+      success: true,
+      message: "Sipariş oluşturuldu",
+      order: populatedOrder,
+      shippingFee,
+    });
+  } catch (error) {
+    console.error("Sipariş oluşturulamadı:", error);
+    res.status(500).json({
+      message: "Sipariş oluşturulurken hata oluştu",
+      error: error.message,
+    });
+  }
+});
+
+router.get("/orders", async (req, res) => {
+  try {
+    // Fetch all orders
+    const orders = await Order.find()
+      .populate({
+        path: "productItems.productId",
+        populate: [
+          {
+            path: "brand",
+            select: "name",
+          },
+          {
+            path: "category",
+            select: "name",
+          },
+        ],
+      })
+      .populate(
+        "userId",
+        "-password -isAdmin -isVerified -createdAt -updatedAt -__v -wishLists"
+      );
+
+    return res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while fetching orders.",
+      error: error.message,
+    });
+  }
+});
+
+router.get("/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
     }
-    await product.save();
-  });
-  
- 
 
-  let order = await Order.create({
-    user: user?._id,
-    orderItems: products,
-    shippingAddress,
-    totalPrice,
-  });
+    const orders = await Order.find({ userId })
+      .populate({
+        path: "productItems.productId",
+        populate: [
+          {
+            path: "brand",
+            select: "name",
+          },
+          {
+            path: "category",
+            select: "name",
+          },
+        ],
+      })
+      .populate(
+        "userId",
+        "-password -isAdmin -isVerified -createdAt -updatedAt -__v -wishLists"
+      );
 
-  user.orders.push(order?._id);
-  await user.save();
-  
-  res
-    .status(200)
-    .send({ success: true, message: "Order created", order, user });
+    res.status(200).json({
+      success: true,
+      orders,
+    });
+  } catch (error) {
+    console.error("Siparişler alınamadı:", error);
+    res.status(500).json({
+      message: "Siparişler alınırken hata oluştu",
+      error: error.message,
+    });
+  }
+});
+
+// PATCH /order/:orderId/status - Update order status by order ID
+router.patch("/:orderId/status", async (req, res) => {
+  const { orderId } = req.params;
+  const { status } = req.body;
+
+  const validStatuses = [
+    "pending",
+    "fulfilled",
+    "shipped",
+    "delivered",
+    "cancelled",
+  ];
+  if (!validStatuses.includes(status)) {
+    return res.status(400).json({ message: "Geçersiz sipariş durumu" });
+  }
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Sipariş bulunamadı" });
+    }
+
+    order.status = status;
+    const updatedOrder = await order.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Sipariş durumu güncellendi",
+      order: updatedOrder,
+    });
+  } catch (error) {
+    console.error("Sipariş durumu güncellenemedi:", error);
+    res.status(500).json({
+      message: "Sipariş durumu güncellenirken hata oluştu",
+      error: error.message,
+    });
+  }
 });
 
 module.exports = router;
-

@@ -1,18 +1,16 @@
 import { Button, Input, TableColumnsType, Typography } from "antd";
+import * as yup from "yup";
 import { FilterValue, SorterResult } from "antd/es/table/interface";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
-import * as yup from "yup";
 import { FaSave } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
-import { ICatagoryResponse } from "../../store/api/catagory/modules";
-import InputComponent from "../../utils/components/InputComponent";
-import { Control, FieldErrors, UseFormHandleSubmit } from "react-hook-form";
-import { IFormField } from ".";
-import { IBrandsResponse } from "../../store/api/brand/modules";
-import SelectBoxComponent from "../../utils/components/SelectBoxComponent";
+import { Control, UseFormHandleSubmit } from "react-hook-form";
 import { Content } from "antd/es/layout/layout";
 import { TFunction } from "i18next";
+import { IFormField } from "./UserOrdertable";
+import { ICatagoryResponse } from "../../../store/api/catagory/modules";
+import InputComponent from "../../../utils/components/InputComponent";
 
 export interface IPaginationData {
   current: number;
@@ -24,19 +22,11 @@ export const defaultPaginationData: IPaginationData = {
   pageSize: 10,
 };
 
-export const paginationSizeOptions: string[] = ["10, 20, 30"];
-
 export const schema = yup.object().shape({
-  name: yup.string().required("Category Name is required"),
+  name: yup.string().required("Brand Name is required"),
 });
 
-const brandOptions = (brands?: IBrandsResponse[]) =>
-  brands?.map((item) => ({
-    label: item.name,
-    value: item._id,
-  }));
-
-export interface ICatagoryTableProps {
+export interface IBrandsTableProps {
   handleSubmit: UseFormHandleSubmit<IFormField, undefined>;
   control: Control<IFormField>;
   filteredInfo?: Record<string, FilterValue | null>;
@@ -45,117 +35,66 @@ export interface ICatagoryTableProps {
   editTable?: (isEdit: boolean) => void;
   isEdit?: boolean;
   isCreate?: boolean;
-  editCategory?: (id: string) => void;
+  createBrand?: boolean;
+  updateBrand?: boolean;
+  editBrand?: (id: string) => void;
   selectedId?: string | null;
-  updateCategory: boolean;
-  errors: FieldErrors<IFormField>;
   onFinish: (values: IFormField) => void;
   onCancel: () => void;
-  onDeleteCategoryById: (id: string) => void;
-  brandData?: IBrandsResponse[];
-  createCategory: boolean;
-  t: TFunction;
+  onDeleteBrandById: (id: string) => void;
+  t: TFunction<"translation", string>;
 }
+
 export const columns = ({
-  control, filteredInfo, setAgeSort, sortedInfo, editTable, isEdit, isCreate, brandData, editCategory, selectedId, createCategory, updateCategory, errors, onFinish, handleSubmit, onCancel, onDeleteCategoryById, t,
-}: ICatagoryTableProps): TableColumnsType<ICatagoryResponse> => [
+  control,
+  filteredInfo,
+  setAgeSort,
+  sortedInfo,
+  createBrand,
+  updateBrand,
+  editTable,
+  isEdit,
+  isCreate,
+  editBrand,
+  selectedId,
+  onFinish,
+  handleSubmit,
+  onCancel,
+  onDeleteBrandById,
+  t,
+}: IBrandsTableProps): TableColumnsType<ICatagoryResponse> => [
   {
     title: "№",
     dataIndex: "_id",
     key: "_id",
-    width: 220,
-
-    render: (_, __, index) => index + 1,
+    width: 270,
+    render: (text, record, index) => index + 1,
   },
   {
-    title: t("Category name"),
+    title: t("Products"),
     dataIndex: "name",
     key: "name",
-    width: 420,
     render: (name: string, record: ICatagoryResponse) => {
-      return (
-        <>
-          {record?._id ? (
-            <Typography>{name}</Typography>
-          ) : (
-            <InputComponent
-              defaultValue={name}
-              name="name"
-              control={control as any}
-              placeholder="Category Name"
-              size="large"
-            />
-          )}
-        </>
-      );
-    },
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
-      <div style={{ padding: 8 }}>
-        <Input
-          placeholder="Search "
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() => confirm()}
-          style={{ width: 188, marginBottom: 8, display: "block" }}
-        />
-        <Button
-          type="primary"
-          onClick={() => confirm()}
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          Search
-        </Button>
-        <Button
-          onClick={() => {
-            setSelectedKeys([]);
-            confirm();
-          }}
-          size="small"
-          style={{ width: 90 }}
-        >
-          Reset
-        </Button>
-      </div>
-    ),
-    filteredValue: filteredInfo?.name || null,
-    onFilter: (value, record) => record.name.includes(value as string),
-    sorter: (a, b) => a?.name?.length - b?.name?.length,
-    sortOrder: sortedInfo?.columnKey === "name" ? sortedInfo.order : null,
-    ellipsis: true,
-  },
-  {
-    title: t("Brand name"),
-    dataIndex: "brand",
-    key: "brand",
-    width: 520,
-    render: (brand: any, record: ICatagoryResponse) => {
-      if (!record?._id && !record?.name) {
+      if (!record?._id && !record?.name && createBrand) {
         return (
-          <SelectBoxComponent
+          <InputComponent
+            name="name"
             control={control as any}
-            name="brand"
-            allowClear
-            options={brandOptions(brandData)}
-            style={{ width: "100%" }}
+            placeholder="Brand Name"
           />
         );
       }
       return (
         <>
           {selectedId === record?._id ? (
-            <SelectBoxComponent
+            <InputComponent
+              defaultValue={name}
+              name="name"
               control={control as any}
-              name="brand"
-              allowClear
-              defaultValue={brand?.name}
-              options={brandOptions(brandData)}
-              style={{ width: "100%" }}
+              placeholder="Brand Name"
             />
           ) : (
-            <Typography>{brand?.name}</Typography>
+            <Typography>{name}</Typography>
           )}
         </>
       );
@@ -163,7 +102,7 @@ export const columns = ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
       <div style={{ padding: 8 }}>
         <Input
-          placeholder="Search category"
+          placeholder="Search brand"
           value={selectedKeys[0]}
           onChange={(e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : [])
@@ -198,32 +137,104 @@ export const columns = ({
     ellipsis: true,
   },
   {
+    title: t("Order status"),
+    dataIndex: "name",
+    key: "name",
+    render: (name: string, record: ICatagoryResponse) => {
+      if (!record?._id && !record?.name && createBrand) {
+        return (
+          <InputComponent
+            name="name"
+            control={control as any}
+            placeholder="Brand Name"
+          />
+        );
+      }
+      return (
+        <>
+          {selectedId === record?._id ? (
+            <InputComponent
+              defaultValue={name}
+              name="name"
+              control={control as any}
+              placeholder="Brand Name"
+            />
+          ) : (
+            <Typography>{name}</Typography>
+          )}
+        </>
+      );
+    },
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          placeholder="Search brand"
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => confirm()}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => confirm()}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          onClick={() => {
+            setSelectedKeys([]);
+            confirm();
+          }}
+          size="small"
+          style={{ width: 90 }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filteredValue: filteredInfo?.name || null,
+    onFilter: (value, record) => record.name.includes(value as string),
+    sorter: (a, b) => a?.name?.length - b?.name?.length,
+    sortOrder: sortedInfo?.columnKey === "name" ? sortedInfo.order : null,
+    ellipsis: true,
+  },
+
+  {
     title: "",
     dataIndex: "actions",
     key: "actions",
+    align: "left",
     render: (_, record: ICatagoryResponse) => {
       const isEdit =
-        (record?._id !== selectedId && !createCategory && !updateCategory) ||
-        (createCategory && record?._id !== selectedId && !updateCategory) ||
-        (updateCategory && record?._id !== selectedId);
-
+        (record?._id !== selectedId && !createBrand && !updateBrand) ||
+        (createBrand && record?._id !== selectedId && !updateBrand) ||
+        (updateBrand && record?._id !== selectedId);
       return (
         <div>
           {isEdit ? (
-            <Content style={{ display: "flex", gap: "20px" }}>
+            <Content
+              style={{
+                display: "flex",
+                gap: "20px",
+              }}
+            >
               <Button
                 htmlType="button"
-                disabled={createCategory || updateCategory}
-                color="primary"
                 icon={<CiEdit />}
-                onClick={() => editCategory?.(record._id)}
+                onClick={() => editBrand?.(record._id)}
+                color="primary"
+                disabled={createBrand || updateBrand}
                 variant="dashed"
               />
               <Button
-                onClick={() => onDeleteCategoryById(record?._id)}
+                onClick={() => onDeleteBrandById(record?._id)}
                 icon={<MdDelete />}
-                disabled={createCategory || updateCategory}
                 htmlType="button"
+                disabled={createBrand || updateBrand}
                 color="danger"
                 variant="dashed"
               />
@@ -234,9 +245,9 @@ export const columns = ({
                 type="primary"
                 htmlType="button"
                 icon={<FaSave />}
-                onClick={handleSubmit((values) =>
-                  onFinish({ ...values, id: record?._id })
-                )}
+                onClick={handleSubmit((values) => {
+                  onFinish({ ...values, id: record?._id });
+                })}
               />
               <Button
                 icon={<MdOutlineCancel />}
@@ -250,7 +261,6 @@ export const columns = ({
         </div>
       );
     },
-
     ellipsis: true,
   },
 ];

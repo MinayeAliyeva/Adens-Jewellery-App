@@ -57,4 +57,5 @@ export const {
   useLazyGetOrdersQuery,
   useUpdateOrderByIdMutation,
   useGetOrderByUserIdQuery,
+  useLazyGetOrderByUserIdQuery
 } = orderApi;

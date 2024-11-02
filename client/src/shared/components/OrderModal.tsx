@@ -8,39 +8,44 @@ const payImages = "./assets/images/pay.png";
 interface IOrderModalProps {
   isModalOpen: boolean;
   setIsModalOpen: (arg: boolean) => void;
+  onClose: () => void;
   basketData: IBasketResponse;
+  shippingFee: number;
 }
 
 const OrderModal: FC<IOrderModalProps> = ({
   isModalOpen,
   setIsModalOpen,
   basketData,
+  shippingFee,
+  onClose,
 }) => {
   const [sendOrder] = useCreateOrderMutation();
   const userData = getUserFromToken();
   const [form] = Form.useForm();
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
-  const onFinish = (values: any) => {
-    console.log(values);
 
+  const handleModalClose = () => {
+    form.resetFields();
+    setIsModalOpen(false);
+    onClose();
+  };
+
+  const onFinish = (values: any) => {
     sendOrder({
       productItems: basketData?.products?.map((product) => ({
         productId: product?.productId?._id,
         quantity: product?.quantity,
       })),
-      shippingAddress: values?.address,
-      userId: userData?._id,
+      shippingAddress: values?.address ?? "",
+      userId: userData?._id as string,
       payment: {
         cardNumber: values?.cardNumber,
         cvv: values?.cvv,
         expiryDate: values?.expiryDate,
       },
+      shippingFee,
     }).then((res: any) => {
-      console.log("res", res?.data?.message);
-      // message.success(res?.data?.);
-      message.success("Order send!!");
+      message.success("Order sent!");
       handleModalClose();
     });
   };
@@ -50,6 +55,7 @@ const OrderModal: FC<IOrderModalProps> = ({
       <Modal
         title="Order Information"
         open={isModalOpen}
+        onCancel={handleModalClose}
         width={900}
         footer={null}
       >
@@ -67,12 +73,19 @@ const OrderModal: FC<IOrderModalProps> = ({
             <Input placeholder="Enter your address" />
           </Form.Item>
 
-          <img src={payImages} alt="" />
+          <img src={payImages} alt="Payment Methods" />
+
           <Form.Item
             label="Card Number"
             name="cardNumber"
             rules={[
               { required: true, message: "Please enter your card number!" },
+              { min: 16, message: "Card number must be at least 16 digits!" },
+              { max: 19, message: "Card number must be at most 19 digits!" },
+              {
+                pattern: /^\d+$/,
+                message: "Card number must contain only digits!",
+              },
             ]}
           >
             <Input placeholder="1234 5678 9123 4567" maxLength={19} />
@@ -83,7 +96,13 @@ const OrderModal: FC<IOrderModalProps> = ({
               <Form.Item
                 label="Expiry Date"
                 name="expiryDate"
-                rules={[{ required: true, message: "Enter expiry date!" }]}
+                rules={[
+                  { required: true, message: "Enter expiry date!" },
+                  {
+                    pattern: /^(0[1-9]|1[0-2])\/\d{2}$/,
+                    message: "Format must be MM/YY",
+                  },
+                ]}
               >
                 <Input placeholder="MM/YY" maxLength={5} />
               </Form.Item>
@@ -92,12 +111,21 @@ const OrderModal: FC<IOrderModalProps> = ({
               <Form.Item
                 label="CVV"
                 name="cvv"
-                rules={[{ required: true, message: "Enter CVV!" }]}
+                rules={[
+                  { required: true, message: "Enter CVV!" },
+                  { min: 3, message: "CVV must be 3 digits!" },
+                  { max: 3, message: "CVV must be 3 digits!" },
+                  {
+                    pattern: /^\d{3}$/,
+                    message: "CVV must contain only digits!",
+                  },
+                ]}
               >
                 <Input placeholder="123" maxLength={3} />
               </Form.Item>
             </Col>
           </Row>
+
           <Row justify="end" gutter={8}>
             <Col>
               <Button

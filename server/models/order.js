@@ -1,45 +1,60 @@
 const mongoose = require("mongoose");
-const randomText = Math.random().toString(36).substring(7).toLocaleLowerCase();
-const randomNumbers = Math.floor(1000 + Math.random() * 900);
+
 const orderSchema = new mongoose.Schema(
   {
-    user: { type: mongoose.Schema.Types.ObjectId, require: true, ref: "User" },
-    orderItems: [{ type: Object, require: true }],
-    shippingAdress: {
-      type: Object,
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
     },
-    totalQualityBuying: Number,
-    orderNumber: {
+    productItems: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          default: 1,
+        },
+      },
+    ],
+    shippingAddress: {
       type: String,
-
-      default: randomText + randomNumbers,
+      required: true,
     },
-    paymentStatus: {
-      type: String,
-
-      default: "Not paid",
-    },
-    paymentMethod: {
+    totalAmount: {
       type: Number,
-      default: 0.0,
+      required: true,
     },
-    totalPrice: {
+    status: {
       type: String,
-
-      default: "Not specified",
+      enum: ["pending", "fulfilled", "shipped", "delivered", "cancelled"],
+      default: "pending",
     },
-    currency: {
-      type: String,
-      require: true,
+    shippingFee: {
+      type: Number,
+      required: true,
+      default: 0,
     },
-
-    dliveredAt: {
-      type: Date,
+    payment: {
+      cardNumber: {
+        type: String,
+        required: true,
+      },
+      cvv: {
+        type: String,
+        required: true,
+      },
+      expiryDate: {
+        type: String,
+        required: true,
+      },
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const Order = mongoose.model("Order", orderSchema);

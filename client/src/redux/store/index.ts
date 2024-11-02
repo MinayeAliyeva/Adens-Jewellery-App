@@ -38,7 +38,7 @@ export const store = configureStore({
       basketApi.middleware,
       favoriteApi.middleware,
       reviewApi.middleware,
-      logoApi.middleware
+      logoApi.middleware,
     ),
 });
 

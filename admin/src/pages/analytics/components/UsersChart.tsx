@@ -25,7 +25,7 @@ const prepareUserData = (users?: IUser[]) => {
       userCountByMinute[dateMinute] = (userCountByMinute[dateMinute] || 0) + 1  ;
     });
   
-    return Object.keys(userCountByMinute).map((dateMinute) => ({
+    return Object.keys(userCountByMinute)?.map?.((dateMinute) => ({
       date: dateMinute,
       users: userCountByMinute[dateMinute],
     }));

@@ -1,9 +1,18 @@
-import React, { FC, memo, useCallback, useMemo } from "react";
+import React, {
+  FC,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { Table, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { columns } from "./data";
 import { useTranslation } from "react-i18next";
 import { IUser } from "./modules";
+import { useLazyGetOrderByUserIdQuery } from "../../store/api/order/order-api";
+import UserOrdertable from "./userOrderTable/UserOrdertable";
 
 interface DataType {
   key: React.Key;
@@ -15,8 +24,10 @@ interface DataType {
 }
 
 const UsersTable: FC<{ data: IUser[] }> = ({ data }) => {
+  const [userId, setUserId] = useState("");
   const { t } = useTranslation();
-
+  const [getUserorderById, { data: userOrders }] =
+    useLazyGetOrderByUserIdQuery();
   const tableDataSource = useMemo(
     () =>
       data?.map((user) => ({
@@ -29,27 +40,25 @@ const UsersTable: FC<{ data: IUser[] }> = ({ data }) => {
       })),
     [data]
   );
-
+  useEffect(() => {
+    if (!userId) return;
+    getUserorderById(userId);
+  }, [userId]);
   const tableColumns = useMemo(() => columns({ t }), [t]);
+
+  const handleExpandedRowRender = useCallback(
+    (record: DataType) => {
+      setUserId(record?._id);
   
-  const handleExpandedRowRender = useCallback((record: DataType) => {
-    return (
-      <Content>
-        <Typography style={{ margin: "10px 0" }}>
-          <strong>{t("First Name")}:</strong> {record.firstName}
-        </Typography>
-        <Typography style={{ margin: "10px 0" }}>
-          <strong>{t("Last Name")}:</strong> {record.lastName}
-        </Typography>
-        <Typography style={{ margin: "10px 0" }}>
-          <strong>{t("Phone")}:</strong> {record.phone}
-        </Typography>
-        <Typography style={{ margin: "10px 0" }}>
-          <strong>{t("Email")}:</strong> {record.email}
-        </Typography>
-      </Content>
-    );
-  }, [t]);
+
+      return (
+        <>
+          <UserOrdertable  />
+        </>
+      );
+    },
+    [t]
+  );
 
   return (
     <Table<DataType>

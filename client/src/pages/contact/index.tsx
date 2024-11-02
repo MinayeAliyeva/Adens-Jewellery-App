@@ -5,8 +5,7 @@ import { useTranslation } from "react-i18next";
 const { Title, Paragraph } = Typography;
 
 const Contact = () => {
-  const onFinish = (values: any) => {
-  };
+  const onFinish = (values: any) => {};
   const { t } = useTranslation();
   return (
     <Content
@@ -16,13 +15,15 @@ const Contact = () => {
         height: "100vh",
       }}
     >
-      <Row gutter={16} style={{display:'flex',alignItems:'center',justifyContent:'center'}}>
-        <Col
-          xs={24}
-          sm={16}
-          md={12}
-         
-        >
+      <Row
+        gutter={16}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Col xs={24} sm={16} md={12}>
           <Card
             style={{
               borderRadius: "10px",
@@ -36,7 +37,9 @@ const Contact = () => {
               {t("Contact Us")}
             </Title>
             <Paragraph style={{ textAlign: "center" }}>
-              {t("If you have any questions, feel free to reach out to us by filling out the form below.")}
+              {t(
+                "If you have any questions, feel free to reach out to us by filling out the form below."
+              )}
             </Paragraph>
 
             <Form layout="vertical" onFinish={onFinish}>
