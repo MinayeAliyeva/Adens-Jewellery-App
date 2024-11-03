@@ -137,10 +137,12 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
               type="primary"
               size="large"
               icon={<IoIosSend />}
+              disabled={isEmpty(basketData?.products)}
               block
               onClick={doOrder}
               style={{
-                backgroundColor: "rgb(64, 51, 29)",
+                backgroundColor: `${isEmpty(basketData?.products) ? "rgb(128, 113, 72)" : "rgb(64, 51, 29)"}`,
+                color: `${isEmpty(basketData?.products) ? "#fff" : "black"}`,
                 borderRadius: "5px",
               }}
             >

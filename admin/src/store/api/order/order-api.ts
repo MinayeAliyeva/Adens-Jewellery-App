@@ -13,15 +13,15 @@ export const orderApi = createApi({
   }),
   tagTypes: ["Order"],
   endpoints: (builder) => ({
-    getOrders: builder.query<IOrderResponse[], void>({
+    getOrders: builder.query<IOrderResponse, void>({
       query: () => `/api/orders`,
       providesTags: ["Order"],
     }),
-    getOrderByUserId: builder.query<IOrderResponse[], string>({
+    getOrderByUserId: builder.query<IOrderResponse, string>({
       query: (userId) => `/api/orders/user/${userId}`,
       providesTags: ["Order"],
     }),
-    createOrder: builder.mutation<IOrderResponse[], IOrderRequestArg>({
+    createOrder: builder.mutation<IOrderResponse, IOrderRequestArg>({
       query: (body) => ({
         url: "/api/orders",
         method: "POST",
@@ -47,6 +47,17 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ["Order"],
     }),
+    updateOrderStatusById: builder.mutation<
+      IOrderResponse,
+       {orderId:string, status: string} 
+    >({
+      query: ({orderId, status}) => ({
+        url: `/api/orders/${orderId}/status`,
+        method: "PATCH",
+        body: { status },
+      }),
+      invalidatesTags: ["Order"],
+    }),
   }),
 });
 
@@ -57,5 +68,6 @@ export const {
   useLazyGetOrdersQuery,
   useUpdateOrderByIdMutation,
   useGetOrderByUserIdQuery,
-  useLazyGetOrderByUserIdQuery
+  useLazyGetOrderByUserIdQuery,
+  useUpdateOrderStatusByIdMutation
 } = orderApi;

@@ -1,11 +1,11 @@
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { iconStyle } from "../constants";
 import ShoppingPanel from "./ShoppingPanel";
 import { getUserFromToken } from "../../../shared/helpers/authStorage";
 import { useSelector } from "react-redux";
 import { getUserBasketProductCountSelector } from "../../../redux/store";
-import { useGetBasketByUserIdQuery } from "../../../redux/api/basket/basket-api";
+import { useLazyGetBasketByUserIdQuery } from "../../../redux/api/basket/basket-api";
 import { isEmpty } from "lodash";
 import ModalComponent from "../../../shared/components/Modal";
 import BadgeComponent from "../../../shared/components/BadgeComponent";
@@ -14,15 +14,23 @@ const ShoppingCart = () => {
   const userData = getUserFromToken();
   const [isDrawerVisible, setIsDrawerVisible] = useState(false);
   const count = useSelector(getUserBasketProductCountSelector);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data: basketData } = useGetBasketByUserIdQuery(
-    { id: userData?._id ?? "" },
-    { skip: !userData?._id }
-  );
+  const [getBasketByUserId,{ data: basketData } ]= useLazyGetBasketByUserIdQuery();
+  useEffect(() => {
+    if(userData?._id && count === 0){
+      getBasketByUserId({
+        id: userData?._id})
+    }
+  },[count, userData?._id])
 
   const showDrawer = () => {
-    userData?._id ? setIsDrawerVisible(true) : setIsModalOpen(true);
+    if (userData?._id) {
+      setIsDrawerVisible(true);
+    } else {
+      setIsModalOpen(true);
+    }
   };
   const onClose = () => {
     setIsDrawerVisible(false);

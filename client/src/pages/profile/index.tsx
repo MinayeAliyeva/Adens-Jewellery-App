@@ -30,9 +30,7 @@ const UserProfile = () => {
     navigate("/");
   };
   const {
-    data: userOrders,
-    isLoading,
-    error,
+    data: userOrders
   } = useGetOrderByUserIdQuery(userData?._id!);
 
   return (
@@ -92,7 +90,7 @@ const UserProfile = () => {
         <Row justify="center">
           <Col span={16}>
             <Card bordered={false} style={{ borderRadius: "12px" }}>
-                  <OrderComponent userOrders={userOrders} />
+                  <OrderComponent userOrders={userOrders!} />
             </Card>
             <Divider />
           </Col>

@@ -1,4 +1,4 @@
-import React, {
+import {
   FC,
   memo,
   useCallback,
@@ -6,13 +6,16 @@ import React, {
   useMemo,
   useState,
 } from "react";
-import { Table, Typography } from "antd";
-import { Content } from "antd/es/layout/layout";
+import { Table } from "antd";
 import { columns } from "./data";
 import { useTranslation } from "react-i18next";
 import { IUser } from "./modules";
-import { useLazyGetOrderByUserIdQuery } from "../../store/api/order/order-api";
-import UserOrdertable from "./userOrderTable/UserOrdertable";
+import {
+  useLazyGetOrderByUserIdQuery,
+  useUpdateOrderStatusByIdMutation,
+} from "../../store/api/order/order-api";
+import { OrderComponent } from "./user-order/OrderComponent";
+import { IOrderResponse } from "../../store/api/order/modules";
 
 interface DataType {
   key: React.Key;
@@ -25,9 +28,13 @@ interface DataType {
 
 const UsersTable: FC<{ data: IUser[] }> = ({ data }) => {
   const [userId, setUserId] = useState("");
+  const [userOrders, setUserOrders] = useState<IOrderResponse | null>(null);
   const { t } = useTranslation();
-  const [getUserorderById, { data: userOrders }] =
+
+  const [getUserorderById, { isLoading: isLoadingUserOrders }] =
     useLazyGetOrderByUserIdQuery();
+  const [updateStatusByOrderId, {isLoading: isLoadingUpdate}] = useUpdateOrderStatusByIdMutation();
+
   const tableDataSource = useMemo(
     () =>
       data?.map((user) => ({
@@ -40,31 +47,47 @@ const UsersTable: FC<{ data: IUser[] }> = ({ data }) => {
       })),
     [data]
   );
+
   useEffect(() => {
-    if (!userId) return;
-    getUserorderById(userId);
-  }, [userId]);
+    if (userId) {
+      console.log("userId", userId);
+      
+      getUserorderById(userId).then((res) => {
+        setUserOrders(res.data!);
+      });
+    }
+  }, [userId, isLoadingUpdate]);
+
   const tableColumns = useMemo(() => columns({ t }), [t]);
+  const saveOrdersStatus = (orderId: string, status: string) => {
+    updateStatusByOrderId({orderId,status});
+  };
 
-  const handleExpandedRowRender = useCallback(
-    (record: DataType) => {
-      setUserId(record?._id);
-  
-
-      return (
-        <>
-          <UserOrdertable  />
-        </>
-      );
-    },
-    [t]
-  );
+  const handleExpandedRowRender = useCallback(() => {
+    return (
+      <OrderComponent
+        userOrders={userOrders!}
+        isLoadingUserOrders={isLoadingUserOrders}
+        saveOrdersStatus={saveOrdersStatus}
+      />
+    );
+  }, [userOrders]);
 
   return (
     <Table<DataType>
       columns={tableColumns}
       expandable={{
         expandedRowRender: handleExpandedRowRender,
+        rowExpandable: () => true,
+        expandRowByClick: true,
+        onExpand: (expanded, record) => {
+          if (expanded) {
+            setUserId(record._id);
+          } else {
+            setUserOrders(null);
+            setUserId("");
+          }
+        },
       }}
       dataSource={tableDataSource}
     />

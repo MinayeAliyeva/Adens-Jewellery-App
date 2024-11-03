@@ -152,6 +152,8 @@ router.get("/user/:userId", async (req, res) => {
 router.patch("/:orderId/status", async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
+  console.log("status", status);
+  
 
   const validStatuses = [
     "pending",

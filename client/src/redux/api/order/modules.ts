@@ -1,3 +1,4 @@
+import { IProduct } from "../product/modules";
 import { IUser } from "../user/module";
 
 export interface IOrderItem {
@@ -22,12 +23,17 @@ interface IProductItem {
   quantity: number;
 }
 
+interface IProductResponseItems {
+  productId: IProduct;
+  quantity: number;
+}
+
 
 interface IOrder {
   payment: IPayment;
   _id: string;
   userId: IUser;
-  productItems: IProductItem[];
+  productItems: IProductResponseItems[];
   shippingAddress: string;
   totalAmount: number;
   status: "pending" | "fulfilled" | "shipped" | "delivered" | "cancelled";
