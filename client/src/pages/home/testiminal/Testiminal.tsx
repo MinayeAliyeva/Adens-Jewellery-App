@@ -4,7 +4,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import TestiminalCart from "./TestiminalCart";
 import { useTranslation } from "react-i18next";
-//!BAckend ile yazilacak
 const testimonials = [
   {
     id: 1,

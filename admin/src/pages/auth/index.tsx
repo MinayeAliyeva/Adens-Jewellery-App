@@ -21,6 +21,7 @@ import TranslateComponent from "../../utils/components/TranslateComponent";
 import { useTranslation } from "react-i18next";
 import { useGetLogoQuery } from "../../store/api/setting/setting-api";
 import { ruleAuth } from "./data";
+import { memo } from "react";
 const bg = "/assets/images/bg.png";
 const logo = "/assets/images/logo.png";
 
@@ -150,4 +151,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default memo(Login);

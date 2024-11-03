@@ -24,7 +24,6 @@ export const basketCountSlice = createSlice({
     },
 
     setBasketProductCount: (state, action: PayloadAction<number>) => {
-      console.log("action.payload", action.payload);
       
       state.count = action.payload;
     },

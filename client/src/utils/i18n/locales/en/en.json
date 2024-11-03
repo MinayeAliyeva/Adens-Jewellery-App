@@ -60,8 +60,10 @@
   "Password": "Sifre",
   "Enter password": "Enter password",
   "Password must be at least 6 characters!": "Password must be at least 6 characters!",
-  "Password must contain at least one uppercase letter!": "Password must contain at least one uppercase letter!", 
+  "Password must contain at least one uppercase letter!": "Password must contain at least one uppercase letter!",
   "Password must contain at least one lowercase letter!": "Password must contain at least one lowercase letter!",
   "Password must contain at least one digit!": "Password must contain at least one digit!",
-  "Password must contain at least one special character!": "Password must contain at least one special character!"
+  "Password must contain at least one special character!": "Password must contain at least one special character!",
+  "Discover your unique style with Timeless. Our curated collection enhances your natural beauty and ensures you always look your best, no matter the occasion.": "Discover your unique style with Timeless. Our curated collection enhances your natural beauty and ensures you always look your best, no matter the occasion.",
+  "Shine bright like a diamond! With our exquisite range of gems, you can elevate your look and make a statement that reflects your personality and elegance.": "Shine bright like a diamond! With our exquisite range of gems, you can elevate your look and make a statement that reflects your personality and elegance."
 }

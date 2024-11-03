@@ -51,8 +51,8 @@
   "Address": "Ünvan",
   "First Name": "Ad",
   "Last Name": "Soyad",
-  "Send Message": "Mesajı göndər", 
-  "Clear": "Təmizlə", 
+  "Send Message": "Mesajı göndər",
+  "Clear": "Təmizlə",
   "Close": "Bagla",
   "You must be a member for this process.": "Bu işləm üçün səlahiyyət olmalıdır.",
   "Product added to basket": "Məhsul sebətə əlavə edildi",
@@ -67,5 +67,6 @@
   "Password must contain at least one lowercase letter!": "Sifre ən azı bir kicik hərfdən ibarət olmalıdır!",
   "Password must contain at least one digit!": "Sifre ən azı bir rəqəmdən ibarət olmalıdır!",
   "Password must contain at least one special character!": "Sifre ən azı bir xüsusi simvol olmalıdır!",
-  "Email":  "E-Poçt ünvanı"
+  "Email": "E-Poçt ünvanı",
+  "Discover your unique style with Timeless. Our curated collection enhances your natural beauty and ensures you always look your best, no matter the occasion.": "Timeless ilə unikal üslubunuzu kəşf edin. Bizim seçilmiş kolleksiyamız təbii gözəlliyinizi artırır və vəziyyətdən asılı olmayaraq həmişə ən yaxşı görünmənizi təmin edir."
 }

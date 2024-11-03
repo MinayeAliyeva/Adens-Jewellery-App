@@ -1,8 +1,8 @@
 import { FC } from "react";
 import { Carousel } from "antd";
 import Typography from "antd/es/typography/Typography";
-import { useTranslation } from "react-i18next";
 import Container from "./Container";
+import { TFunction } from "i18next";
 
 const caruselImg1 = "/assets/images/carusel1.jpg";
 const caruselImg2 = "/assets/images/carusel2.jpg";
@@ -26,9 +26,9 @@ const slides = [
   },
 ];
 
-const CaruselComponent: FC = () => {
-  const { t } = useTranslation(); 
-
+const CaruselComponent: FC<{ t: TFunction<"translation", undefined> }> = ({
+  t,
+}) => {
   return (
     <Carousel
       autoplay
@@ -54,7 +54,7 @@ const CaruselComponent: FC = () => {
                 animationDelay: `${index * 0.5}s`,
               }}
             >
-              {t(slide.text)} 
+              {t(slide.text)}
             </Typography>
           </Container>
         </div>
