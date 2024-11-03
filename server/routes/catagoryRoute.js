@@ -33,21 +33,7 @@ router.post("/", async (req, res) => {
 });
 
 
-// update category
 router.put("/:id", async (req, res) => {
-
-  
-  // let findedCategory = await Category.findOne({ name: req.body.name });
-  
-  
-  // if (findedCategory && findedCategory?.brand?._id === req.body?.brand) {
-  //   return res.status(400).send("Bele category movcuddur !!!");
-  // }
-
-  //  if(!findedCategory){
-  //   res.status(400).send("Update Edeceyiniz Kategori Bulunamadı");
-  //   return;
-  //  }
 
   const category = await Category.findById(req.params.id);
 

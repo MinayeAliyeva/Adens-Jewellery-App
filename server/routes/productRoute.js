@@ -32,7 +32,7 @@ router.get("/", async (req, res) => {
       maxPrice,
       size,
       brand,
-      minwWeight,
+      minWeight,
       maxWeight,
       duration,
       dimention,
@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
       !maxPrice &&
       !size &&
       !brand &&
-      !minwWeight &&
+      !minWeight &&
       !maxWeight &&
       !duration &&
       !dimention &&
@@ -85,15 +85,15 @@ router.get("/", async (req, res) => {
       ...(minPrice && { price: { $gte: Number(minPrice) } }),
       ...(maxPrice && { price: { $lte: Number(maxPrice) } }),
 
-      ...(minwWeight && { weight: { $gte: Number(minwWeight) } }),
+      ...(minWeight && { weight: { $gte: Number(minWeight) } }),
       ...(maxWeight && { weight: { $lte: Number(maxWeight) } }),
       ...(minPrice &&
         maxPrice && {
           price: { $gte: Number(minPrice), $lte: Number(maxPrice) },
         }),
-      ...(minwWeight &&
+      ...(minWeight &&
         maxWeight && {
-          weight: { $gte: Number(minwWeight), $lte: Number(maxWeight) },
+          weight: { $gte: Number(minWeight), $lte: Number(maxWeight) },
         }),
       ...(duration && { warrantyDuration: { $eq: Number(duration) } }),
       ...(dimention && { dimensions: { $eq: Number(dimention) } }),

@@ -47,14 +47,23 @@ export const orderApi = createApi({
       }),
       invalidatesTags: ["Order"],
     }),
+    deleteOrderByIds: builder.mutation<IOrderResponse, string>({
+      query: (orderId) => ({
+        url: `/api/orders/${orderId}/user`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Order"],
+    })
   }),
 });
 
 export const {
   useCreateOrderMutation,
   useDeleteOrderByIdMutation,
+  useLazyGetOrderByUserIdQuery,
   useGetOrdersQuery,
   useLazyGetOrdersQuery,
   useUpdateOrderByIdMutation,
   useGetOrderByUserIdQuery,
+  useDeleteOrderByIdsMutation
 } = orderApi;

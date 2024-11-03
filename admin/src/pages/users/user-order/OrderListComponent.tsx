@@ -34,9 +34,9 @@ const OrderProductListComponent: FC<{
               description={item?.productName}
             />
             <div style={{ display: "flex", gap: "15px" }}>
-              {" "}
+              <span>Quantity:{item?.quantity}</span>|
               <span>Price:{item?.price}$</span>|
-              <span>Quantity:{item?.quantity}</span>
+              <span>Total:{item?.price * item?.quantity}$</span>
             </div>
           </>
         </List.Item>

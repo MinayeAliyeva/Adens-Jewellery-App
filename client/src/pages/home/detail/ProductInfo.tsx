@@ -4,7 +4,6 @@ import Title from "antd/es/typography/Title";
 import { isEmpty } from "lodash";
 import { useTranslation } from "react-i18next";
 import {
-  DollarCircleOutlined,
   HeartFilled,
   HeartOutlined,
   ShoppingCartOutlined,
@@ -132,7 +131,6 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
       {product?.size && product?.size.length > 0 && (
         <Paragraph>
           <strong>Size:</strong> {product?.size.join(", ")}{" "}
-          {/* Size dizisi olarak gösteriliyor */}
         </Paragraph>
       )}
       {product?.color && (
@@ -177,20 +175,7 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
         </Paragraph>
       )}
 
-      <Content style={{ display: "flex", justifyContent: "space-between" }}>
-        <Button
-          type="primary"
-          icon={<DollarCircleOutlined />}
-          onClick={handlePayment}
-          size="large"
-          style={{
-            backgroundColor: "#52c41a",
-            borderColor: "#52c41a",
-            fontWeight: "bold",
-          }}
-        >
-          Make Payment
-        </Button>
+ 
 
         <Button
           type="primary"
@@ -207,7 +192,6 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
         >
           Sebete Ekle
         </Button>
-      </Content>
     </div>
   );
 };
