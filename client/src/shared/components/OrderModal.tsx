@@ -1,5 +1,11 @@
 import { FC, memo } from "react";
+import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 import { Button, Modal, Input, Form, Row, Col, message } from "antd";
+import { isEmpty } from "lodash";
+import { useDeleteAllProductFromBasketMutation } from "../../redux/api/basket/basket-api";
+import { showSuccessToast } from "./NotficationComponent";
+import { setBasketProductCount } from "../../redux/features/basketProductCountSlice";
 import { useCreateOrderMutation } from "../../redux/api/order/order-api";
 import { IBasketResponse } from "../../redux/api/basket/modules";
 import { getUserFromToken } from "../helpers/authStorage";
@@ -21,6 +27,7 @@ const OrderModal: FC<IOrderModalProps> = ({
   onClose,
 }) => {
   const [sendOrder] = useCreateOrderMutation();
+  const [deleteAllProductByUserId] = useDeleteAllProductFromBasketMutation();
   const userData = getUserFromToken();
   const [form] = Form.useForm();
 
@@ -29,6 +36,8 @@ const OrderModal: FC<IOrderModalProps> = ({
     setIsModalOpen(false);
     onClose();
   };
+  const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   const onFinish = (values: any) => {
     sendOrder({
@@ -44,9 +53,14 @@ const OrderModal: FC<IOrderModalProps> = ({
         expiryDate: values?.expiryDate,
       },
       shippingFee,
-    }).then((res: any) => {
+    }).then((res) => {
       message.success("Order sent!");
       handleModalClose();
+      deleteAllProductByUserId(userData?._id ?? '').then((res) => {
+        if (!isEmpty(res?.data?.basket?.products)) return;
+       dispatch(setBasketProductCount(0));
+       showSuccessToast(t("Order completed"));
+      });
     });
   };
 

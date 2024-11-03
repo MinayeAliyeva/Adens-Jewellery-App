@@ -1,4 +1,5 @@
 import { IUser } from "../admin/admin-api";
+import { IProduct } from "../product/modules";
 
 export interface IOrderItem {
   _id: string;
@@ -21,11 +22,17 @@ interface IProductItem {
   quantity: number;
 }
 
-interface IOrder {
+interface IProductItems {
+  productId: IProduct;
+  quantity: number;
+}
+
+
+export interface IOrder {
   payment: IPayment;
   _id: string;
   userId: IUser;
-  productItems: IProductItem[];
+  productItems: IProductItems[];
   shippingAddress: string;
   totalAmount: number;
   status: "pending" | "fulfilled" | "shipped" | "delivered" | "cancelled";

@@ -7,6 +7,12 @@ export interface IProductInBasket {
     _id: string;
 };
 
+export interface IAddBasaketBody {
+    productId: string;
+    userId: string;
+    quantity: number;
+}
+
 export interface IBasketResponse {
     _id: string;
     user: string;
@@ -14,6 +20,9 @@ export interface IBasketResponse {
     totalPrice: number;
     __v: number;
 };
+
+
+
 
 
 

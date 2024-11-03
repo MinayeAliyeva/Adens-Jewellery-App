@@ -1,3 +1,4 @@
+import { IProduct } from "../../redux/api/product/modules";
 import { IUser } from "../../redux/api/user/module";
 
 export interface IOrderItem {
@@ -21,11 +22,18 @@ export interface IProductItem {
   quantity: number;
 }
 
+
+interface IProductItems {
+  productId: IProduct;
+  quantity: number;
+}
+
+
 export interface IOrder {
   payment: IPayment;
   _id: string;
   userId: IUser;
-  productItems: IProductItem[];
+  productItems: IProductItems[];
   shippingAddress: string;
   totalAmount: number;
   status: "pending" | "fulfilled" | "shipped" | "delivered" | "cancelled";
@@ -50,5 +58,6 @@ export interface IPayment {
 }
 
 export interface IOrderResponse {
-  userOrders: { success: boolean; orders: IOrder[] };
+  success: boolean;
+   orders: IOrder[] ;
 }

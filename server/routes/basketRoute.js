@@ -111,6 +111,31 @@ router.delete("/:userId/:productId", async (req, res) => {
   }
 });
 
+router.delete("/:userId", async (req, res) => {
+  
+  const { userId } = req.params;
+  console.log("userId", userId);
+
+  try {
+    const basket = await Basket.findOneAndUpdate(
+      { user: userId },
+      { $set: { products: [], totalPrice: 0 } }, 
+      { new: true }
+    );
+    console.log("basket", basket);
+    
+
+    if (!basket) {
+      return res.status(404).json({ message: "Basket not found for this user" });
+    }
+
+    res.status(200).send({ message: "All products removed from basket", basket });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 router.put("/:userId/:productId", async (req, res) => {
   const { userId, productId } = req.params;
   const { quantity } = req.body;

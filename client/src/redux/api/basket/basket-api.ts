@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
-import { IBasketResponse } from "./modules";
+import { IAddBasaketBody, IBasketResponse } from "./modules";
 
 export const basketApi = createApi({
   reducerPath: "basketApi",
@@ -15,7 +15,7 @@ export const basketApi = createApi({
     getBasket: builder.query<IBasketResponse, void>({
       query: () => `/api/basket`,
     }),
-    addBasket: builder.mutation<{message: string; basket:IBasketResponse}, any>({
+    addBasket: builder.mutation<{message: string; basket:IBasketResponse}, IAddBasaketBody>({
       query: (body) => ({
         url: "/api/basket",
         method: "POST",
@@ -44,6 +44,13 @@ export const basketApi = createApi({
         method: "DELETE",
       })
     }),
+
+    deleteAllProductFromBasket: builder.mutation<{message: string; basket:IBasketResponse}, string>({
+      query: (userId) => ({
+        url: `/api/basket/${userId}`,
+        method: "DELETE",
+      })
+    }),
   }),
 });
 
@@ -54,5 +61,6 @@ export const {
  useGetBasketByUserIdQuery,
  useLazyGetBasketByUserIdQuery,
  useAddProductToBasketMutation,
- useDeleteProductFromBasketMutation
+ useDeleteProductFromBasketMutation,
+ useDeleteAllProductFromBasketMutation
 } = basketApi;
