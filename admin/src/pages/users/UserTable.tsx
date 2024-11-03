@@ -11,6 +11,7 @@ import { columns } from "./data";
 import { useTranslation } from "react-i18next";
 import { IUser } from "./modules";
 import {
+  useDeleteOrderByIdsMutation,
   useLazyGetOrderByUserIdQuery,
   useUpdateOrderStatusByIdMutation,
 } from "../../store/api/order/order-api";
@@ -29,11 +30,12 @@ interface DataType {
 const UsersTable: FC<{ data: IUser[] }> = ({ data }) => {
   const [userId, setUserId] = useState("");
   const [userOrders, setUserOrders] = useState<IOrderResponse | null>(null);
+  const [expandedRowKeys, setExpandedRowKeys] = useState<React.Key[]>([]);
   const { t } = useTranslation();
 
-  const [getUserorderById, { isLoading: isLoadingUserOrders }] =
-    useLazyGetOrderByUserIdQuery();
+  const [getUserorderById, { isLoading: isLoadingUserOrders }] = useLazyGetOrderByUserIdQuery();
   const [updateStatusByOrderId, {isLoading: isLoadingUpdate}] = useUpdateOrderStatusByIdMutation();
+  const [deleteOrder,{isLoading: isLoadingDeleteOrderById}] = useDeleteOrderByIdsMutation();
 
   const tableDataSource = useMemo(
     () =>
@@ -54,12 +56,17 @@ const UsersTable: FC<{ data: IUser[] }> = ({ data }) => {
         setUserOrders(res.data!);
       });
     }
-  }, [userId, isLoadingUpdate]);
+  }, [userId, isLoadingUpdate, isLoadingDeleteOrderById]);
 
   const tableColumns = useMemo(() => columns({ t }), [t]);
   const saveOrdersStatus = (orderId: string, status: string) => {
     updateStatusByOrderId({orderId,status});
   };
+
+  const deleteOrderById = useCallback((orderId: string) => {
+    deleteOrder(orderId);
+  }, []);
+
 
   const handleExpandedRowRender = useCallback(() => {
     return (
@@ -67,6 +74,7 @@ const UsersTable: FC<{ data: IUser[] }> = ({ data }) => {
         userOrders={userOrders!}
         isLoadingUserOrders={isLoadingUserOrders}
         saveOrdersStatus={saveOrdersStatus}
+        deleteOrderById={deleteOrderById}
       />
     );
   }, [userOrders]);
@@ -81,11 +89,14 @@ const UsersTable: FC<{ data: IUser[] }> = ({ data }) => {
         onExpand: (expanded, record) => {
           if (expanded) {
             setUserId(record._id);
+            setExpandedRowKeys([record.key]); 
           } else {
             setUserOrders(null);
             setUserId("");
+            setExpandedRowKeys([]);
           }
         },
+        expandedRowKeys: expandedRowKeys, 
       }}
       dataSource={tableDataSource}
     />

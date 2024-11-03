@@ -15,7 +15,6 @@ import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { setLogout } from "../../redux/features/authSlice";
 import { IDecodedValue } from "../../shared/modules";
 import { OrderComponent } from "../order";
-import { useGetOrderByUserIdQuery } from "../../redux/api/order/order-api";
 
 const { Content, Footer } = Layout;
 const { Title, Paragraph } = Typography;
@@ -29,9 +28,6 @@ const UserProfile = () => {
     dispatch(setLogout());
     navigate("/");
   };
-  const {
-    data: userOrders
-  } = useGetOrderByUserIdQuery(userData?._id!);
 
   return (
     <Layout style={{ minHeight: "100vh", padding: "25px" }}>
@@ -90,7 +86,7 @@ const UserProfile = () => {
         <Row justify="center">
           <Col span={16}>
             <Card bordered={false} style={{ borderRadius: "12px" }}>
-                  <OrderComponent userOrders={userOrders!} />
+              <OrderComponent />
             </Card>
             <Divider />
           </Col>

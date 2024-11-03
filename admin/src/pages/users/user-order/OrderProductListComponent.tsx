@@ -27,6 +27,7 @@ interface IProps {
   userOrders: IOrderResponse;
   isLoadingUserOrders: boolean;
   saveOrdersStatus: (orderId: string, status: string) => void;
+  deleteOrderById:(orderId: string)=>void;
 }
 
 const statusData = [
@@ -56,6 +57,7 @@ export const OrderComponent: FC<IProps> = ({
   userOrders,
   isLoadingUserOrders,
   saveOrdersStatus,
+  deleteOrderById
 }) => {
   const { t } = useTranslation();
 
@@ -140,6 +142,7 @@ export const OrderComponent: FC<IProps> = ({
                             color: "red",
                             cursor: "pointer",
                           }}
+                          onClick={()=>deleteOrderById(order._id)}
                         />
                       </div>
                     )}

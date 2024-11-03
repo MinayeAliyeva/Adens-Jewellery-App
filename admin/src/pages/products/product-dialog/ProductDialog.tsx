@@ -215,13 +215,17 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
               name="price"
               rules={[{ required: true, message: t("Price is required!") }]}
             >
-              <Input type="number" placeholder={t("Enter price")} />
+              <Input min={0} type="number" placeholder={t("Enter price")} />
             </Form.Item>
           </Col>
 
           <Col span={12}>
             <Form.Item label="Dimensions" name="dimensions">
-              <Input type="number" placeholder={t("Enter dimension...")} />
+              <Input
+                min={0}
+                type="number"
+                placeholder={t("Enter dimension...")}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -303,12 +307,13 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
                 type="number"
                 placeholder={t("Enter totalQty number...")}
                 name="totalQty"
+                min={0}
               />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item label={t("Weight (mm)")} name="weight">
-              <Input type="number" placeholder={t("Enter weight...")} />
+              <Input min={0} type="number" placeholder={t("Enter weight...")} />
             </Form.Item>
           </Col>
         </Row>
@@ -316,7 +321,11 @@ const ProductDialog: FC<IProductDialog> = ({ open, setOpen, product }) => {
         <Row gutter={24}>
           <Col span={12}>
             <Form.Item label={t("Warranty Duration")} name="warrantyDuration">
-              <Input type="number" placeholder={t("Enter warranty duration")} />
+              <Input
+                min={0}
+                type="number"
+                placeholder={t("Enter warranty duration")}
+              />
             </Form.Item>
           </Col>
           <Col span={12}>

@@ -150,7 +150,6 @@ router.get("/user/:userId", async (req, res) => {
 router.patch("/:orderId/status", async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
-  
 
   const validStatuses = [
     "pending",
@@ -182,6 +181,61 @@ router.patch("/:orderId/status", async (req, res) => {
     console.error("Sipariş durumu güncellenemedi:", error);
     res.status(500).json({
       message: "Sipariş durumu güncellenirken hata oluştu",
+      error: error.message,
+    });
+  }
+});
+
+router.delete("/:orderId", async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Sifariş tapılmadı" });
+    }
+
+    if (order.status === "delivered" || order.status === "cancelled") {
+      await Order.findByIdAndDelete(orderId);
+      return res.status(200).json({
+        success: true,
+        message: "Sifariş uğurla silindi",
+      });
+    } else {
+      return res.status(400).json({
+        message:
+          "Yalnızca 'delivered' və ya 'cancelled' durumundakı sifarişlər silinə bilər",
+      });
+    }
+  } catch (error) {
+    console.error("Sifariş silinmədi:", error);
+    return res.status(500).json({
+      message: "Sifariş silinərkən xəta baş verdi",
+      error: error.message,
+    });
+  }
+});
+
+router.delete("/:orderId/user", async (req, res) => {
+  const { orderId } = req.params;
+
+  try {
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({ message: "Sifariş tapılmadı" });
+    }
+
+    await Order.findByIdAndDelete(orderId);
+    return res.status(200).json({
+      success: true,
+      message: "Sifariş uğurla silindi",
+    });
+  } catch (error) {
+    console.error("Sifariş silinmədi:", error);
+    return res.status(500).json({
+      message: "Sifariş silinərkən xəta baş verdi",
       error: error.message,
     });
   }

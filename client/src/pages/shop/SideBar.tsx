@@ -79,7 +79,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
   const { data: brandData } = useGetBrandsQuery();
   const [form] = Form.useForm();
 
-  const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {    
+  const onFinish: FormProps<IFieldType>["onFinish"] = (values) => {
     clearFilterParams?.();
     onFilter?.(values!);
   };
@@ -237,17 +237,19 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
               content={t("Size Options...")}
             />
             <Form.Item name="size" valuePropName="checked">
-                <Checkbox.Group
-                  onChange={(value: string[]) => {
-                    form.setFieldsValue({ size: value });
-                  }}
-                >
-                  {sizes?.map((option, idx) => {
-                    return <Checkbox key={idx} value={option.value}>
+              <Checkbox.Group
+                onChange={(value: string[]) => {
+                  form.setFieldsValue({ size: value });
+                }}
+              >
+                {sizes?.map((option, idx) => {
+                  return (
+                    <Checkbox key={idx} value={option.value}>
                       {option?.label}
-                    </Checkbox>;
-                  })}
-                </Checkbox.Group>
+                    </Checkbox>
+                  );
+                })}
+              </Checkbox.Group>
             </Form.Item>
           </Col>
         </Row>
@@ -366,7 +368,6 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
             <Button
               type="primary"
               htmlType="submit"
-              disabled={form.isFieldsTouched(true)}
               style={{ backgroundColor: "#70b3bf" }}
               size="large"
               icon={<SendOutlined />}
