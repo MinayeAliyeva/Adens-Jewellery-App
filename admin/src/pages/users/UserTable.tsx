@@ -14,7 +14,7 @@ import {
   useLazyGetOrderByUserIdQuery,
   useUpdateOrderStatusByIdMutation,
 } from "../../store/api/order/order-api";
-import { OrderComponent } from "./user-order/OrderComponent";
+import { OrderComponent } from "./user-order/OrderProductListComponent";
 import { IOrderResponse } from "../../store/api/order/modules";
 
 interface DataType {
@@ -49,9 +49,7 @@ const UsersTable: FC<{ data: IUser[] }> = ({ data }) => {
   );
 
   useEffect(() => {
-    if (userId) {
-      console.log("userId", userId);
-      
+    if (userId) {      
       getUserorderById(userId).then((res) => {
         setUserOrders(res.data!);
       });

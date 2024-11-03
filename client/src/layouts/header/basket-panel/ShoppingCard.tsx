@@ -1,5 +1,5 @@
 import { ShoppingCartOutlined } from "@ant-design/icons";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { iconStyle } from "../constants";
 import ShoppingPanel from "./ShoppingPanel";
 import { getUserFromToken } from "../../../shared/helpers/authStorage";
@@ -56,4 +56,4 @@ const ShoppingCart = () => {
   );
 };
 
-export default ShoppingCart;
+export default memo(ShoppingCart);

@@ -2,6 +2,7 @@ import { Layout, Row, Col, Typography } from "antd";
 import { Link } from "react-router-dom";
 import { IFooterStyle } from "./style";
 import { useTranslation } from "react-i18next";
+import { memo } from "react";
 const { Footer } = Layout;
 
 const FooterStyle: IFooterStyle = {
@@ -99,4 +100,4 @@ const CustomFooter = () => {
   );
 };
 
-export default CustomFooter;
+export default memo(CustomFooter);

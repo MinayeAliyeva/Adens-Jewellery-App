@@ -22,7 +22,7 @@ interface IProductItem {
   quantity: number;
 }
 
-interface IProductItems {
+export interface IProductItems {
   productId: IProduct;
   quantity: number;
 }

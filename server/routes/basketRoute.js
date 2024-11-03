@@ -114,7 +114,6 @@ router.delete("/:userId/:productId", async (req, res) => {
 router.delete("/:userId", async (req, res) => {
   
   const { userId } = req.params;
-  console.log("userId", userId);
 
   try {
     const basket = await Basket.findOneAndUpdate(
@@ -122,7 +121,6 @@ router.delete("/:userId", async (req, res) => {
       { $set: { products: [], totalPrice: 0 } }, 
       { new: true }
     );
-    console.log("basket", basket);
     
 
     if (!basket) {

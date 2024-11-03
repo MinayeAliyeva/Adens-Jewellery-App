@@ -5,26 +5,28 @@ import {
   Col,
   Typography,
   Divider,
-  Avatar,
   Tag,
   Spin,
   Button,
   Select,
 } from "antd";
 import { isEmpty } from "lodash";
-import { IOrder, IOrderResponse } from "../../../store/api/order/modules";
-import { CiEdit } from "react-icons/ci";
 import { Content } from "antd/es/layout/layout";
+import { CiEdit } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
+
 import { MdOutlineCancel } from "react-icons/md";
 import { useTranslation } from "react-i18next";
+import OrderProductListComponent from "./OrderListComponent";
 
+import { IOrder, IOrderResponse } from "../../../store/api/order/modules";
 const { Text, Title } = Typography;
 
 interface IProps {
   userOrders: IOrderResponse;
   isLoadingUserOrders: boolean;
-  saveOrdersStatus: (orderId: string, status: string) => void
+  saveOrdersStatus: (orderId: string, status: string) => void;
 }
 
 const statusData = [
@@ -49,11 +51,11 @@ const statusData = [
     label: "Cancelled",
   },
 ];
-
+const deleteOrderProduct = ["cancelled", "delivered"];
 export const OrderComponent: FC<IProps> = ({
   userOrders,
   isLoadingUserOrders,
-  saveOrdersStatus
+  saveOrdersStatus,
 }) => {
   const { t } = useTranslation();
 
@@ -116,7 +118,10 @@ export const OrderComponent: FC<IProps> = ({
           ) : (
             <Row gutter={[32, 32]}>
               {userOrders?.orders?.map((order: IOrder) => (
-                <Col style={{ width: "100%" }} key={order?._id}>
+                <Col
+                  style={{ width: "100%", display: "flex" }}
+                  key={order?._id}
+                >
                   <Card
                     bordered={false}
                     style={{
@@ -127,13 +132,25 @@ export const OrderComponent: FC<IProps> = ({
                       width: "100%",
                     }}
                   >
+                    {deleteOrderProduct?.includes(order?.status) && (
+                      <div style={{ textAlign: "right" }}>
+                        <MdDelete
+                          style={{
+                            fontSize: "20px",
+                            color: "red",
+                            cursor: "pointer",
+                          }}
+                        />
+                      </div>
+                    )}
+
                     <Row justify="space-between" align="middle">
                       <Col>
                         <Title
                           level={4}
                           style={{ color: "#3d3d3d", marginBottom: 12 }}
                         >
-                          <Content style={{ display: "flex", gap: "20px" }}>
+                          <Content style={{ display: "flex", gap: "10px" }}>
                             {order._id === state.selectedOrderId ? (
                               <Select
                                 options={statusData}
@@ -167,7 +184,6 @@ export const OrderComponent: FC<IProps> = ({
                                 icon={<CiEdit />}
                                 onClick={() => editOrderId(order._id)}
                                 color="primary"
-                                //disabled={createBrand || updateBrand}
                                 variant="dashed"
                               />
                             )}
@@ -211,79 +227,24 @@ export const OrderComponent: FC<IProps> = ({
                         </Text>
                       </Col>
                     </Row>
-                    <Divider style={{ margin: "20px 0" }} />
+                    <Divider style={{ margin: "10px 0" }} />
 
-                    <Row gutter={[16, 16]}>
-                      {order?.productItems?.map((item, index) => (
-                        <Col span={24} key={`${order?._id}-item-${index}`}>
-                          <Card
-                            hoverable
-                            bordered={false}
-                            style={{
-                              backgroundColor: "#fafafa",
-                              borderRadius: "10px",
-                              boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.05)",
-                              padding: "16px",
-                            }}
-                          >
-                            <Row align="middle" gutter={[16, 0]}>
-                              <Col>
-                                <Avatar
-                                  shape="square"
-                                  size={64}
-                                  src={item.productId.mainImageUrl}
-                                  style={{
-                                    border: "1px solid #d9d9d9",
-                                    boxShadow: "0px 1px 4px rgba(0, 0, 0, 0.1)",
-                                  }}
-                                />
-                              </Col>
-                              <Col flex="auto">
-                                <Title
-                                  level={5}
-                                  style={{
-                                    margin: 0,
-                                    fontSize: "16px",
-                                    color: "#3d3d3d",
-                                  }}
-                                >
-                                  {item?.productId?.productName}
-                                </Title>
-                                <Text
-                                  type="secondary"
-                                  style={{
-                                    fontSize: "14px",
-                                    display: "block",
-                                    marginTop: 4,
-                                  }}
-                                >
-                                  Quantity: {item?.quantity}
-                                </Text>
-                                <Text
-                                  style={{
-                                    fontSize: "14px",
-                                    display: "block",
-                                    marginTop: 4,
-                                  }}
-                                >
-                                  Price: {item?.productId?.price} USD
-                                </Text>
-                                <Text
-                                  type="secondary"
-                                  style={{
-                                    fontSize: "14px",
-                                    display: "block",
-                                    marginTop: 4,
-                                  }}
-                                >
-                                  Color: {item?.productId?.color}
-                                </Text>
-                              </Col>
-                            </Row>
-                          </Card>
-                        </Col>
-                      ))}
-                    </Row>
+                    <Card
+                      hoverable
+                      bordered={false}
+                      style={{
+                        backgroundColor: "#fafafa",
+                        borderRadius: "10px",
+                        boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.05)",
+                        padding: "16px",
+                        width: "100%",
+                      }}
+                    >
+                      <OrderProductListComponent
+                        data={order?.productItems}
+                        isLoadingUserOrders={isLoadingUserOrders}
+                      />
+                    </Card>
                   </Card>
                 </Col>
               ))}

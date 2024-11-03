@@ -1,83 +1,88 @@
 import { FC } from "react";
 import { Card, Row, Col, Typography, Divider, Avatar, Tag } from "antd";
-import { isEmpty } from 'lodash';
+import { isEmpty } from "lodash";
 import { IOrder, IOrderResponse } from "./modules";
+import OrderListComponent from "./OrderListComponent";
 
 const { Text, Title } = Typography;
 
-export const OrderComponent: FC<{userOrders: IOrderResponse}> = ({ userOrders }) => {
-  console.log({userOrders});
-  
+export const OrderComponent: FC<{ userOrders: IOrderResponse }> = ({
+  userOrders,
+}) => {
+
   return (
     <Card
       style={{ backgroundColor: "#f4f6f8", padding: "40px", border: "none" }}
-    >{
-      isEmpty(userOrders?.orders) ? (
+    >
+      {isEmpty(userOrders?.orders) ? (
         <Title
           level={4}
-          style={{ color: "#3d3d3d", marginBottom: 12 , textAlign: "center"}}
+          style={{ color: "#3d3d3d", marginBottom: 12, textAlign: "center" }}
         >
           No Orders
         </Title>
-      ): <Row gutter={[32, 32]}>
-      {userOrders?.orders?.map((order: IOrder) => (
-        <Col style={{ width: "100%" }} key={order?._id}>
-          <Card
-            bordered={false}
-            style={{
-              borderRadius: "12px",
-              boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
-              padding: "24px",
-              backgroundColor: "#ffffff",
-              width: "100%",
-            }}
-          >
-            <Row justify="space-between" align="middle">
-              <Col>
-                <Title
-                  level={4}
-                  style={{ color: "#3d3d3d", marginBottom: 12 }}
-                >
-                  <Tag color="green" style={{ fontSize: "14px" }}>
-                    {order?.status}
-                  </Tag>
-                </Title>
-                <Text
-                  type="secondary"
-                  style={{ display: "block", marginBottom: 4 }}
-                >
-                  Shipping Address:{" "}
-                  <span style={{ color: "#3d3d3d" }}>
-                    {order?.shippingAddress}
-                  </span>
-                </Text>
-                <Text
-                  type="secondary"
-                  style={{ display: "block", marginBottom: 4 }}
-                >
-                  Order NO:{" "}
-                  <span style={{ color: "#3d3d3d" }}>{order?._id}</span>
-                </Text>
-                <Text type="secondary" style={{ display: "block" }}>
-                  Created:{" "}
-                  <span style={{ color: "#3d3d3d" }}>{order?.createdAt}</span>
-                </Text>
-              </Col>
-              <Col style={{ textAlign: "right" }}>
-                <Text type="secondary">Total Amount:</Text>{" "}
-                <Text strong style={{ fontSize: "16px", color: "#3d3d3d" }}>
-                  {order?.totalAmount} $
-                </Text>
-                <br />
-                <Text type="secondary">Shipping Fee:</Text>{" "}
-                <Text style={{ color: "#595959" }}>
-                  {order?.shippingFee} $
-                </Text>
-              </Col>
-            </Row>
-            <Divider style={{ margin: "20px 0" }} />
-
-            <Row gutter={[16, 16]}>
+      ) : (
+        <Row gutter={[32, 32]}>
+          {userOrders?.orders?.map((order: IOrder) => (
+            <Col style={{ width: "100%" }} key={order?._id}>
+              <Card
+                bordered={false}
+                style={{
+                  borderRadius: "12px",
+                  boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",
+                  padding: "24px",
+                  backgroundColor: "#ffffff",
+                  width: "100%",
+                }}
+              >
+                <Row justify="space-between" align="middle">
+                  <Col>
+                    <Title
+                      level={4}
+                      style={{ color: "#3d3d3d", marginBottom: 12 }}
+                    >
+                      <Tag color="green" style={{ fontSize: "14px" }}>
+                        {order?.status}
+                      </Tag>
+                    </Title>
+                    <Text
+                      type="secondary"
+                      style={{ display: "block", marginBottom: 4 }}
+                    >
+                      Shipping Address:{" "}
+                      <span style={{ color: "#3d3d3d" }}>
+                        {order?.shippingAddress}
+                      </span>
+                    </Text>
+                    <Text
+                      type="secondary"
+                      style={{ display: "block", marginBottom: 4 }}
+                    >
+                      Order NO:{" "}
+                      <span style={{ color: "#3d3d3d" }}>{order?._id}</span>
+                    </Text>
+                    <Text type="secondary" style={{ display: "block" }}>
+                      Created:{" "}
+                      <span style={{ color: "#3d3d3d" }}>
+                        {order?.createdAt}
+                      </span>
+                    </Text>
+                  </Col>
+                  <Col style={{ textAlign: "right" }}>
+                    <Text type="secondary">Total Amount:</Text>{" "}
+                    <Text strong style={{ fontSize: "16px", color: "#3d3d3d" }}>
+                      {order?.totalAmount} $
+                    </Text>
+                    <br />
+                    <Text type="secondary">Shipping Fee:</Text>{" "}
+                    <Text style={{ color: "#595959" }}>
+                      {order?.shippingFee} $
+                    </Text>
+                  </Col>
+                </Row>
+                <Divider style={{ margin: "20px 0" }} />
+                <OrderListComponent data={order?.productItems} />
+                {/* <Row gutter={[16, 16]}>
               {order?.productItems?.map((item, index) => (
                 <Col span={24} key={`${order?._id}-item-${index}`}>
                   <Card
@@ -147,13 +152,12 @@ export const OrderComponent: FC<{userOrders: IOrderResponse}> = ({ userOrders })
                   </Card>
                 </Col>
               ))}
-            </Row>
-          </Card>
-        </Col>
-      ))}
-    </Row>
-    }
-
+            </Row> */}
+              </Card>
+            </Col>
+          ))}
+        </Row>
+      )}
     </Card>
   );
 };

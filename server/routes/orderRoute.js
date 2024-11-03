@@ -73,7 +73,6 @@ router.post("/", async (req, res) => {
 
 router.get("/orders", async (req, res) => {
   try {
-    // Fetch all orders
     const orders = await Order.find()
       .populate({
         path: "productItems.productId",
@@ -148,11 +147,9 @@ router.get("/user/:userId", async (req, res) => {
   }
 });
 
-// PATCH /order/:orderId/status - Update order status by order ID
 router.patch("/:orderId/status", async (req, res) => {
   const { orderId } = req.params;
   const { status } = req.body;
-  console.log("status", status);
   
 
   const validStatuses = [

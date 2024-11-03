@@ -50,55 +50,8 @@ export interface IOrderRequestArg {
   payment: IPayment;
   shippingFee: number;
 }
-//
-
-// interface IUser {
-//   _id: string;
-//   firstName: string;
-//   lastName: string;
-//   phone: string;
-//   email: string;
-//   wishLists: any[];
-//   isAdmin: boolean;
-//   createdAt: string;
-//   updatedAt: string;
-//   __v: number;
-// }
 
 
-// interface IProduct {
-//   productAvailability: IProductAvailability;
-//   _id: string;
-//   productName: string;
-//   size: string[];
-//   price: number;
-//   totalQty: number;
-//   totalSold: number;
-//   category: string;
-//   color: string;
-//   comments: any[];
-//   mainImageUrl: string;
-//   additionalImages: string[];
-//   description: string;
-//   weight: number;
-//   dimensions: number;
-//   warrantyDuration: number;
-//   creationDate: string;
-//   brand: string;
-//   priceHistory: any[];
-//   createdAt: string;
-//   updatedAt: string;
-//   __v: number;
-//   lastUpdated: string;
-//   averageRating: number;
-//   id: string;
-//}
-
-// interface IProductItem {
-//   productId: IProduct;
-//   quantity: number;
-//   _id: string;
-// }
 
 export interface IPayment {
   cardNumber: string;

@@ -7,7 +7,6 @@ const auth = (req, res, next) => {
   if (!token) {
     return res.status(401).send("yetkiniz yok.");
   }
-// postman BEARER
   if (token.startsWith("Bearer ")) {
     token = token.slice(7, token.length).trimLeft();
   }

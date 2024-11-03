@@ -1,19 +1,19 @@
-import TranslateComponent from "../utils/components/TranslateComponent";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Col, Divider, Image, Layout, Row, Spin, theme } from "antd";
-import { useState } from "react";
+import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { BiLogOutCircle } from "react-icons/bi";
+import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
+import { Col, Divider, Image, Layout, Row, Spin, theme } from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
-import { ButtonComponent } from "../utils/components/ButtonComponent";
 import { menu } from "./data";
+import { ButtonComponent } from "../utils/components/ButtonComponent";
+import TranslateComponent from "../utils/components/TranslateComponent";
 import { useGetLogoQuery } from "../store/api/setting/setting-api";
 
 const logo = "/assets/images/logo.png";
-const { Header, Sider, Content } = Layout;
 const bg = "/assets/images/bg.png";
+const { Header, Sider, Content } = Layout;
 
-const MainLayout: React.FC = () => {
+const MainLayout: FC = () => {
   const { t } = useTranslation();
 
   const [collapsed, setCollapsed] = useState(false);
