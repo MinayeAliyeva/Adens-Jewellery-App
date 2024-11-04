@@ -8,7 +8,7 @@ import {
   HeartOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons";
-import { FC, memo, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { IProduct } from "../../../redux/api/product/modules";
 import { Content } from "antd/es/layout/layout";
 import { useDispatch } from "react-redux";
@@ -196,4 +196,4 @@ const ProductInfo: FC<IProductInfoProps> = ({ product }) => {
   );
 };
 
-export default memo(ProductInfo);
+export default ProductInfo;

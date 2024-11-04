@@ -1,5 +1,5 @@
 import { Avatar, List } from "antd";
-import { FC, memo } from "react";
+import { FC } from "react";
 import { IProductItems } from "./modules";
 interface DataType {
   productName: string;
@@ -45,4 +45,4 @@ const OrderProductListComponent: FC<{
   );
 };
 
-export default memo(OrderProductListComponent);
+export default OrderProductListComponent;

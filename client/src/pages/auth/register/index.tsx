@@ -61,7 +61,6 @@ const Register: FC = () => {
     try {
       const res = await registerUser(data);
       if (!isEmpty(res?.data)) {
-        
         reset();
         dispatch(setRegister())
         navigate("/home");

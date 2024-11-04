@@ -1,4 +1,4 @@
-import { FC, memo } from "react";
+import { FC} from "react";
 import { Avatar, Card, List, Rate, Typography } from "antd";
 import { MdDeleteOutline } from "react-icons/md";
 import { UserOutlined } from "@ant-design/icons";
@@ -123,4 +123,4 @@ const CommentList: FC<ICommentProps> = ({ productId }) => {
   );
 };
 
-export default memo(CommentList);
+export default CommentList;

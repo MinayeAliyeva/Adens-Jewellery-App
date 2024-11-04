@@ -9,7 +9,7 @@ import {
   Space,
   Popconfirm,
 } from "antd";
-import { FC, memo, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { IoIosSend, IoMdEye } from "react-icons/io";
 import { getUserFromToken } from "../../../shared/helpers/authStorage";
 import {
@@ -142,7 +142,7 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
               onClick={doOrder}
               style={{
                 backgroundColor: `${isEmpty(basketData?.products) ? "rgb(128, 113, 72)" : "rgb(64, 51, 29)"}`,
-                color: `${isEmpty(basketData?.products) ? "#fff" : "black"}`,
+                color: `${isEmpty(basketData?.products) ? "#fff" : "fff"}`,
                 borderRadius: "5px",
               }}
             >
@@ -245,4 +245,4 @@ const ShoppingPanel: FC<IDrawerComponentProps> = ({
   );
 };
 
-export default memo(ShoppingPanel);
+export default ShoppingPanel;

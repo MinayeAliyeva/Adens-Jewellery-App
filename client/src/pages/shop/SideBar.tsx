@@ -254,7 +254,7 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
           </Col>
         </Row>
         <hr />
-        <Row gutter={24} style={{ marginTop: "15px" }}>
+        {/* <Row gutter={24} style={{ marginTop: "15px" }}>
           <Col span={12}>
             <TypographyComponent
               level={5}
@@ -311,7 +311,66 @@ export const SideBar: FC<ISideBarProps> = ({ onFilter, clearFilterParams }) => {
               />
             </Form.Item>
           </Col>
+        </Row> */}
+        <Row gutter={24} style={{ marginTop: "15px" }}>
+          <Col span={12}>
+            <TypographyComponent
+              level={5}
+              style={{ marginBottom: "15px" }}
+              content={t("Min Weight (g)")}
+            />
+            <Form.Item<IFieldType> name="minWeight">
+              <Input
+                onBlur={(e) => {
+                  const maxWeight = form.getFieldValue("maxWeight") || 0;
+                  const minWeight = Number(e.target.value);
+                  if (minWeight && maxWeight && minWeight >= maxWeight) {
+                    form.setFieldValue("minWeight", maxWeight);
+                  } else {
+                    form.setFieldValue("minWeight", minWeight);
+                  }
+                }}
+                onFocus={() => {
+                  form.setFieldValue("minWeight", "");
+                }}
+                type="number"
+                name="minWeight"
+                size="large"
+                placeholder="min weight"
+                min={0}
+              />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <TypographyComponent
+              level={5}
+              style={{ marginBottom: "15px" }}
+              content={t("Max Weight (g)")}
+            />
+            <Form.Item<IFieldType> name="maxWeight">
+              <Input
+                type="number"
+                name="maxWeight"
+                size="large"
+                placeholder="max weight"
+                min={0}
+                onBlur={(e) => {
+                  const minWeight = form.getFieldValue("minWeight") || 0;
+                  const maxWeight = Number(e.target.value);
+                  if (minWeight && maxWeight && maxWeight < minWeight) {
+                    form.setFieldValue("maxWeight", minWeight);
+                  } else {
+                    form.setFieldValue("maxWeight", maxWeight);
+                  }
+                }}
+                onFocus={() => {
+                  form.setFieldValue("maxWeight", "");
+                }}
+              />
+            </Form.Item>
+          </Col>
         </Row>
+
         <hr />
         <Row gutter={24} style={{ marginTop: "15px" }}>
           <Col span={12}>

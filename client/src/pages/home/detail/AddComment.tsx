@@ -1,4 +1,4 @@
-import { FC, memo } from "react";
+import { FC} from "react";
 import { Button, Card, Typography } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { TextAreaComponent } from "../../../shared/components/form-components/TextAreaComponent";
@@ -96,4 +96,4 @@ const AddComment: FC<IAddCommentProps> = ({ productId }) => {
   );
 };
 
-export default memo(AddComment);
+export default AddComment;
