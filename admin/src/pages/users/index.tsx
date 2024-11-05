@@ -1,5 +1,5 @@
 import { useGetUsersQuery } from "../../store/api/users/users-api";
-import { IUser } from "./modules";
+import { IUser } from "./models";
 import UsersTable from "./UserTable";
 
 

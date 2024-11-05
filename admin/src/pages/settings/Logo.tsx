@@ -14,7 +14,7 @@ import {
   useUpdateLogoMutation,
   useDeleteLogoMutation,
 } from "../../store/api/setting/setting-api";
-import { ILogos } from "../../store/api/setting/modules";
+import { ILogos } from "../../store/api/setting/models";
 import { MdDelete } from "react-icons/md";
 import { GrUpdate } from "react-icons/gr";
 const defaultLogo =

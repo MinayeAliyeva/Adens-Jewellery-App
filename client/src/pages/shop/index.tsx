@@ -10,7 +10,7 @@ import { useLazyGetProductsQuery } from "../../redux/api/product/product-api";
 import InputComponent from "../../shared/components/form-components/InputControlledComponent";
 import OpenDrawer from "./OpenDrawer";
 import { useTranslation } from "react-i18next";
-import { IProduct } from "../../redux/api/product/modules";
+import { IProduct } from "../../redux/api/product/models";
 import { ICheckboxComponentProps } from "../../shared/components/Drawer";
 import ProductCard from "../../shared/components/ProductCard";
 

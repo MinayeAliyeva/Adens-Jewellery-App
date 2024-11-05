@@ -2,7 +2,7 @@ import React, { Suspense, lazy, useEffect } from "react";
 import { Card, message, Spin } from "antd";
 import { useDeleteOrderByIdsMutation, useLazyGetOrderByUserIdQuery } from "../../redux/api/order/order-api";
 import { getUserFromToken } from "../../shared/helpers/authStorage";
-import { IDecodedValue } from "../../shared/modules";
+import { IDecodedValue } from "../../shared/models";
 import { isEmpty } from 'lodash';
 
 const OrderDetails = lazy(() => import("./OrderDetails"));

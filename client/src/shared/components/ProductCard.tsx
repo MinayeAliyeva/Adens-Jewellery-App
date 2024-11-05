@@ -15,7 +15,7 @@ import {
 import { useDispatch } from "react-redux";
 import { isEmpty } from "lodash";
 import { showErrorToast, showSuccessToast } from "./NotficationComponent";
-import { IProduct } from "../../redux/api/product/modules";
+import { IProduct } from "../../redux/api/product/models";
 import { getUserFromToken } from "../helpers/authStorage";
 import { useAddBasketMutation } from "../../redux/api/basket/basket-api";
 import { useAddProductToFavoriteMutation, useLazyGetFavoriteByUserIdQuery } from "../../redux/api/favorite/favorite-api";

@@ -1,6 +1,6 @@
 import { FC, memo } from "react";
 import { Card } from "antd";
-import { IProduct } from "../../../redux/api/product/modules";
+import { IProduct } from "../../../redux/api/product/models";
 import { Content } from "antd/es/layout/layout";
 import ProductCard from "../../../shared/components/ProductCard";
 

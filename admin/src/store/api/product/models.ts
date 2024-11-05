@@ -1,5 +1,5 @@
-import { IBrandsResponse } from "../brand/modules";
-import { ICatagoryResponse } from "../catagory/modules";
+import { IBrandsResponse } from "../brand/models";
+import { ICatagoryResponse } from "../catagory/models";
 
 export interface IComment {
   body: Array<{

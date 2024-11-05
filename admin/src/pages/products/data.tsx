@@ -3,9 +3,9 @@ import OpenDeleteDialogButton from "./product-dialog/OpenDeleteDialog";
 import Typography from "antd/es/typography/Typography";
 import { Content } from "antd/es/layout/layout";
 import { FaRegEdit } from "react-icons/fa";
-import { IBrandsResponse } from "../../store/api/brand/modules";
-import { ICatagoryResponse } from "../../store/api/catagory/modules";
-import { IProduct } from "../../store/api/product/modules";
+import { IBrandsResponse } from "../../store/api/brand/models";
+import { ICatagoryResponse } from "../../store/api/catagory/models";
+import { IProduct } from "../../store/api/product/models";
 import { TFunction } from "i18next";
 
 export const sizeOptions = [

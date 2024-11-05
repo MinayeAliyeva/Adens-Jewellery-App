@@ -5,7 +5,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import { map } from "lodash";
-import { IProduct } from '../../store/api/product/modules';
+import { IProduct } from '../../store/api/product/models';
 
 type DataIndex = keyof IProduct;
 interface IProductsTableProps {

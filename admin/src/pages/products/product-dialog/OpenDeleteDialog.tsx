@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { ButtonComponent } from "../../../utils/components/ButtonComponent";
-import { IProduct } from "../../../store/api/product/modules";
+import { IProduct } from "../../../store/api/product/models";
 import DeleteDialog from "./DeleteDialog";
 import { useTranslation } from "react-i18next";
 

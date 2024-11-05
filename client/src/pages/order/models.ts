@@ -1,4 +1,4 @@
-import { IProduct } from "../../redux/api/product/modules";
+import { IProduct } from "../../redux/api/product/models";
 import { IUser } from "../../redux/api/user/module";
 
 export interface IOrderItem {

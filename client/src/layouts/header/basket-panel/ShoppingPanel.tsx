@@ -20,8 +20,8 @@ import {
 import {
   IBasketResponse,
   IProductInBasket,
-} from "../../../redux/api/basket/modules";
-import { IProduct } from "../../../redux/api/product/modules";
+} from "../../../redux/api/basket/models";
+import { IProduct } from "../../../redux/api/product/models";
 import { useDispatch } from "react-redux";
 import { setBasketProductCount } from "../../../redux/features/basketProductCountSlice";
 import { SpinComponent } from "../../../shared/components/SpinComponent";

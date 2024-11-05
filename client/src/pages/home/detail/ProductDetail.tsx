@@ -2,7 +2,7 @@ import { FC, memo } from "react";
 import { Card, Col, Row } from "antd";
 import ImageGallery from "./ImageGallery";
 import ProductInfo from "./ProductInfo";
-import { IProduct } from "../../../redux/api/product/modules";
+import { IProduct } from "../../../redux/api/product/models";
 
 interface IProductDetailProps {
   product: IProduct;

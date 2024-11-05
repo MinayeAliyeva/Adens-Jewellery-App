@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
-import { IAddBasaketBody, IBasketResponse } from "./modules";
+import { IAddBasaketBody, IBasketResponse } from "./models";
 
 export const basketApi = createApi({
   reducerPath: "basketApi",

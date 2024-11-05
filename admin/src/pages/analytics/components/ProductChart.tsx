@@ -8,7 +8,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { IProduct } from "../../../store/api/product/modules";
+import { IProduct } from "../../../store/api/product/models";
 import { SpinComponent } from "../../../utils/components/SpinComponent";
 import { useTranslation } from "react-i18next";
 import { memo } from "react";

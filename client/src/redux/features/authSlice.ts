@@ -4,7 +4,7 @@ import {
   removeFromLocalStorage,
 } from "../../shared/helpers/localStorageUtil";
 import { getUserFromToken } from "../../shared/helpers/authStorage";
-import { IDecodedValue } from "../../shared/modules";
+import { IDecodedValue } from "../../shared/models";
 
 interface AuthState {
   user: IDecodedValue | null;

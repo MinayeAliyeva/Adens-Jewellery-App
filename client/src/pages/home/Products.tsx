@@ -1,5 +1,5 @@
 import { useGetProductsQuery } from "../../redux/api/product/product-api";
-import { IProduct } from "../../redux/api/product/modules";
+import { IProduct } from "../../redux/api/product/models";
 import { Row, Col, Typography, Layout } from "antd";
 import ProductCard from "../../shared/components/ProductCard";
 const { Content } = Layout;

@@ -1,4 +1,4 @@
-import { IProduct } from "../product/modules";
+import { IProduct } from "../product/models";
 
 export interface IProductFavorite {
   productId: IProduct;

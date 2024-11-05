@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { MdDelete } from "react-icons/md";
 import { Modal, Row, Col, Typography, Divider, message } from "antd";
-import { IProduct } from "../../../store/api/product/modules";
+import { IProduct } from "../../../store/api/product/models";
 import { useDeleteProductByIdMutation } from "../../../store/api/product/product-api";
 import { ButtonComponent } from "../../../utils/components/ButtonComponent";
 

@@ -5,7 +5,7 @@ import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import { FaSave } from "react-icons/fa";
 import { MdOutlineCancel } from "react-icons/md";
-import { ICatagoryResponse } from "../../store/api/catagory/modules";
+import { ICatagoryResponse } from "../../store/api/catagory/models";
 import InputComponent from "../../utils/components/InputComponent";
 import { Control, UseFormHandleSubmit } from "react-hook-form";
 import { IFormField } from ".";

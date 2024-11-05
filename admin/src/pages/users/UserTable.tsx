@@ -9,14 +9,14 @@ import {
 import { Table } from "antd";
 import { columns } from "./data";
 import { useTranslation } from "react-i18next";
-import { IUser } from "./modules";
+import { IUser } from "./models";
 import {
   useDeleteOrderByIdsMutation,
   useLazyGetOrderByUserIdQuery,
   useUpdateOrderStatusByIdMutation,
 } from "../../store/api/order/order-api";
 import { OrderComponent } from "./user-order/OrderProductListComponent";
-import { IOrderResponse } from "../../store/api/order/modules";
+import { IOrderResponse } from "../../store/api/order/models";
 
 interface DataType {
   key: React.Key;

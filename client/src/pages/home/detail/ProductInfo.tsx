@@ -9,7 +9,7 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons";
 import { FC, useEffect } from "react";
-import { IProduct } from "../../../redux/api/product/modules";
+import { IProduct } from "../../../redux/api/product/models";
 import { Content } from "antd/es/layout/layout";
 import { useDispatch } from "react-redux";
 import { getUserFromToken } from "../../../shared/helpers/authStorage";

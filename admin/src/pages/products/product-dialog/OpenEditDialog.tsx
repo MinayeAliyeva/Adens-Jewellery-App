@@ -1,6 +1,6 @@
 import { FC, memo, ReactNode, useState } from "react";
 import { ButtonComponent } from "../../../utils/components/ButtonComponent";
-import { IProduct } from "../../../store/api/product/modules";
+import { IProduct } from "../../../store/api/product/models";
 import ProductDialog from "./ProductDialog";
 
 interface IProductComponentProps {

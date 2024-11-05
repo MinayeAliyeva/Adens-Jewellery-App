@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { IoIosAddCircleOutline } from "react-icons/io";
 import { MdClearAll } from "react-icons/md";
-import { ICatagoryResponse } from "../../store/api/catagory/modules";
+import { ICatagoryResponse } from "../../store/api/catagory/models";
 import { ButtonComponent } from "../../utils/components/ButtonComponent";
 import {
   columns,
@@ -22,7 +22,7 @@ import {
   useUpdateBrandByIdMutation,
 } from "../../store/api/brand/brand-api";
 import { isEmpty, map } from "lodash";
-import { IBrandsResponse } from "../../store/api/brand/modules";
+import { IBrandsResponse } from "../../store/api/brand/models";
 
 type OnChange = NonNullable<TableProps<ICatagoryResponse>["onChange"]>;
 type Filters = Parameters<OnChange>[1];

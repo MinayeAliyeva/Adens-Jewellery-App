@@ -1,7 +1,7 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
-import { IOrderRequestArg, IOrderResponse } from "./modules";
+import { IOrderRequestArg, IOrderResponse } from "./models";
 
 export const orderApi = createApi({
   reducerPath: "orderApi",

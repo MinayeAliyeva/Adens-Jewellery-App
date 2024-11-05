@@ -20,7 +20,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import { useTranslation } from "react-i18next";
 import OrderProductListComponent from "./OrderListComponent";
 
-import { IOrder, IOrderResponse } from "../../../store/api/order/modules";
+import { IOrder, IOrderResponse } from "../../../store/api/order/models";
 const { Text, Title } = Typography;
 
 interface IProps {
