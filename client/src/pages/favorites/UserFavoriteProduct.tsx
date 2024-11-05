@@ -6,7 +6,7 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { useNavigate } from "react-router-dom";
 import { FaTrashCan } from "react-icons/fa6";
-import { IProduct } from "../../redux/api/product/modules";
+import { IProduct } from "../../redux/api/product/models";
 import { getUserFromToken } from "../../shared/helpers/authStorage";
 import { useAddBasketMutation } from "../../redux/api/basket/basket-api";
 import { setFavoriteProductCount } from "../../redux/features/favoriteProductCount";

@@ -1,6 +1,6 @@
 import { Avatar, Modal, Space, Typography } from "antd";
 import { FC, memo } from "react";
-import { IProduct } from "../../../redux/api/product/modules";
+import { IProduct } from "../../../redux/api/product/models";
 interface IWievModalProps {
   isModalVisible: boolean;
   selectedProduct: IProduct | null;

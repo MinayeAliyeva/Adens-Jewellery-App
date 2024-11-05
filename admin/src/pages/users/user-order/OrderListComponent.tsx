@@ -1,6 +1,6 @@
 import { Avatar, List } from "antd";
 import { FC, memo } from "react";
-import { IProductItems } from "../../../store/api/order/modules";
+import { IProductItems } from "../../../store/api/order/models";
 interface DataType {
   productName: string;
   quantity: number;

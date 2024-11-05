@@ -7,7 +7,7 @@ import { useDeleteAllProductFromBasketMutation } from "../../redux/api/basket/ba
 import { showSuccessToast } from "./NotficationComponent";
 import { setBasketProductCount } from "../../redux/features/basketProductCountSlice";
 import { useCreateOrderMutation } from "../../redux/api/order/order-api";
-import { IBasketResponse } from "../../redux/api/basket/modules";
+import { IBasketResponse } from "../../redux/api/basket/models";
 import { getUserFromToken } from "../helpers/authStorage";
 const payImages = "./assets/images/pay.png";
 

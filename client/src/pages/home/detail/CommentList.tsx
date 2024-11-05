@@ -9,7 +9,7 @@ import {
   useGetReviewByProductIdQuery,
 } from "../../../redux/api/review/review-api";
 import { getUserFromToken } from "../../../shared/helpers/authStorage";
-import { IReview, IUserCommentResponse } from "../../../redux/api/review/modules";
+import { IReview, IUserCommentResponse } from "../../../redux/api/review/models";
 
 interface ICommentProps {
   productId: string;
