@@ -17,8 +17,9 @@ import {
 import { ILogos } from "../../store/api/setting/models";
 import { MdDelete } from "react-icons/md";
 import { GrUpdate } from "react-icons/gr";
-const defaultLogo =
-  "http://localhost:8080/public/logoImg/1729960022891_adenaLogo.png";
+import { BASE_URL } from "../../store/api/constants";
+
+const defaultLogo = `${BASE_URL}/public/logoImg/1729960022891_adenaLogo.png`
 
 const Logo: React.FC = () => {
   const { data: logoData } = useGetLogoQuery();
