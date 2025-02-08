@@ -1,5 +1,4 @@
 import { Button, Rate, Typography } from "antd";
-import { Content } from "antd/es/layout/layout";
 import { FC, memo, useEffect } from "react";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { Link } from "react-router-dom";
@@ -97,11 +96,11 @@ const ProductCard: FC<IProps> = ({ product }) => {
   };
 
   return (
-    <Content
+    <div
       className="w-full max-w-md transition-transform hover:scale-105 relative group"
       style={{ height: "600px", width: "400px", padding: "20px", marginBottom: "120px" }}
     >
-      <Content className="relative w-full h-2/3 overflow-hidden">
+      <div className="relative w-full h-2/3 overflow-hidden">
         <img
           alt="product"
           src={product.mainImageUrl}
@@ -113,7 +112,7 @@ const ProductCard: FC<IProps> = ({ product }) => {
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out opacity-0 group-hover:opacity-100"
         />
 
-        <Content className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex space-x-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex space-x-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <Button
             onClick={onCreateOrder}
             style={{ border: "none" }}
@@ -136,21 +135,21 @@ const ProductCard: FC<IProps> = ({ product }) => {
             }
           />
 
-          <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
+          <div className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
             <Link to={`/product/detail/${product?._id}`}>
               <InfoCircleOutlined className="text-lg cursor-pointer transition-colors duration-300" />
             </Link>
-          </Content>
+          </div>
 
-          <Content className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
+          <div className="bg-white border border-gray-300 rounded-full p-2 flex justify-center items-center">
             <Link to={`/products`}>
               <SwapOutlined className="text-lg cursor-pointer transition-colors duration-300" />
             </Link>
-          </Content>
-        </Content>
+          </div>
+        </div>
 
-        <Content className="absolute bottom-4 left-3 right-3 flex flex-col items-center bg-white bg-opacity-80 p-4 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <Content className="flex space-x-1">
+        <div className="absolute bottom-4 left-3 right-3 flex flex-col items-center bg-white bg-opacity-80 p-4 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+          <div className="flex space-x-1">
             {product?.size?.map((size: string) => (
               <Typography
                 key={size}
@@ -159,13 +158,13 @@ const ProductCard: FC<IProps> = ({ product }) => {
                 {size}
               </Typography>
             ))}
-          </Content>
+          </div>
 
           <Rate defaultValue={product?.averageRating} disabled />
-        </Content>
-      </Content>
+        </div>
+      </div>
 
-      <Content className="mt-2 h-1/3">
+      <div className="mt-2 h-1/3">
         <Typography className="text-[16px] font-semibold text-gray-800">
           Product Name: {product?.productName}
         </Typography>
@@ -192,15 +191,15 @@ const ProductCard: FC<IProps> = ({ product }) => {
         {product?.totalQty > 0 ? (
           <Typography className="text-green-600 mt-2">In Stock</Typography>
         ) : (
-          <Content className="flex items-center mt-2">
+          <div className="flex items-center mt-2">
             <Typography className="text-red-600 mr-2">Out of Stock</Typography>
             <IoIosNotificationsOutline
               style={{ cursor: "pointer", fontSize: "20px" }}
             />
-          </Content>
+          </div>
         )}
-      </Content>
-    </Content>
+      </div>
+    </div>
   );
 };
 
