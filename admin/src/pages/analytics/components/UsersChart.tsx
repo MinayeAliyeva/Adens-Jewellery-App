@@ -19,12 +19,10 @@ interface DataType {
 }
 const prepareUserData = (users?: IUser[]) => {
     const userCountByMinute: DataType = {};
-  
     users?.forEach((user) => {
       const dateMinute = new Date(user?.createdAt!).toISOString().slice(0, 16);
       userCountByMinute[dateMinute] = (userCountByMinute[dateMinute] || 0) + 1  ;
     });
-  
     return Object.keys(userCountByMinute)?.map?.((dateMinute) => ({
       date: dateMinute,
       users: userCountByMinute[dateMinute],

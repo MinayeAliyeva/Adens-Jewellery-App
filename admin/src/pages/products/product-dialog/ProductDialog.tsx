@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next";
 import { FaSave } from "react-icons/fa";
 import { useGetBrandsQuery } from "../../../store/api/brand/brand-api";
 import { useGetCategoriesQuery } from "../../../store/api/catagory/catagory-api";
-import { IProduct } from "../../../store/api/product/modules";
+import { IProduct } from "../../../store/api/product/models";
 import { ButtonComponent } from "../../../utils/components/ButtonComponent";
 import { sizeOptions } from "../data";
 

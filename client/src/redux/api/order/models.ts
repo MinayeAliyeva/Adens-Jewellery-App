@@ -1,5 +1,5 @@
-import { IUser } from "../admin/admin-api";
-import { IProduct } from "../product/modules";
+import { IProduct } from "../product/models";
+import { IUser } from "../user/module";
 
 export interface IOrderItem {
   _id: string;
@@ -17,22 +17,23 @@ export interface IOrderRequest {
   shippingAddress: IShippingAddress;
 }
 
+
 interface IProductItem {
   productId: string;
   quantity: number;
 }
 
-export interface IProductItems {
+interface IProductResponseItems {
   productId: IProduct;
   quantity: number;
 }
 
 
-export interface IOrder {
+interface IOrder {
   payment: IPayment;
   _id: string;
   userId: IUser;
-  productItems: IProductItems[];
+  productItems: IProductResponseItems[];
   shippingAddress: string;
   totalAmount: number;
   status: "pending" | "fulfilled" | "shipped" | "delivered" | "cancelled";
@@ -50,11 +51,14 @@ export interface IOrderRequestArg {
   shippingFee: number;
 }
 
+
+
 export interface IPayment {
   cardNumber: string;
   cvv: string;
   expiryDate: string;
 }
+
 
 export interface IOrderResponse {
   success: boolean;

@@ -13,7 +13,7 @@ import {
 import { getUserFromToken } from "../../shared/helpers/authStorage";
 import { UserOutlined, LogoutOutlined } from "@ant-design/icons";
 import { setLogout } from "../../redux/features/authSlice";
-import { IDecodedValue } from "../../shared/modules";
+import { IDecodedValue } from "../../shared/models";
 import { OrderComponent } from "../order";
 
 const { Content, Footer } = Layout;

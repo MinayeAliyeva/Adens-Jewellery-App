@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+
 const productsRouter = require("../server/routes/productRoute");
 const usersRouter = require("../server/routes/usersRoute");
 const catagoryRouter = require("../server/routes/catagoryRoute");
@@ -51,7 +52,8 @@ const connectInfo = {
   }
 })();
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
+
 app.listen(PORT, () => {
   console.log(`Sunucu ${PORT} portunda çalışıyor.`);
 });

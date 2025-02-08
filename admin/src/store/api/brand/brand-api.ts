@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
-import { IBrandsResponse } from "./modules";
+import { IBrandsResponse } from "./models";
 
 export const brandApi = createApi({
   reducerPath: "brandApi",

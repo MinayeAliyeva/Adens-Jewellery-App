@@ -5,7 +5,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import { map } from "lodash";
-import { IProduct } from '../../store/api/product/modules';
+import { IProduct } from "../../store/api/product/models";
 
 type DataIndex = keyof IProduct;
 interface IProductsTableProps {
@@ -13,7 +13,7 @@ interface IProductsTableProps {
   columns: TableColumnsType<IProduct>;
   loading: boolean;
 }
-const ProductsTable: FC<IProductsTableProps> = ({ data, columns, loading}) => {
+const ProductsTable: FC<IProductsTableProps> = ({ data, columns, loading }) => {
   const searchInput = useRef<InputRef>(null);
   const { t } = useTranslation();
   const handleSearch = (
@@ -71,7 +71,7 @@ const ProductsTable: FC<IProductsTableProps> = ({ data, columns, loading}) => {
             size="small"
             style={{ width: 90 }}
           >
-           {t("Reset")}
+            {t("Reset")}
           </Button>
           <Button
             type="link"
@@ -99,9 +99,14 @@ const ProductsTable: FC<IProductsTableProps> = ({ data, columns, loading}) => {
     ),
     onFilter: (value, record) => {
       if (dataIndex === "category" || dataIndex === "brand") {
-        return record[dataIndex]?.name?.toLowerCase().includes((value as string).toLowerCase());
+        return record[dataIndex]?.name
+          ?.toLowerCase()
+          .includes((value as string).toLowerCase());
       }
-      return record[dataIndex]?.toString().toLowerCase().includes((value as string).toLowerCase());
+      return record[dataIndex]
+        ?.toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase());
     },
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
@@ -123,8 +128,17 @@ const ProductsTable: FC<IProductsTableProps> = ({ data, columns, loading}) => {
       }),
     [columns, t]
   );
-  const tableDataSource = useMemo(() => map(data,item => ({ ...item, key: item._id })), [data]);
-  return <Table loading={loading} columns={tableColumns} dataSource={tableDataSource}  />;
+  const tableDataSource = useMemo(
+    () => map(data, (item) => ({ ...item, key: item._id })),
+    [data]
+  );
+  return (
+    <Table
+      loading={loading}
+      columns={tableColumns}
+      dataSource={tableDataSource}
+    />
+  );
 };
 
 export default memo(ProductsTable);

@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { BASE_URL } from "../constants";
-import { ILogoResponse } from "./modules";
+import { ILogoResponse } from "./models";
 
 export const logoApi = createApi({
   reducerPath: "settingApi",

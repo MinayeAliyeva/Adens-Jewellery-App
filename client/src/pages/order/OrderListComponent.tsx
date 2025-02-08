@@ -1,6 +1,6 @@
 import { Avatar, List } from "antd";
 import { FC } from "react";
-import { IProductItems } from "./modules";
+import { IProductItems } from "./models";
 interface DataType {
   productName: string;
   quantity: number;

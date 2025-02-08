@@ -1,4 +1,4 @@
-import CreateEditDialogButton from "./product-dialog/OpenEditDialog";
+import CreateEditDialogButton from "./product-dialog/OpenCreateEditDialog";
 import ProductsTable from "./ProductsTable";
 import { memo } from "react";
 import { useTranslation } from "react-i18next";

@@ -1,6 +1,6 @@
 import { Card, Row, Col, Typography, Divider, Tag } from "antd";
 import { isEmpty } from "lodash";
-import { IOrder, IOrderResponse } from "./modules";
+import { IOrder, IOrderResponse } from "./models";
 import OrderListComponent from "./OrderListComponent";
 import { FC, useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";

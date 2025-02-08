@@ -18,7 +18,7 @@ import {
   useGetCategoriesQuery,
   useUpdateCategoryByIdMutation,
 } from "../../store/api/catagory/catagory-api";
-import { ICatagoryResponse } from "../../store/api/catagory/modules";
+import { ICatagoryResponse } from "../../store/api/catagory/models";
 import { ButtonComponent } from "../../utils/components/ButtonComponent";
 import { useGetBrandsQuery } from "../../store/api/brand/brand-api";
 import { useTranslation } from "react-i18next";
