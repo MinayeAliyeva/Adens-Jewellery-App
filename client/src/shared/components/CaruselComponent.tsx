@@ -45,7 +45,7 @@ const CaruselComponent: FC<{ t: TFunction<"translation", undefined> }> = ({
           <img
             src={slide.img}
             alt={slide.alt}
-            className="w-full h-full object-cover transition-transform duration-1000 ease-in-out"
+            className="w-[100%] h-full object-cover transition-transform duration-1000 ease-in-out"
           />
           <Container width="50%" backgroundColor="red">
             <Typography

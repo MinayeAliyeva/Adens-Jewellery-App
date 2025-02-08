@@ -25,7 +25,7 @@ const Container: FC<IContainerProps> = ({
   zIndex,
 }) => {
   return (
-    <Content
+    <div
       style={{
         maxWidth: width,
         minHeight: height,
@@ -38,7 +38,7 @@ const Container: FC<IContainerProps> = ({
       className={className}
     >
       {children}
-    </Content>
+    </div>
   );
 };
 
