@@ -17,10 +17,12 @@ import { showErrorToast, showSuccessToast } from "./NotficationComponent";
 import { IProduct } from "../../redux/api/product/models";
 import { getUserFromToken } from "../helpers/authStorage";
 import { useAddBasketMutation } from "../../redux/api/basket/basket-api";
-import { useAddProductToFavoriteMutation, useLazyGetFavoriteByUserIdQuery } from "../../redux/api/favorite/favorite-api";
+import {
+  useAddProductToFavoriteMutation,
+  useLazyGetFavoriteByUserIdQuery,
+} from "../../redux/api/favorite/favorite-api";
 import { setBasketProductCount } from "../../redux/features/basketProductCountSlice";
 import { setFavoriteProductCount } from "../../redux/features/favoriteProductCount";
-
 
 interface IProps {
   product: IProduct;
@@ -67,15 +69,14 @@ const ProductCard: FC<IProps> = ({ product }) => {
   const uptadedWithList = () => {
     addFavorite({
       productId: product?._id,
-      userId: userData?._id ?? ""
+      userId: userData?._id ?? "",
     }).then((res) => {
       if (isEmpty(res?.data)) return;
       dispatch(
         setFavoriteProductCount(res.data?.wishList?.products?.length ?? 0)
       );
     });
-  }
-
+  };
 
   const onCreateWishList = () => {
     if (!userData?._id) {
@@ -96,8 +97,7 @@ const ProductCard: FC<IProps> = ({ product }) => {
   };
 
   return (
-    <div className="w-[400px] h-[600px] p-5 mb-[120px] transition-transform hover:scale-105 relative group">
-
+    <div className="w-[400px] h-[600px]  mb-[120px] transition-transform hover:scale-105 relative group">
       <div className="relative w-full h-2/3 overflow-hidden">
         <img
           alt="product"
