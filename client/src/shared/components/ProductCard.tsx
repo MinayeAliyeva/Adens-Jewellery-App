@@ -103,6 +103,7 @@ const ProductCard: FC<IProps> = ({ product }) => {
           alt="product"
           src={product.mainImageUrl}
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:opacity-0"
+          style={{width:'400px'}}
         />
         <img
           alt="product hover"

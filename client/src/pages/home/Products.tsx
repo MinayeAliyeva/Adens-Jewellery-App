@@ -8,14 +8,12 @@ const Products = () => {
   const { data } = useGetProductsQuery<{ data: IProduct[] }>("");
 
   return (
-    <Container
-   
-    >
+    <Container>
       <Typography className="text-3xl font-bold my-8 font-dancing-script text-center">
         OUR COLLECTION
       </Typography>
 
-      <Row gutter={[20, 40]} justify="center" style={{background:'red'}}>
+      <Row gutter={[20, 40]} justify="center" className="bg-stone-700">
         {data?.map?.((product: IProduct) => (
           <Col>
             <ProductCard product={product} />
