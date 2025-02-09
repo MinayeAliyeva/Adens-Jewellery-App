@@ -96,10 +96,8 @@ const ProductCard: FC<IProps> = ({ product }) => {
   };
 
   return (
-    <div
-      className="w-full max-w-md transition-transform hover:scale-105 relative group"
-      style={{ height: "600px", width: "400px", padding: "20px", marginBottom: "120px" }}
-    >
+    <div className="w-[400px] h-[600px] p-5 mb-[120px] transition-transform hover:scale-105 relative group">
+
       <div className="relative w-full h-2/3 overflow-hidden">
         <img
           alt="product"
