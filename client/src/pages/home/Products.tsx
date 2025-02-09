@@ -13,7 +13,7 @@ const Products = () => {
         OUR COLLECTION
       </Typography>
 
-      <Row gutter={[20, 40]} justify="center" className="bg-stone-700">
+      <Row gutter={[20, 40]} justify="center">
         {data?.map?.((product: IProduct) => (
           <Col>
             <ProductCard product={product} />

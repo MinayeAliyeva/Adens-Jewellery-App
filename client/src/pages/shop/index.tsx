@@ -97,7 +97,6 @@ const Shop = () => {
       brands.forEach((brand) => params.append("brand", brand));
     }
     if (size && size.length > 0) {
-
       size.forEach((value) => params.append("size", value));
     }
     if (productName) params.append("productName", productName);
@@ -129,7 +128,9 @@ const Shop = () => {
     <>
       <CatagoriesSlider />
 
-      <Content style={{ minHeight: "100vh", marginTop: "30px" }}>
+      <Content
+        style={{ minHeight: "100vh", marginTop: "30px",  }}
+      >
         <Row>
           <Col
             span={6}
@@ -153,7 +154,8 @@ const Shop = () => {
                 display: "flex",
                 flexWrap: "wrap",
                 gap: "20px",
-                justifyContent: "space-between",
+                justifyContent: "space-around",
+                alignItems:'center',
                 padding: " 0 20px",
                 marginBottom: "40px",
               }}
@@ -188,6 +190,7 @@ const Shop = () => {
             <Content
               style={{
                 display: "flex",
+                alignItems:'center',justifyContent:'center',
                 flexWrap: "wrap",
                 gap: "30px",
               }}
