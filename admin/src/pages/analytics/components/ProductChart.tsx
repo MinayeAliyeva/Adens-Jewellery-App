@@ -23,15 +23,15 @@ interface CategoryData {
 const aggregateData = (productList: IProduct[]) => {
   const categoryMap: { [key: string]: CategoryData } = {};
   productList.forEach((product) => {
-    const categoryName = product.category.name;
+    const categoryName = product.category?.name;
     const totalStock = productList.reduce((acc, curr) => {
-      if (curr.category.name === categoryName) {
+      if (curr.category?.name === categoryName) {
         acc += curr.totalQty;
       }
       return acc;
     }, 0);
     const totalSales = productList?.reduce((acc, curr) => {
-      if (curr.category.name === categoryName) {
+      if (curr.category?.name === categoryName) {
         acc += curr.price * curr.totalQty;
       }
       return acc;
